@@ -3,1160 +3,335 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fund Kurd - باشترین رێبەرێ تە بو پراپ فیرما</title>
+    <title>Fund Kurd</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family: 'Vazirmatn', sans-serif;}
-        :root {
-            --primary: #305CDE;
-            --primary-light: #4a73f5;
-            --primary-dark: #1e3fa6;
-            --gold: #D4A843;
-            --gold-light: #e6c36a;
-            --gold-dark: #b8922e;
-            --bg: #0a0a0a;
-            --bg-card: #111111;
-            --bg-elevated: #1a1a1a;
-            --bg-modal: #141414;
-            --text: #ffffff;
-            --text-muted: #999999;
-            --text-dim: #666666;
-            --border: #222222;
-            --radius: 12px;
-            --radius-lg: 16px;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Noto Sans Arabic', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            direction: rtl;
-            line-height: 1.7;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
-
-        /* Header */
-        .header {
-            position: fixed;
-            top: 0;
-            right: 0;
-            left: 0;
-            z-index: 100;
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            transition: var(--transition);
-        }
-        .header-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: var(--text);
-        }
-        .logo-icon {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, var(--primary), var(--gold));
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 16px;
-            color: #fff;
-        }
-        .logo-text {
-            font-size: 20px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary-light), var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .burger {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            cursor: pointer;
-            background: none;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            transition: var(--transition);
-            z-index: 200;
-        }
-        .burger:hover { border-color: var(--primary); }
-        .burger span {
-            display: block;
-            width: 20px;
-            height: 2px;
-            background: var(--text);
-            border-radius: 2px;
-            transition: var(--transition);
-        }
-        .burger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-        .burger.active span:nth-child(2) { opacity: 0; }
-        .burger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-
-        /* Nav Menu Overlay */
-        .nav-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(4px);
-            z-index: 140;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-        }
-        .nav-overlay.active { opacity: 1; visibility: visible; }
-        .nav-menu {
-            position: fixed;
-            top: 0;
-            right: -320px;
-            width: 300px;
-            max-width: 85vw;
-            height: 100vh;
-            background: var(--bg-card);
-            z-index: 150;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            border-left: 1px solid var(--border);
-            overflow-y: auto;
-        }
-        .nav-menu.active { right: 0; }
-        .nav-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .nav-close {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: none;
-            color: var(--text);
-            cursor: pointer;
-            font-size: 16px;
-            transition: var(--transition);
-        }
-        .nav-close:hover { background: var(--primary); border-color: var(--primary); }
-        .nav-links { padding: 12px; flex: 1; }
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 16px;
-            border-radius: var(--radius);
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: 500;
-            transition: var(--transition);
-            cursor: pointer;
-        }
-        .nav-link:hover, .nav-link.active {
-            background: rgba(48, 92, 222, 0.1);
-            color: var(--text);
-        }
-        .nav-link.active { border-right: 3px solid var(--primary); }
-        .nav-link i { width: 20px; text-align: center; font-size: 16px; color: var(--primary); }
-        .nav-footer {
-            padding: 16px 24px;
-            border-top: 1px solid var(--border);
-            text-align: center;
-        }
-        .nav-footer p { font-size: 12px; color: var(--text-dim); }
-
-        /* Page Sections */
-        .page-section {
-            display: none;
-            padding-top: 64px;
-            min-height: 100vh;
-            animation: fadeUp 0.5s ease;
-        }
-        .page-section.active { display: block; }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .page-header {
-            padding: 40px 20px 30px;
-            text-align: center;
-            border-bottom: 1px solid var(--border);
-            background: linear-gradient(180deg, rgba(48,92,222,0.06) 0%, transparent 100%);
-        }
-        .page-header h1 {
-            font-size: clamp(22px, 5vw, 32px);
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .page-header h1 i { color: var(--primary); margin-left: 10px; font-size: 0.85em; }
-        .page-header p { color: var(--text-muted); font-size: 14px; max-width: 500px; margin: 0 auto; }
-        .page-header .accent { color: var(--gold); }
-
-        /* Hero */
-        .hero {
-            padding: 80px 20px 40px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(48,92,222,0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 16px;
-            background: rgba(48,92,222,0.1);
-            border: 1px solid rgba(48,92,222,0.2);
-            border-radius: 50px;
-            font-size: 13px;
-            color: var(--primary-light);
-            margin-bottom: 24px;
-        }
-        .hero h1 {
-            font-size: clamp(26px, 6vw, 42px);
-            font-weight: 800;
-            line-height: 1.3;
-            margin-bottom: 16px;
-        }
-        .hero h1 .highlight {
-            background: linear-gradient(135deg, var(--primary-light), var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .hero p {
-            color: var(--text-muted);
-            font-size: 15px;
-            max-width: 480px;
-            margin: 0 auto 32px;
-        }
-
-        /* Stats Bar */
-        .stats-bar {
-            max-width: 600px;
-            margin: 0 auto 40px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-        .stat-item {
-            background: var(--bg-card);
-            padding: 16px 10px;
-            text-align: center;
-        }
-        .stat-item .num {
-            font-size: clamp(18px, 4vw, 26px);
-            font-weight: 700;
-            color: var(--gold);
-        }
-        .stat-item .label { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 24px 16px;
-        }
-
-        /* Section Title */
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            font-size: 18px;
-            font-weight: 700;
-        }
-        .section-title i { color: var(--primary); }
-        .section-title .line {
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
-
-        /* Prop Cards */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
-        }
-        .prop-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            transition: var(--transition);
-        }
-        .prop-card:hover {
-            border-color: rgba(48,92,222,0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(48,92,222,0.08);
-        }
-        .card-top {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            border-bottom: 1px solid var(--border);
-        }
-        .card-logo {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-        .card-top-info h3 { font-size: 16px; font-weight: 700; }
-        .card-top-info .code {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--gold);
-            background: rgba(212,168,67,0.1);
-            padding: 2px 10px;
-            border-radius: 6px;
-            margin-top: 4px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .card-top-info .code:hover { background: rgba(212,168,67,0.2); }
-        .card-body { padding: 16px 20px; }
-        .card-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            font-size: 13px;
-        }
-        .card-row:last-child { border-bottom: none; }
-        .card-row .label { color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
-        .card-row .label i { color: var(--primary); font-size: 12px; width: 16px; text-align: center; }
-        .card-row .value { font-weight: 600; font-size: 13px; }
-        .card-row .value.price { color: var(--gold); }
-        .card-row .value.green { color: #34d399; }
-        .card-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
-        .btn-more {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: var(--radius);
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: #fff;
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .btn-more:hover { background: linear-gradient(135deg, var(--primary-light), var(--primary)); transform: translateY(-1px); }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(8px);
-            z-index: 500;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-        }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        @media(min-width:768px) {
-            .modal-overlay { align-items: center; }
-        }
-        .modal {
-            width: 100%;
-            max-width: 640px;
-            max-height: 90vh;
-            background: var(--bg-modal);
-            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-            overflow: hidden;
-            transform: translateY(100%);
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-        }
-        @media(min-width:768px) {
-            .modal { border-radius: var(--radius-lg); transform: translateY(30px) scale(0.95); }
-        }
-        .modal-overlay.active .modal { transform: translateY(0) scale(1); }
-        .modal-handle {
-            width: 36px;
-            height: 4px;
-            background: var(--text-dim);
-            border-radius: 2px;
-            margin: 10px auto 0;
-        }
-        @media(min-width:768px) { .modal-handle { display: none; } }
-        .modal-header {
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-            flex-shrink: 0;
-        }
-        .modal-header h2 { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-        .modal-close {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: none;
-            color: var(--text);
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-        .modal-close:hover { background: #ef4444; border-color: #ef4444; }
-        .modal-body {
-            padding: 20px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        /* Modal Sections */
-        .modal-section {
-            margin-bottom: 20px;
-            background: var(--bg-elevated);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            overflow: hidden;
-        }
-        .modal-section-title {
-            padding: 12px 16px;
-            font-size: 14px;
-            font-weight: 600;
-            background: rgba(48,92,222,0.05);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .modal-section-title i { color: var(--primary); font-size: 14px; }
-        .modal-info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            font-size: 13px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-        }
-        .modal-info-row:last-child { border-bottom: none; }
-        .modal-info-row .lbl { color: var(--text-muted); }
-        .modal-info-row .val { font-weight: 600; }
-        .modal-info-row .val.gold { color: var(--gold); }
-        .modal-info-row .val.yes { color: #34d399; }
-        .modal-info-row .val.no { color: #ef4444; }
-
-        /* Account Type Tabs */
-        .acc-tabs {
-            display: flex;
-            gap: 6px;
-            padding: 4px;
-            background: var(--bg);
-            border-radius: var(--radius);
-            margin: 12px 16px;
-            overflow-x: auto;
-        }
-        .acc-tab {
-            flex: 1;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 8px;
-            background: none;
-            color: var(--text-muted);
-            font-family: inherit;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
-            text-align: center;
-        }
-        .acc-tab.active { background: var(--primary); color: #fff; }
-        .acc-tab:hover:not(.active) { color: var(--text); }
-        .acc-content { display: none; }
-        .acc-content.active { display: block; }
-
-        /* Guarantee Tag */
-        .guarantee-tag {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            padding: 12px 16px;
-            background: rgba(212,168,67,0.06);
-            border: 1px solid rgba(212,168,67,0.15);
-            border-radius: var(--radius);
-            margin: 12px 16px 16px;
-            font-size: 12px;
-            color: var(--gold-light);
-            line-height: 1.8;
-        }
-        .guarantee-tag i { color: var(--gold); margin-top: 4px; flex-shrink: 0; }
-
-        /* Discount Page */
-        .discount-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 12px;
-            transition: var(--transition);
-        }
-        .discount-card:hover { border-color: var(--gold-dark); }
-        .discount-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-        .discount-info { flex: 1; }
-        .discount-info h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-        .discount-info .dcode {
-            font-size: 13px;
-            color: var(--gold);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .copy-btn {
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--gold-dark);
-            background: rgba(212,168,67,0.1);
-            color: var(--gold);
-            font-family: inherit;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-        }
-        .copy-btn:hover { background: rgba(212,168,67,0.2); }
-        .copy-btn.copied { background: rgba(52,211,153,0.15); border-color: #34d399; color: #34d399; }
-
-        /* Learn Page */
-        .learn-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-        }
-        .learn-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            transition: var(--transition);
-            cursor: pointer;
-        }
-        .learn-card:hover { border-color: var(--primary); transform: translateY(-2px); }
-        .learn-card .icon-box {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: rgba(48,92,222,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 14px;
-            font-size: 18px;
-            color: var(--primary);
-        }
-        .learn-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
-        .learn-card p { font-size: 13px; color: var(--text-muted); line-height: 1.8; }
-
-        /* Info Cards (Notifications) */
-        .info-list { display: flex; flex-direction: column; gap: 12px; }
-        .info-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 18px 20px;
-            display: flex;
-            gap: 14px;
-            align-items: flex-start;
-            transition: var(--transition);
-        }
-        .info-card:hover { border-color: var(--primary); }
-        .info-card .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--primary);
-            margin-top: 8px;
-            flex-shrink: 0;
-        }
-        .info-card .dot.gold { background: var(--gold); }
-        .info-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-        .info-card p { font-size: 13px; color: var(--text-muted); line-height: 1.8; }
-        .info-card .date { font-size: 11px; color: var(--text-dim); margin-top: 6px; display: flex; align-items: center; gap: 6px; }
-
-        /* About Page */
-        .about-block {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 30px 24px;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-        .about-block .ab-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, var(--primary), var(--gold));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            margin: 0 auto 16px;
-        }
-        .about-block h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
-        .about-block p { font-size: 13px; color: var(--text-muted); line-height: 2; max-width: 500px; margin: 0 auto; }
-        .about-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 12px;
-            margin-top: 16px;
-        }
-        .about-feat {
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px 16px;
-            text-align: center;
-        }
-        .about-feat i { font-size: 22px; color: var(--primary); margin-bottom: 10px; display: block; }
-        .about-feat h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-        .about-feat p { font-size: 12px; color: var(--text-muted); }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(80px);
-            background: var(--bg-card);
-            border: 1px solid var(--gold-dark);
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--gold);
-            z-index: 600;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-        .toast.show { transform: translateX(-50%) translateY(0); }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 30px 20px;
-            border-top: 1px solid var(--border);
-            margin-top: 40px;
-        }
-        .footer p { font-size: 12px; color: var(--text-dim); }
-        .footer .ft-brand { color: var(--primary-light); font-weight: 700; }
-
-        /* Responsive */
-        @media(max-width: 640px) {
-            .cards-grid { grid-template-columns: 1fr; }
-            .stats-bar { grid-template-columns: repeat(3, 1fr); }
-            .hero { padding: 50px 16px 30px; }
-            .container { padding: 16px 12px; }
-            .about-features { grid-template-columns: 1fr 1fr; }
-        }
-        @media(max-width: 380px) {
-            .about-features { grid-template-columns: 1fr; }
-            .acc-tabs { flex-wrap: wrap; }
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Header -->
-    <header class="header" id="header">
-        <div class="header-inner">
-            <a href="#" class="logo" onclick="switchPage('home');return false;">
-                <div class="logo-icon">FK</div>
-                <span class="logo-text">Fund Kurd</span>
-            </a>
-            <button class="burger" id="burgerBtn" onclick="toggleMenu()" aria-label="Menu">
-                <span></span><span></span><span></span>
-            </button>
+    <header>
+        <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <div class="logo">
+            Fund Kurd
         </div>
     </header>
 
-    <!-- Nav Overlay -->
-    <div class="nav-overlay" id="navOverlay" onclick="closeMenu()"></div>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-    <!-- Nav Menu -->
-    <nav class="nav-menu" id="navMenu">
-        <div class="nav-header">
-            <div class="logo">
-                <div class="logo-icon">FK</div>
-                <span class="logo-text">Fund Kurd</span>
-            </div>
-            <button class="nav-close" onclick="closeMenu()"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="nav-links">
-            <a class="nav-link active" data-page="home" onclick="switchPage('home')">
-                <i class="fa-solid fa-house"></i> سەرەکی
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">Fund Kurd</div>
+        <nav>
+            <a href="#" class="nav-link active" onclick="showPage('home')">
+                <i class="fas fa-home"></i> سەرەکی
             </a>
-            <a class="nav-link" data-page="discounts" onclick="switchPage('discounts')">
-                <i class="fa-solid fa-tag"></i> کودێن داشکاندنێ
+            <a href="#" class="nav-link" onclick="showPage('discounts')">
+                <i class="fas fa-tag"></i> کودێن داشکاندنێ
             </a>
-            <a class="nav-link" data-page="learn" onclick="switchPage('learn')">
-                <i class="fa-solid fa-graduation-cap"></i> فێربوون
+            <a href="#" class="nav-link" onclick="showPage('learn')">
+                <i class="fas fa-graduation-cap"></i> فێربوون
             </a>
-            <a class="nav-link" data-page="notifications" onclick="switchPage('notifications')">
-                <i class="fa-solid fa-bell"></i> ئاگەهداری
+            <a href="#" class="nav-link" onclick="showPage('notifications')">
+                <i class="fas fa-bell"></i> ئاگەهداری
             </a>
-            <a class="nav-link" data-page="about" onclick="switchPage('about')">
-                <i class="fa-solid fa-circle-info"></i> دەربارەی مە
+            <a href="#" class="nav-link" onclick="showPage('about')">
+                <i class="fas fa-info-circle"></i> دەربارەی مە
             </a>
-        </div>
-        <div class="nav-footer">
-            <p>Fund Kurd &copy;2026</p>
-        </div>
-    </nav>
+        </nav>
+    </aside>
 
-    <!-- ========== HOME PAGE ========== -->
-    <section class="page-section active" id="page-home">
-        <div class="hero">
-            <h1>باشترین <span class="highlight">رێبەرێ تە</span><br>بو پراپ فیرمان</h1>
-            <p>پراپ فیرمێن باوەرپێکری، ب بهایێن کێمتر بو بازرگانێن کورد</p>
-        </div>
-
+    <main>
         <div class="container">
-            <div class="section-title">
-                <div class="line"></div>
-            </div>
-            <div class="cards-grid" id="cardsGrid"></div>
-        </div>
-    </section>
+            
+            <section id="home" class="page-section active">
+                <div class="hero">
+                    <h1>باشترین رێبەرێ تە بو پراپ فیرمان</h1>
+                    <p>ئەرزانترین و باشترین پراپ بو بازرگانێن کورد ل ڤێرە ببینە.</p>
+                </div>
 
-    <!-- ========== DISCOUNTS PAGE ========== -->
-    <section class="page-section" id="page-discounts">
-        <div class="page-header">
-            <p>هەمی کودێن داشکاندنێ بو پراپ فیرمان ل ڤێرە ببینە</p>
-        </div>
-        <div class="container" id="discountsList"></div>
-    </section>
+                <div class="grid" id="firm-grid">
+                    </div>
+            </section>
 
-    <!-- ========== LEARN PAGE ========== -->
-    <section class="page-section" id="page-learn">
-        <div class="page-header">
-            <p>فێربوون و چەوانییا سەرەدەریرکرنێ دگەل پراپ فیرمان</p>
-        </div>
-        <div class="container">
-            <div class="learn-cards">
-                <div class="learn-card">
-                    <div class="icon-box"><i class="fa-solid fa-chart-line"></i></div>
-                    <h3>پراپ فیرم چنە؟</h3>
-                    <p>فێربوونا بنەڕەتییا پراپ تریدنگ و چاوانیا کارکرن ب سەرمایەیەکا مەزن بێی ریسک کرنا سەرمایێ خو</p>
+            <section id="discounts" class="page-section">
+                <div class="hero">
+                    <h1>کودێن داشکاندنێ</h1>
+                    <p>هەمی کودێن نوو و کارا بۆ کێمکرنا بهایێ چالێنجان.</p>
                 </div>
-                <div class="learn-card">
-                    <div class="icon-box"><i class="fa-solid fa-list-check"></i></div>
-                    <h3>چاوا ل پێنگاڤان دەرباز ببی؟</h3>
-                    <p>ستراتیژییێن دەرباز بوونا پێنگاڤێن پراپ فیرمان </p>
-                </div>
-                <div class="learn-card">
-                    <div class="icon-box"><i class="fa-solid fa-shield-halved"></i></div>
-                    <h3>برێڤەبرنا ریسکێ</h3>
-                    <p>چاوا ریسکا خو برێڤە ببەی و هەژمارا خو بپارێزی</p>
-                </div>
-                <div class="learn-card">
-                    <div class="icon-box"><i class="fa-solid fa-brain"></i></div>
-                    <h3>دەروونناسیا بازرگانیکرنێ</h3>
-                    <p>گرنگیا لایەنێ دەروونی د بازرگانیکرنێ دا و چاوانییا کۆنترۆلا هەستان</p>
-                </div>
-                <div class="learn-card">
-                    <div class="icon-box"><i class="fa-solid fa-money-bill-trend-up"></i></div>
-                    <h3>کێشانا پارەیی</h3>
-                    <p>چاوا پارەیێ خو ژ پراپ فیرمان بکێشی و باشترین رێکێن وەرگرتنا پارەیی</p>
-                </div>
-                <div class="learn-card">
-                    <div class="icon-box"><i class="fa-solid fa-scale-balanced"></i></div>
-                    <h3>بەراوردکرنا پراپ فیرمان</h3>
-                    <p>چاوا باشترین پراپ فیرم بو خو هەلبژێری لدویف ستراتیژییا خو</p>
-                </div>
-            </div>
-        </div>
-    </section>
+                <div class="grid" id="discount-grid">
+                    </div>
+            </section>
 
-    <!-- ========== NOTIFICATIONS PAGE ========== -->
-    <section class="page-section" id="page-notifications">
-        <div class="page-header">
-            <p>نویترین ئاگەهداری لسەر پراپ فیرمان و داشکاندنێن نوی</p>
-        </div>
-        <div class="container">
-            <div class="info-list">
-                <div class="info-card">
-                    <div class="dot"></div>
-                    <div>
-                        <h4>داشکاندنەکا نوی بو GFT</h4>
-                        <p>داشکاندنەکا نوی بو GFT هاتیە زێدەکرن ب ٣٥٪ داشکاندن بو هەمی هەژماران</p>
-                        <div class="date"><i class="fa-regular fa-clock"></i> ٢٠٢٦/٢/٢١</div>
+            <section id="learn" class="page-section">
+                <div class="hero">
+                    <h1>فێربوون</h1>
+                    <p>هەر تشتەکێ تە پێدڤی بێ بو سەرکەفتن ل پراپ فیرمان.</p>
+                </div>
+                <div class="grid">
+                    <div class="learn-card">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>پراپ فیرم چنە؟</h3>
+                        <p>کومپانیێن دابینکرنا سەرمایەی نە بۆ تریدەران بەرامبەر پارەکرنا تێستەکێ.</p>
+                    </div>
+                    <div class="learn-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>رێکخستنا مەترسیێ</h3>
+                        <p>چەوانیا پاراستنا ئەکاونتی ژ دۆڕاندنێ و رێساێن توند.</p>
+                    </div>
+                    <div class="learn-card">
+                        <i class="fas fa-brain"></i>
+                        <h3>دەروونیەت تریدینگێ</h3>
+                        <p>چەوان کونترۆلا هەستێن خۆ بکەی دەمێ بازرگانیێ دکەی.</p>
                     </div>
                 </div>
-                <div class="info-card">
-                    <div class="dot gold"></div>
-                    <div>
-                        <h4>پراپەکا نوی هاتە زێدەکرن</h4>
-                        <p>Goat Funded هاتیە زێدەکرن بو لیستا پراپ فیرمان ب تایبەتمەندییێن نوی</p>
-                        <div class="date"><i class="fa-regular fa-clock"></i> ٢٠٢٦/٢/٢١</div>
+            </section>
+
+            <section id="notifications" class="page-section">
+                <div class="hero">
+                    <h1>ئاگەهداری</h1>
+                </div>
+                <div id="notif-list" style="display: flex; flex-direction: column; gap: 15px;">
+                    </div>
+            </section>
+
+            <section id="about" class="page-section">
+                <div class="hero">
+                    <div style="font-size: 4rem; color: var(--gold);"><i class="fas fa-rocket"></i></div>
+                    <h1>دەربارەی Fund Kurd</h1>
+                    <p>ئەم ئێکەمین و مەزنترین رێبەرێ کوردین بۆ پراپ فیرمان، ئارمانجا مە ئاسانکرنا کارێ تریدەری یە.</p>
+                </div>
+                <div class="grid">
+                    <div class="learn-card" style="text-align: center;">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>شەفافیەت</h3>
+                    </div>
+                    <div class="learn-card" style="text-align: center;">
+                        <i class="fas fa-users"></i>
+                        <h3>پشتەڤانیا کوردی</h3>
+                    </div>
+                    <div class="learn-card" style="text-align: center;">
+                        <i class="fas fa-sync"></i>
+                        <h3>نووکرنا بەردەوام</h3>
                     </div>
                 </div>
-            </div>
+            </section>
+
         </div>
-    </section>
+    </main>
 
-    <!-- ========== ABOUT PAGE ========== -->
-    <section class="page-section" id="page-about">
-        <div class="container">
-            <div class="about-block">
-                <div class="ab-icon"><i class="fa-solid fa-rocket" style="color:#fff"></i></div>
-                <h3>Fund Kurd چی یە؟</h3>
-                <p>Fund Kurd باشترین رێبەرە بو بازرگانان ل هەرێما کوردستانێ و عیراقێ بو پەیداکرنا باشترین پراپ فیرمان. ئەم هەمی پێزانینێن پێدڤی لسەر پراپ فیرمان، یاسایێن وان، کودێن داشکاندنان، و وانەیێن فێربوونێ کومڤەدکەین بو هەوە ل ئێک جهـ.</p>
-            </div>
-   </section>
-
-    <!-- ========== MODAL ========== -->
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
-        <div class="modal" id="modalContent">
-            <div class="modal-handle"></div>
-            <div class="modal-header">
-                <h2 id="modalTitle"></h2>
-                <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body" id="modalBody"></div>
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div id="modal-body">
+                </div>
         </div>
     </div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast"><i class="fa-solid fa-check"></i> <span id="toastText"></span></div>
+    <div class="toast" id="toast">کود هاتە کۆپیکرن!</div>
 
-<script>
-// ===== PROP FIRMS DATA =====
-const propFirms = [
-    {
-        name: "Goat Funded",
-        code: "FUNDKURD35",
-        logo: "GF",
-        colors: ["#D4A843","#b8922e"],
-        cheapest: "$17",
-        cheapestIQD: "26,000 د.ع",
-        bestModel: "دەستبجهی",
-        payout: "١ - ٢ رۆژ",
-        profitSplit: "٨٠٪ هەتا ١٠٠٪",
-        guarantee: "ئەگەر دماوێ ٤٨ دەمژمێران دا پارە نەهاتە فرێکرن $٥٠٠ دیاری لسەر قازانجێ خو وەربگرە",
-        accounts: [
+    <script>
+        // --- DATA ARRAY ---
+        const propFirms = [
             {
-                type: "١-پێنگاڤی",
-                rules: [
-                    {label: "نزمترین ئاستێ روژانە", value: "٪۴", cls: ""},
-                    {label: "نزمترین ئاستێ هەژمارێ", value: "٪۸", cls: ""},
-                    {label: "ئارمانجا دەرباز بوونێ", value: "٪۸", cls: "gold"},
-                    {label: "بازرگانی کرن د دەمێ نوچەیان دا", value: "بەلێ", cls: "yes"},
-                    {label: "ڤەکری هێلانا بازرگانیا د دەمێ دوماهیا حەفتیێ", value: "بەلێ", cls: "yes"},
-                    {label: "بلندترین ژ دەست دانا ئێک بازرگانی", value: "٪۲", cls: ""}
+                id: 1,
+                name: "FTMO",
+                code: "FUNDKURD10",
+                logo: "FT",
+                cheapest: 155,
+                cheapestIQD: "235,000",
+                bestModel: "2-Step Challenge",
+                payout: "14 Days",
+                profitSplit: "80/20",
+                guarantee: "ئەڤ کۆمپانیا ئێک ژ باوەرپێکریترین کۆمپانیێن جیهانی یە.",
+                accounts: [
+                    { size: "10K", daily: "5%", max: "10%", target: "10%", news: "بەڵێ", weekend: "نەخێر" },
+                    { size: "50K", daily: "5%", max: "10%", target: "10%", news: "بەڵێ", weekend: "نەخێر" },
+                    { size: "100K", daily: "5%", max: "10%", target: "10%", news: "بەڵێ", weekend: "نەخێر" }
                 ]
             },
             {
-                type: "٢-پێنگاڤی",
-                rules: [
-                    {label: "نزمترین ئاستێ روژانە", value: "٪۴", cls: ""},
-                    {label: "نزمترین ئاستێ هەژمارێ", value: "٪۱۰", cls: ""},
-                    {label: "ئارمانجا دەرباز بوونێ ل پێنگاڤا ١", value: "٪۸", cls: "gold"},
-                    {label: "ئارمانجا دەرباز بوونێ ل پێنگاڤا ٢", value: "٪۴", cls: "gold"},
-                    {label: "بازرگانی کرن د دەمێ نوچەیان دا", value: "بەلێ", cls: "yes"},
-                    {label: "ڤەکری هێلانا بازرگانیا د دەمێ دوماهیا حەفتیێ", value: "بەلێ", cls: "yes"},
-                    {label: "بلندترین ژ دەست دانا ئێک بازرگانی", value: "٪۲", cls: ""}
+                id: 2,
+                name: "Funding Pips",
+                code: "KURD5",
+                logo: "FP",
+                cheapest: 32,
+                cheapestIQD: "48,000",
+                bestModel: "Evaluation",
+                payout: "5 Days",
+                profitSplit: "80/20",
+                guarantee: "ئەرزانترین نرخ بۆ تریدەرێن نوی.",
+                accounts: [
+                    { size: "5K", daily: "5%", max: "10%", target: "8%", news: "بەڵێ", weekend: "بەڵێ" },
+                    { size: "25K", daily: "5%", max: "10%", target: "8%", news: "بەڵێ", weekend: "بەڵێ" }
                 ]
             },
             {
-                type: "٣-پێنگاڤی",
-                rules: [
-                    {label: "نزمترین ئاستێ روژانە", value: "٪۴", cls: ""},
-                    {label: "نزمترین ئاستێ هەژمارێ", value: "٪۱۰", cls: ""},
-                    {label: "ئارمانجا دەرباز بوونێ ل پێنگاڤا ١", value: "٪۵", cls: "gold"},
-                    {label: "ئارمانجا دەرباز بوونێ ل پێنگاڤا ٢", value: "٪۴", cls: "gold"},
-                    {label: "ئارمانجا دەرباز بوونێ ل پێنگاڤا ٣", value: "٪۳", cls: "gold"},
-                    {label: "بازرگانی کرن د دەمێ نوچەیان دا", value: "بەلێ", cls: "yes"},
-                    {label: "ڤەکری هێلانا بازرگانیا د دەمێ دوماهیا حەفتیێ", value: "بەلێ", cls: "yes"},
-                    {label: "بلندترین ژ دەست دانا ئێک بازرگانی", value: "٪۲", cls: ""}
-                ]
-            },
-            {
-                type: "هەژمارا دەستبجهـ",
-                rules: [
-                    {label: "نزمترین ئاستێ روژانە", value: "٪۴", cls: ""},
-                    {label: "نزمترین ئاستێ هەژمارێ", value: "٪۸", cls: ""},
-                    {label: "ئارمانج بو دەرباز بوونێ", value: "نینە - دەستبجهـ", cls: "yes"},
-                    {label: "بازرگانی کرن د دەمێ نوچەیان دا", value: "بەلێ", cls: "yes"},
-                    {label: "ڤەکری هێلانا بازرگانیا د دەمێ دوماهیا حەفتیێ", value: "بەلێ", cls: "yes"},
-                    {label: "بلندترین ژ دەست دانا ئێک بازرگانی", value: "٪۲", cls: ""}
+                id: 3,
+                name: "MyFundedFX",
+                code: "SPECIAL",
+                logo: "MF",
+                cheapest: 50,
+                cheapestIQD: "75,000",
+                bestModel: "1-Step",
+                payout: "Bi-Weekly",
+                profitSplit: "80/20",
+                guarantee: "سیستەمەکێ بێ رێسایێن زەحمەت.",
+                accounts: [
+                    { size: "5K", daily: "4%", max: "8%", target: "10%", news: "نەخێر", weekend: "بەڵێ" }
                 ]
             }
-        ]
-    },
-];
+        ];
 
-// ===== RENDER CARDS =====
-function renderCards() {
-    const grid = document.getElementById('cardsGrid');
-    grid.innerHTML = propFirms.map((firm, i) => `
-        <div class="prop-card">
-            <div class="card-top">
-                <div class="card-logo" style="background:linear-gradient(135deg,${firm.colors[0]},${firm.colors[1]});color:#fff">${firm.logo}</div>
-                <div class="card-top-info">
+        // --- SPA LOGIC ---
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            event?.currentTarget?.classList.add('active');
+            
+            toggleSidebar(false);
+            window.scrollTo(0,0);
+
+            if(pageId === 'home') renderHome();
+            if(pageId === 'discounts') renderDiscounts();
+            if(pageId === 'notifications') renderNotifications();
+        }
+
+        // --- SIDEBAR TOGGLE ---
+        function toggleSidebar(state) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            const isActive = state !== undefined ? state : !sidebar.classList.contains('active');
+            
+            sidebar.classList.toggle('active', isActive);
+            overlay.classList.toggle('active', isActive);
+        }
+
+        // --- RENDER HOME ---
+function renderHome() {
+    const grid = document.getElementById('firm-grid');
+    
+    grid.innerHTML = propFirms.map(firm => `
+        <div class="card">
+            <div class="card-header">
+                <div class="card-logo">${firm.logo}</div>
+                <div class="card-title">
                     <h3>${firm.name}</h3>
-                    <span class="code" onclick="copyCode('${firm.code}',event)"><i class="fa-solid fa-scissors"></i> ${firm.code}</span>
+                    <span>${firm.bestModel}</span>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="card-row">
-                    <span class="label"><i class="fa-solid fa-dollar-sign"></i> ئەرزانترین بها</span>
-                    <span class="value price">${firm.cheapest} / ${firm.cheapestIQD}</span>
-                </div>
-                <div class="card-row">
-                    <span class="label"><i class="fa-solid fa-layer-group"></i> باشترین مودێل</span>
-                    <span class="value">${firm.bestModel}</span>
-                </div>
-                <div class="card-row">
-                    <span class="label"><i class="fa-solid fa-clock"></i> دەمێ پارەدانێ</span>
-                    <span class="value">${firm.payout}</span>
-                </div>
-                <div class="card-row">
-                    <span class="label"><i class="fa-solid fa-chart-pie"></i> دابەشکرنا قازانجی</span>
-                    <span class="value green">${firm.profitSplit}</span>
-                </div>
+            <div class="price-tag">دەستپێدکەت ژ: $${firm.cheapest} (${firm.cheapestIQD} IQD)</div>
+            <div class="card-stats">
+                <div class="stat-item">پێدانا پارەی<b>${firm.payout}</b></div>
+                <div class="stat-item">پشکا قازانجی<b>${firm.profitSplit}</b></div>
             </div>
-            <div class="card-footer">
-                <button class="btn-more" onclick="openModal(${i})"><i class="fa-solid fa-circle-info"></i> پتر بزانە</button>
+            <div class="code-box">
+                <span>کۆد: <b>${firm.code}</b></span>
+                <button class="copy-btn" onclick="copyCode('${firm.code}')"><i class="far fa-copy"></i></button>
             </div>
+            <button class="btn-primary" onclick="openModal(${firm.id})">زێدەتر ببینە</button>
         </div>
     `).join('');
 }
 
-// ===== RENDER DISCOUNTS =====
-function renderDiscounts() {
-    const list = document.getElementById('discountsList');
-    list.innerHTML = propFirms.map(firm => `
-        <div class="discount-card">
-            <div class="discount-icon" style="background:linear-gradient(135deg,${firm.colors[0]},${firm.colors[1]});color:#fff">${firm.logo}</div>
-            <div class="discount-info">
-                <h3>${firm.name}</h3>
-                <span class="dcode"><i class="fa-solid fa-tag"></i> ${firm.code}</span>
-            </div>
-            <button class="copy-btn" onclick="copyDiscount(this,'${firm.code}')"><i class="fa-regular fa-copy"></i> کۆپی</button>
-        </div>
-    `).join('');
-}
+        // --- RENDER DISCOUNTS ---
+        function renderDiscounts() {
+            const grid = document.getElementById('discount-grid');
+            grid.innerHTML = propFirms.map(firm => `
+                <div class="card" style="text-align: center;">
+                    <h2 class="text-gold" style="font-size: 2rem;">10% OFF</h2>
+                    <p>بۆ کۆمپانیا ${firm.name}</p>
+                    <div class="code-box m-t-20">
+                        <span>${firm.code}</span>
+                        <button class="copy-btn" onclick="copyCode('${firm.code}')"><i class="far fa-copy"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
 
-// ===== MODAL =====
-function openModal(index) {
-    const firm = propFirms[index];
-    const overlay = document.getElementById('modalOverlay');
-    document.getElementById('modalTitle').innerHTML = `<span style="display:inline-flex;width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,${firm.colors[0]},${firm.colors[1]});align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;margin-left:4px">${firm.logo}</span> ${firm.name}`;
+        // --- RENDER NOTIFICATIONS ---
+        function renderNotifications() {
+            const list = document.getElementById('notif-list');
+            const news = [
+                { title: "نووکرنا یاسایان", body: "کۆمپانیا FTMO یاسایا کاتژمێرێن بازرگانی گۆڕی.", date: "2024/05/20" },
+                { title: "داشکاندنا نوی", body: "Funding Pips داشکاندنا 20% راگەهاند.", date: "2024/05/18" }
+            ];
+            list.innerHTML = news.map(n => `
+                <div class="card" style="padding: 15px; border-right: 4px solid var(--primary);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h4 style="margin: 0;">${n.title}</h4>
+                        <span style="font-size: 0.75rem; color: var(--muted);">${n.date}</span>
+                    </div>
+                    <p style="color: var(--muted); font-size: 0.9rem; margin-top: 5px;">${n.body}</p>
+                </div>
+            `).join('');
+        }
 
-    let accTabsHTML = '<div class="acc-tabs">';
-    firm.accounts.forEach((acc, j) => {
-        accTabsHTML += `<button class="acc-tab ${j===0?'active':''}" onclick="switchAccTab(this,${index},${j})">${acc.type}</button>`;
-    });
-    accTabsHTML += '</div>';
+        // --- MODAL LOGIC ---
+        function openModal(id) {
+            const firm = propFirms.find(f => f.id === id);
+            const modalBody = document.getElementById('modal-body');
+            
+            modalBody.innerHTML = `
+                <h2>${firm.name} - پێزانینێن تەواو</h2>
+                <div class="tabs" id="modal-tabs">
+                    ${firm.accounts.map((acc, idx) => `
+                        <button class="tab-btn ${idx === 0 ? 'active' : ''}" onclick="switchTab(${idx})">${acc.size}</button>
+                    `).join('')}
+                </div>
+                <div id="tab-contents">
+                    ${firm.accounts.map((acc, idx) => `
+                        <div class="tab-panel ${idx === 0 ? 'active' : ''}" id="tab-${idx}">
+                            <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div class="stat-item">Daily Drawdown <b>${acc.daily}</b></div>
+                                <div class="stat-item">Max Drawdown <b>${acc.max}</b></div>
+                                <div class="stat-item">Profit Target <b>${acc.target}</b></div>
+                                <div class="stat-item">News Trading <b>${acc.news}</b></div>
+                                <div class="stat-item">Weekend Holding <b>${acc.weekend}</b></div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="guarantee">
+                    <i class="fas fa-shield-check"></i> ${firm.guarantee}
+                </div>
+            `;
+            
+            document.getElementById('modal-overlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
 
-    let accContentsHTML = '';
-    firm.accounts.forEach((acc, j) => {
-        accContentsHTML += `<div class="acc-content ${j===0?'active':''}" id="accContent-${index}-${j}">`;
-        acc.rules.forEach(rule => {
-            accContentsHTML += `<div class="modal-info-row"><span class="lbl">${rule.label}</span><span class="val ${rule.cls}">${rule.value}</span></div>`;
-        });
-        accContentsHTML += '</div>';
-    });
+        function closeModal(e) {
+            document.getElementById('modal-overlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
 
-    document.getElementById('modalBody').innerHTML = `
-        <div class="modal-section">
-            <div class="modal-section-title"><i class="fa-solid fa-circle-info"></i> زانیاریێن گشتی</div>
-            <div class="modal-info-row"><span class="lbl">ناڤێ پراپی</span><span class="val">${firm.name}</span></div>
-            <div class="modal-info-row"><span class="lbl">کودێ داشکاندنێ</span><span class="val gold" style="cursor:pointer" onclick="copyCode('${firm.code}',event)">${firm.code} <i class="fa-regular fa-copy" style="margin-right:6px;font-size:12px"></i></span></div>
-            <div class="modal-info-row"><span class="lbl">ئەرزانترین بها</span><span class="val gold">${firm.cheapest} / ${firm.cheapestIQD}</span></div>
-            <div class="modal-info-row"><span class="lbl">دەمێ پارەدانێ</span><span class="val">${firm.payout}</span></div>
-            <div class="modal-info-row"><span class="lbl">دابەشکرنا قازانجی</span><span class="val yes">${firm.profitSplit}</span></div>
-        </div>
-        <div class="guarantee-tag"><i class="fa-solid fa-shield-halved"></i> <span>${firm.guarantee}</span></div>
-        <div class="modal-section">
-            <div class="modal-section-title"><i class="fa-solid fa-layer-group"></i> مودێلێن هەژمارا</div>
-            ${accTabsHTML}
-            <div style="padding:0">${accContentsHTML}</div>
-        </div>
-    `;
-    overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
+        function switchTab(index) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            
+            document.querySelectorAll('.tab-btn')[index].classList.add('active');
+            document.querySelectorAll('.tab-panel')[index].classList.add('active');
+        }
 
-function switchAccTab(btn, firmIdx, accIdx) {
-    const tabs = btn.parentElement.querySelectorAll('.acc-tab');
-    tabs.forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    const section = btn.closest('.modal-section');
-    const contents = section.querySelectorAll('.acc-content');
-    contents.forEach(c => c.classList.remove('active'));
-    document.getElementById(`accContent-${firmIdx}-${accIdx}`).classList.add('active');
-}
+        // --- UTILS ---
+        function copyCode(code) {
+            navigator.clipboard.writeText(code);
+            const toast = document.getElementById('toast');
+            toast.classList.add('active');
+            setTimeout(() => toast.classList.remove('active'), 2000);
+        }
 
-function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('active');
-    document.body.style.overflow = '';
-}
+        function sortFirms() {
+            propFirms.sort((a, b) => a.cheapest - b.cheapest);
+            renderHome();
+        }
 
-function closeModalOutside(e) {
-    if (e.target === document.getElementById('modalOverlay')) closeModal();
-}
-
-// ===== MENU =====
-function toggleMenu() {
-    const btn = document.getElementById('burgerBtn');
-    const menu = document.getElementById('navMenu');
-    const overlay = document.getElementById('navOverlay');
-    btn.classList.toggle('active');
-    menu.classList.toggle('active');
-    overlay.classList.toggle('active');
-    document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
-}
-
-function closeMenu() {
-    document.getElementById('burgerBtn').classList.remove('active');
-    document.getElementById('navMenu').classList.remove('active');
-    document.getElementById('navOverlay').classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-// ===== PAGE SWITCH =====
-function switchPage(page) {
-    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-    document.getElementById('page-' + page).classList.add('active');
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    document.querySelector(`.nav-link[data-page="${page}"]`).classList.add('active');
-    closeMenu();
-    window.scrollTo({top: 0, behavior: 'smooth'});
-}
-
-// ===== COPY =====
-function copyCode(code, e) {
-    if(e) e.stopPropagation();
-    navigator.clipboard.writeText(code).then(() => showToast('کود هاتە کۆپیکرن: ' + code));
-}
-
-function copyDiscount(btn, code) {
-    navigator.clipboard.writeText(code).then(() => {
-        btn.classList.add('copied');
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> هاتە کۆپیکرن';
-        showToast('کود هاتە کۆپیکرن: ' + code);
-        setTimeout(() => {
-            btn.classList.remove('copied');
-            btn.innerHTML = '<i class="fa-regular fa-copy"></i> کۆپی';
-        }, 2000);
-    });
-}
-
-function showToast(text) {
-    const toast = document.getElementById('toast');
-    document.getElementById('toastText').textContent = text;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
-}
-
-// ===== INIT =====
-document.addEventListener('DOMContentLoaded', () => {
-    renderCards();
-    renderDiscounts();
-});
-
-// Close modal on Escape key
-document.addEventListener('keydown', e => { if(e.key === 'Escape') { closeModal(); closeMenu(); } });
-</script>
-
+        // Initial Render
+        renderHome();
+    </script>
 </body>
 </html>
