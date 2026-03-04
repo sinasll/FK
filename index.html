@@ -14,29 +14,27 @@
 
     <header>
         <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-        <div class="logo">
-            Fund Kurd
-        </div>
+        <div class="logo"><img class="logo-img" src="FK.png" alt="Fund Kurd logo"></div>
     </header>
 
     <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
     <aside class="sidebar" id="sidebar">
-        <div class="logo">Fund Kurd</div>
+        <div class="logo"><img class="logo-img" src="FK.png" alt="Fund Kurd logo"></div>
         <nav>
-            <a href="#" class="nav-link active" onclick="showPage('home')">
+            <a href="#" class="nav-link active" onclick="showPage(event, 'home')">
                 <i class="fas fa-home"></i> سەرەکی
             </a>
-            <a href="#" class="nav-link" onclick="showPage('discounts')">
+            <a href="#" class="nav-link" onclick="showPage(event, 'discounts')">
                 <i class="fas fa-tag"></i> کودێن داشکاندنێ
             </a>
-            <a href="#" class="nav-link" onclick="showPage('learn')">
+            <a href="#" class="nav-link" onclick="showPage(event, 'learn')">
                 <i class="fas fa-graduation-cap"></i> فێربوون
             </a>
-            <a href="#" class="nav-link" onclick="showPage('notifications')">
+            <a href="#" class="nav-link" onclick="showPage(event, 'notifications')">
                 <i class="fas fa-bell"></i> ئاگەهداری
             </a>
-            <a href="#" class="nav-link" onclick="showPage('about')">
+            <a href="#" class="nav-link" onclick="showPage(event, 'about')">
                 <i class="fas fa-info-circle"></i> دەربارەی مە
             </a>
         </nav>
@@ -45,25 +43,33 @@
     <main>
         <div class="container">
             
+            <!-- Home Page -->
             <section id="home" class="page-section active">
                 <div class="hero">
                     <h1>باشترین رێبەرێ تە بو پراپ فیرمان</h1>
                     <p>ئەرزانترین و باشترین پراپ بو بازرگانێن کورد ل ڤێرە ببینە.</p>
                 </div>
 
-                <div class="grid" id="firm-grid">
-                    </div>
+                <div class="controls">
+                    <input type="text" id="searchInput" class="search-bar" placeholder="گەڕان ..." oninput="filterFirms()">
+                    <button class="sort-btn" onclick="sortFirms()">
+                        <i class="fas fa-sort-amount-down"></i> رێکخرن
+                    </button>
+                </div>
+
+                <div class="grid" id="firm-grid"></div>
             </section>
 
+            <!-- Discounts Page -->
             <section id="discounts" class="page-section">
                 <div class="hero">
                     <h1>کودێن داشکاندنێ</h1>
                     <p>هەمی کودێن نوو و کارا بۆ کێمکرنا بهایێ چالێنجان.</p>
                 </div>
-                <div class="grid" id="discount-grid">
-                    </div>
+                <div class="grid" id="discount-grid"></div>
             </section>
 
+            <!-- Learn Page -->
             <section id="learn" class="page-section">
                 <div class="hero">
                     <h1>فێربوون</h1>
@@ -88,14 +94,15 @@
                 </div>
             </section>
 
+            <!-- Notifications Page -->
             <section id="notifications" class="page-section">
                 <div class="hero">
                     <h1>ئاگەهداری</h1>
                 </div>
-                <div id="notif-list" style="display: flex; flex-direction: column; gap: 15px;">
-                    </div>
+                <div id="notif-list" style="display: flex; flex-direction: column; gap: 15px;"></div>
             </section>
 
+            <!-- About Page -->
             <section id="about" class="page-section">
                 <div class="hero">
                     <div style="font-size: 4rem; color: var(--gold);"><i class="fas fa-rocket"></i></div>
@@ -121,81 +128,68 @@
         </div>
     </main>
 
+    <!-- Modal -->
     <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
-            <div id="modal-body">
-                </div>
+            <div id="modal-body"></div>
         </div>
     </div>
 
+    <!-- Toast -->
     <div class="toast" id="toast">کود هاتە کۆپیکرن!</div>
 
     <script>
-        // --- DATA ARRAY ---
-        const propFirms = [
+        let propFirms = [
             {
                 id: 1,
-                name: "FTMO",
-                code: "FUNDKURD10",
-                logo: "FT",
-                cheapest: 155,
-                cheapestIQD: "235,000",
-                bestModel: "2-Step Challenge",
-                payout: "14 Days",
-                profitSplit: "80/20",
-                guarantee: "ئەڤ کۆمپانیا ئێک ژ باوەرپێکریترین کۆمپانیێن جیهانی یە.",
-                accounts: [
-                    { size: "10K", daily: "5%", max: "10%", target: "10%", news: "بەڵێ", weekend: "نەخێر" },
-                    { size: "50K", daily: "5%", max: "10%", target: "10%", news: "بەڵێ", weekend: "نەخێر" },
-                    { size: "100K", daily: "5%", max: "10%", target: "10%", news: "بەڵێ", weekend: "نەخێر" }
+                name: "Goat Funded Trader",
+                code: "BOGO40",
+                logo: "GFT",
+                cheapest: "١٧ دولاران",
+                cheapestIQD: "٢٣٠٠٠ دیناران",
+                bestModel: "Instant GOAT",
+                payout: "١٤ روژان جارەکێ",
+                profitSplit: "٨٠٪ هەتا ١٠٠٪",
+                link: "https://goatfundedtrader.com",
+                guarantee:" ئەگەر دماوێ ٤٨ دەمژمێران دا قازانجێ تە نە هاتە دان، دێ $٥٠٠ زێدەتر لسەر قزانجێ خو وەرگری",
+                models: [
+                    {
+                        name: "Instant Funding PRO",
+                        daily: "٤٪",
+                        max: "٦٪",
+                        target: "نینە",
+                        consistency: "٢٠٪ پێگیربوون",
+                        rules: "٢٪",
+                        notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"]
+                    },
+                    {
+                        name: "Instant Funding GOAT",
+                        daily: "٤٪",
+                        max: "٨٪",
+                        target: "نینە",
+                        consistency: "١٥٪ پێگیربوون",
+                        rules: "٢٪",
+                        notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"]
+                    }
                 ]
             },
-            {
-                id: 2,
-                name: "Funding Pips",
-                code: "KURD5",
-                logo: "FP",
-                cheapest: 32,
-                cheapestIQD: "48,000",
-                bestModel: "Evaluation",
-                payout: "5 Days",
-                profitSplit: "80/20",
-                guarantee: "ئەرزانترین نرخ بۆ تریدەرێن نوی.",
-                accounts: [
-                    { size: "5K", daily: "5%", max: "10%", target: "8%", news: "بەڵێ", weekend: "بەڵێ" },
-                    { size: "25K", daily: "5%", max: "10%", target: "8%", news: "بەڵێ", weekend: "بەڵێ" }
-                ]
-            },
-            {
-                id: 3,
-                name: "MyFundedFX",
-                code: "SPECIAL",
-                logo: "MF",
-                cheapest: 50,
-                cheapestIQD: "75,000",
-                bestModel: "1-Step",
-                payout: "Bi-Weekly",
-                profitSplit: "80/20",
-                guarantee: "سیستەمەکێ بێ رێسایێن زەحمەت.",
-                accounts: [
-                    { size: "5K", daily: "4%", max: "8%", target: "10%", news: "نەخێر", weekend: "بەڵێ" }
-                ]
-            }
         ];
 
-        // --- SPA LOGIC ---
-        function showPage(pageId) {
+        // --- SPA LOGIC (fixed event handling) ---
+        function showPage(event, pageId) {
+            if(event) event.preventDefault();
+            
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             
             document.getElementById(pageId).classList.add('active');
-            event?.currentTarget?.classList.add('active');
+            if(event) event.currentTarget.classList.add('active');
             
             toggleSidebar(false);
             window.scrollTo(0,0);
 
-            if(pageId === 'home') renderHome();
+            if(pageId === 'home') renderHome(propFirms);
             if(pageId === 'discounts') renderDiscounts();
             if(pageId === 'notifications') renderNotifications();
         }
@@ -211,41 +205,78 @@
         }
 
         // --- RENDER HOME ---
-function renderHome() {
-    const grid = document.getElementById('firm-grid');
-    
-    grid.innerHTML = propFirms.map(firm => `
-        <div class="card">
-            <div class="card-header">
-                <div class="card-logo">${firm.logo}</div>
-                <div class="card-title">
-                    <h3>${firm.name}</h3>
-                    <span>${firm.bestModel}</span>
+        function renderHome(firmsToRender) {
+            const grid = document.getElementById('firm-grid');
+            
+            if (firmsToRender.length === 0) {
+                grid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--muted);">هیچ کۆمپانیایەک نەدۆزرایەوە.</p>';
+                return;
+            }
+
+            grid.innerHTML = firmsToRender.map(firm => `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-logo">${firm.logo}</div>
+                        <div class="card-title">
+                            <h3>${firm.name}</h3>
+                        </div>
+                    </div>
+                    <div class="guarantee">قازانج دان ب گرەنتییە</div>
+                    <div class="price-tag">دەستپێدکەت ژ ${firm.cheapest} / ${firm.cheapestIQD}</div>
+                    <div class="card-stats">
+                        <div class="stat-item">پێدانا پارەی<b>${firm.payout}</b></div>
+                        <div class="stat-item">پشکا قازانجی<b>${firm.profitSplit}</b></div>
+                    </div>
+                    <div class="code-box">
+                        <span>لینک</span>
+                        <button class="copy-btn" onclick="copyCode('${firm.code}')" title="Copy Code"><i></i></button>
+                        <a href="${firm.link}" target="_blank" class="copy-btn" title="Visit Website">
+                        <i class="fas fa-arrow-up-right-from-square"></i></a></div>
+                        <button class="btn-primary" onclick="renderModelSelection(${firm.id})">زێدەتر ببینە</button>
                 </div>
-            </div>
-            <div class="price-tag">دەستپێدکەت ژ: $${firm.cheapest} (${firm.cheapestIQD} IQD)</div>
-            <div class="card-stats">
-                <div class="stat-item">پێدانا پارەی<b>${firm.payout}</b></div>
-                <div class="stat-item">پشکا قازانجی<b>${firm.profitSplit}</b></div>
-            </div>
-            <div class="code-box">
-                <span>کۆد: <b>${firm.code}</b></span>
-                <button class="copy-btn" onclick="copyCode('${firm.code}')"><i class="far fa-copy"></i></button>
-            </div>
-            <button class="btn-primary" onclick="openModal(${firm.id})">زێدەتر ببینە</button>
-        </div>
-    `).join('');
-}
+            `).join('');
+        }
+
+        // --- FILTER & SORT ---
+        let sortAscending = true;
+        
+        function sortFirms() {
+            sortAscending = !sortAscending;
+            propFirms.sort((a, b) => sortAscending ? a.cheapest - b.cheapest : b.cheapest - a.cheapest);
+            filterFirms();
+            // Update sort icon (optional)
+            const icon = document.querySelector('.sort-btn i');
+            if(icon) icon.className = sortAscending ? 'fas fa-sort-amount-down' : 'fas fa-sort-amount-up';
+        }
+
+        function filterFirms() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = propFirms.filter(f => f.name.toLowerCase().includes(query));
+            renderHome(filtered);
+        }
+
+        // --- COPY CODE ---
+        function copyCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('active');
+                setTimeout(() => {
+                    toast.classList.remove('active');
+                }, 3000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
 
         // --- RENDER DISCOUNTS ---
         function renderDiscounts() {
             const grid = document.getElementById('discount-grid');
             grid.innerHTML = propFirms.map(firm => `
-                <div class="card" style="text-align: center;">
-                    <h2 class="text-gold" style="font-size: 2rem;">10% OFF</h2>
-                    <p>بۆ کۆمپانیا ${firm.name}</p>
+                <div class="card" style="text-align: center; justify-content: center;">
+                    <h2 class="text-gold" style="font-size: 2rem;">داشکاندن</h2>
+                    <p style="margin-top: 5px;">بۆ کۆمپانیا <b>${firm.name}</b></p>
                     <div class="code-box m-t-20">
-                        <span>${firm.code}</span>
+                        <span style="font-weight: bold;">${firm.code}</span>
                         <button class="copy-btn" onclick="copyCode('${firm.code}')"><i class="far fa-copy"></i></button>
                     </div>
                 </div>
@@ -265,73 +296,77 @@ function renderHome() {
                         <h4 style="margin: 0;">${n.title}</h4>
                         <span style="font-size: 0.75rem; color: var(--muted);">${n.date}</span>
                     </div>
-                    <p style="color: var(--muted); font-size: 0.9rem; margin-top: 5px;">${n.body}</p>
+                    <p style="color: var(--muted); font-size: 0.9rem; margin-top: 8px;">${n.body}</p>
                 </div>
             `).join('');
         }
 
-        // --- MODAL LOGIC ---
-        function openModal(id) {
-            const firm = propFirms.find(f => f.id === id);
+        // --- MODAL: Tabbed Interface (perfect modal) ---
+        function renderModelSelection(firmId) {
+            const firm = propFirms.find(f => f.id === firmId);
             const modalBody = document.getElementById('modal-body');
             
+            // Build tabs
+            let tabsHtml = '<div class="tabs">';
+            firm.models.forEach((model, index) => {
+                tabsHtml += `<button class="tab-btn ${index === 0 ? 'active' : ''}" onclick="switchModel(${firmId}, ${index})">${model.name}</button>`;
+            });
+            tabsHtml += '</div>';
+            
+            // Container for accounts (initially first model)
+            const accountsHtml = buildAccountsHtml(firm, 0);
+            
             modalBody.innerHTML = `
-                <h2>${firm.name} - پێزانینێن تەواو</h2>
-                <div class="tabs" id="modal-tabs">
-                    ${firm.accounts.map((acc, idx) => `
-                        <button class="tab-btn ${idx === 0 ? 'active' : ''}" onclick="switchTab(${idx})">${acc.size}</button>
-                    `).join('')}
-                </div>
-                <div id="tab-contents">
-                    ${firm.accounts.map((acc, idx) => `
-                        <div class="tab-panel ${idx === 0 ? 'active' : ''}" id="tab-${idx}">
-                            <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 15px;">
-                                <div class="stat-item">Daily Drawdown <b>${acc.daily}</b></div>
-                                <div class="stat-item">Max Drawdown <b>${acc.max}</b></div>
-                                <div class="stat-item">Profit Target <b>${acc.target}</b></div>
-                                <div class="stat-item">News Trading <b>${acc.news}</b></div>
-                                <div class="stat-item">Weekend Holding <b>${acc.weekend}</b></div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="guarantee">
-                    <i class="fas fa-shield-check"></i> ${firm.guarantee}
-                </div>
+                <h2 style="margin-bottom: 20px;">${firm.name}</h2>
+                ${tabsHtml}
+                <div id="modal-accounts-container">${accountsHtml}</div>
             `;
             
             document.getElementById('modal-overlay').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeModal(e) {
+        function buildAccountsHtml(firm, modelIndex) {
+            const model = firm.models[modelIndex];
+            if (!model) return '';
+            
+            return model.notes.map(size => `
+                <div class="account-card">
+                    <h3>تێبینی: ${size}</h3>
+                    <div class="rules-grid">
+                        <div class="stat-item" style="font-size: 0.85rem;">ژ دەستدانا روژانە: <b style="color:#fff; display:block;">${model.daily}</b></div>
+                        <div class="stat-item" style="font-size: 0.85rem;">ژ دەستدانا گشتی: <b style="color:#fff; display:block;">${model.max}</b></div>
+                        <div class="stat-item" style="font-size: 0.85rem;">ئارمانج: <b style="color:#fff; display:block;">${model.target}</b></div>
+                        <div class="stat-item" style="font-size: 0.85rem; grid-column: 1 / -1;">پێگیربوون: <b style="color:#fff; display:block;">${model.consistency}</b></div>
+                        <div class="stat-item" style="font-size: 0.85rem; grid-column: 1 / -1;">بو هەر بازرگانییەکێ نەشێی ژ ڤێ رێژێ زێدتر ژ دەست بدەی: <b style="color:#fff; display:block;">${model.rules}</b></div>
+
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function switchModel(firmId, modelIndex) {
+            const firm = propFirms.find(f => f.id === firmId);
+            const container = document.getElementById('modal-accounts-container');
+            if (container) {
+                container.innerHTML = buildAccountsHtml(firm, modelIndex);
+            }
+            // Update active tab
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                if (idx === modelIndex) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+        }
+
+        // Close modal (handles both overlay click and close button)
+        function closeModal(event) {
+            if (event && event.target !== document.getElementById('modal-overlay')) return;
             document.getElementById('modal-overlay').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
 
-        function switchTab(index) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            
-            document.querySelectorAll('.tab-btn')[index].classList.add('active');
-            document.querySelectorAll('.tab-panel')[index].classList.add('active');
-        }
-
-        // --- UTILS ---
-        function copyCode(code) {
-            navigator.clipboard.writeText(code);
-            const toast = document.getElementById('toast');
-            toast.classList.add('active');
-            setTimeout(() => toast.classList.remove('active'), 2000);
-        }
-
-        function sortFirms() {
-            propFirms.sort((a, b) => a.cheapest - b.cheapest);
-            renderHome();
-        }
-
-        // Initial Render
-        renderHome();
+        // Initial render
+        renderHome(propFirms);
     </script>
 </body>
 </html>
