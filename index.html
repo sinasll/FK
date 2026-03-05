@@ -868,10 +868,20 @@ async function trackTelegramUser() {
 }
 
 // Call the function after page load
+function initTracking() {
+    if (typeof Appwrite !== 'undefined') {
+        trackTelegramUser();
+    } else {
+        console.warn('Appwrite SDK not loaded yet, retrying in 500ms...');
+        setTimeout(initTracking, 500);
+    }
+}
+
+// Start tracking when the page is fully loaded (including all scripts)
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', trackTelegramUser);
+    document.addEventListener('DOMContentLoaded', initTracking);
 } else {
-    trackTelegramUser();
+    initTracking();
 }
 </script>
 </body>
