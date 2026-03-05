@@ -84,12 +84,12 @@
                     <div class="learn-card">
                         <i class="fas fa-shield-alt"></i>
                         <h3>رێکخستنا مەترسیێ</h3>
-                        <p>چەوانیا پاراستنا ئەکاونتی ژ دۆڕاندنێ و رێساێن توند.</p>
+                        <p>څەوانیا پاراستنا ئەکاونتی ژ دۆڕاندنێ و رێساێن توند.</p>
                     </div>
                     <div class="learn-card">
                         <i class="fas fa-brain"></i>
                         <h3>دەروونیەت تریدینگێ</h3>
-                        <p>چەوان کونترۆلا هەستێن خۆ بکەی دەمێ بازرگانیێ دکەی.</p>
+                        <p>څەوان کونترۆلا هەستێن خۆ بکەی دەمێ بازرگانیێ دکەی.</p>
                     </div>
                 </div>
             </section>
@@ -143,20 +143,7 @@
 // -----------------------------
 // CONFIG: change these if needed
 // -----------------------------
-const APPWRITE_VERSION = '16.0.0';                     // ✅ latest stable
-const APPWRITE_CDN = `https://cdn.jsdelivr.net/npm/appwrite@${APPWRITE_VERSION}/appwrite.js`; // Primary CDN
-const APPWRITE_FALLBACK_CDN = `https://unpkg.com/appwrite@${APPWRITE_VERSION}/appwrite.js`; // Fallback CDN
-const APPWRITE_ENDPOINT = 'https://fra.cloud.appwrite.io/v1';
-const APPWRITE_PROJECT = '69a9a583003005a0f42e';
-const APPWRITE_DATABASE_ID = '69a9a595000ec11d2008';
-const APPWRITE_COLLECTION_ID = 'users'; // Collection to store Telegram user data
-// -----------------------------
-
-const tg = window.Telegram?.WebApp;
-if (tg) {
-    tg.expand();
-    tg.enableClosingConfirmation();
-}
+// (Appwrite-related config removed)
 
 // Your existing data structure for propFirms
 let propFirms = [
@@ -863,182 +850,6 @@ document.addEventListener('click', (e) => {
         triggerHaptic();
     }
 });
-
-/* -----------------------------
-   Appwrite loader + tracking
-   ----------------------------- */
-
-/**
- * Loads an external JavaScript script.
- * @param {string} url - The URL of the script to load.
- * @returns {Promise<Appwrite>} A promise that resolves with the Appwrite global object or rejects on error.
- */
-function loadScript(url) {
-    return new Promise((resolve, reject) => {
-        // If Appwrite is already available, resolve immediately
-        if (window.Appwrite && window.Appwrite.Client) {
-            console.log('Appwrite SDK already loaded.');
-            return resolve(window.Appwrite);
-        }
-        const s = document.createElement('script');
-        s.src = url;
-        s.async = true;
-        s.onload = () => {
-            if (window.Appwrite && window.Appwrite.Client) {
-                console.log('Appwrite SDK loaded successfully from:', url);
-                resolve(window.Appwrite);
-            } else {
-                reject(new Error('Appwrite object not found after script loaded from ' + url));
-            }
-        };
-        s.onerror = (e) => reject(new Error('Failed to load script from ' + url + '. Error: ' + e.message));
-        document.head.appendChild(s);
-    });
-}
-
-/**
- * Tracks Telegram Mini App user in Appwrite, creating or updating their document.
- * Sets document-level permissions for the creating user and for any authenticated member.
- */
-async function trackTelegramUser() {
-    const tg = window.Telegram?.WebApp;
-    if (!tg) {
-        console.log('Not running in Telegram Web App environment.');
-        return;
-    }
-
-    const user = tg.initDataUnsafe?.user;
-    if (!user) {
-        console.log('No Telegram user data found in initDataUnsafe.');
-        return;
-    }
-
-    try {
-        // Appwrite classes are expected to be globally available after SDK loads
-        const { Client, Account, Databases, ID, Query, Permission, Role } = Appwrite;
-
-        const client = new Client()
-            .setEndpoint(APPWRITE_ENDPOINT)
-            .setProject(APPWRITE_PROJECT);
-
-        const account = new Account(client);
-        const databases = new Databases(client);
-
-        let currentUserId = null;
-
-        // 1. Establish or restore an anonymous session to get an Appwrite user ID
-        try {
-            const session = await account.createAnonymousSession();
-            currentUserId = session.userId;
-            console.log('Appwrite anonymous session established for user ID:', currentUserId);
-        } catch (sessionError) {
-            // If session already exists (e.g., user is returning), createAnonymousSession will throw.
-            // In this case, try to get the current account details to retrieve the user ID.
-            if (sessionError.code === 409) { // Conflict: Session already exists
-                try {
-                    const currentAccount = await account.get();
-                    currentUserId = currentAccount.$id;
-                    console.log('Existing Appwrite session found for user ID:', currentUserId);
-                } catch (getAccountError) {
-                    console.error('Failed to get existing Appwrite account:', getAccountError);
-                    return; // Cannot proceed without a user ID
-                }
-            } else {
-                console.error('Failed to create anonymous session:', sessionError);
-                return; // Cannot proceed without a session
-            }
-        }
-
-        if (!currentUserId) {
-            console.error('Appwrite user ID is null. Cannot track user data.');
-            return;
-        }
-
-        // 2. Prepare user data to be stored in the Appwrite collection
-        const userData = {
-            telegramId: user.id.toString(), // Ensure ID is stored as string
-            username: user.username || null,
-            firstName: user.first_name || null,
-            lastName: user.last_name || null,
-            lastActivity: new Date().toISOString(), // ISO 8601 format for datetime
-            appRole: 'user' // Default role for users joining via Telegram Mini App
-        };
-
-        // 3. Check if user already exists in the collection to prevent duplicates
-        const existingUsers = await databases.listDocuments(
-            APPWRITE_DATABASE_ID,
-            APPWRITE_COLLECTION_ID,
-            [Query.equal('telegramId', user.id.toString())] // Query with string representation
-        );
-
-        if (existingUsers.total > 0) {
-            // User exists, update their information
-            const docId = existingUsers.documents[0].$id;
-            await databases.updateDocument(
-                APPWRITE_DATABASE_ID,
-                APPWRITE_COLLECTION_ID,
-                docId,
-                {
-                    username: userData.username,
-                    firstName: userData.firstName,
-                    lastName: userData.lastName,
-                    lastActivity: userData.lastActivity
-                    // appRole is not updated here, assumes it's static or managed by admin
-                }
-            );
-            console.log('Telegram user data updated in Appwrite. Document ID:', docId);
-        } else {
-            // User does not exist, create a new document
-            await databases.createDocument(
-                APPWRITE_DATABASE_ID,
-                APPWRITE_COLLECTION_ID,
-                ID.unique(), // Generate a unique document ID
-                userData,
-                [
-                    // Permissions for the newly created document:
-                    // Only the specific Appwrite user who created this document can read it
-                    Permission.read(Role.user(currentUserId)),
-                    // Only the specific Appwrite user who created this document can update it
-                    Permission.update(Role.user(currentUserId)),
-                    // Any authenticated Appwrite member (any logged-in user) can read this document
-                    // Useful for admin panels or if user profiles are public to other authenticated users
-                    Permission.read(Role.member())
-                ]
-            );
-            console.log('New Telegram user data created in Appwrite for user ID:', currentUserId);
-        }
-    } catch (error) {
-        console.error('Failed to track Telegram user data in Appwrite:', error);
-    }
-}
-
-/**
- * Initializes Appwrite SDK loading and user tracking.
- * Attempts to load from primary CDN, falls back to alternative CDN on failure.
- */
-async function initTrackingWithLoader() {
-    try {
-        await loadScript(APPWRITE_CDN);
-    } catch (err) {
-        console.warn('Primary Appwrite CDN failed to load, trying fallback:', err);
-        try {
-            await loadScript(APPWRITE_FALLBACK_CDN);
-        } catch (fallbackErr) {
-            console.error('Both Appwrite CDNs failed to load. User tracking will not be available.', fallbackErr);
-            return; // Cannot proceed if SDK isn't loaded
-        }
-    }
-
-    // Small delay might help if UMD bundle takes a moment to attach globals
-    setTimeout(() => trackTelegramUser(), 100);
-}
-
-// Start tracking after the page loads
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => initTrackingWithLoader());
-} else {
-    initTrackingWithLoader();
-}
 </script>
 </body>
 </html>
