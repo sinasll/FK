@@ -10,8 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Appwrite SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1/dist/umd/sdk.js"></script>
+    <script src="https://unpkg.com/appwrite@14.0.1/dist/umd/sdk.js"></script>
 </head>
 <body>
 
@@ -867,19 +866,25 @@ async function trackTelegramUser() {
     }
 }
 
-// Call the function after page load
-function initTracking() {
+// Enhanced tracking with retries and timeout
+function initTracking(attempts = 0) {
+    const maxAttempts = 10;
+    const delay = Math.min(1000 * Math.pow(1.5, attempts), 10000); // exponential backoff up to 10s
+
     if (typeof Appwrite !== 'undefined') {
         trackTelegramUser();
+    } else if (attempts < maxAttempts) {
+        console.warn(`Appwrite SDK not loaded (attempt ${attempts + 1}/${maxAttempts}), retrying in ${delay}ms...`);
+        setTimeout(() => initTracking(attempts + 1), delay);
     } else {
-        console.warn('Appwrite SDK not loaded yet, retrying in 500ms...');
-        setTimeout(initTracking, 500);
+        console.error('Appwrite SDK failed to load after multiple attempts. User not tracked.');
+        // Optionally show a fallback message or store locally
     }
 }
 
-// Start tracking when the page is fully loaded (including all scripts)
+// Start tracking after the page loads
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTracking);
+    document.addEventListener('DOMContentLoaded', () => initTracking());
 } else {
     initTracking();
 }
