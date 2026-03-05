@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
 
@@ -64,7 +65,6 @@
             <section id="discounts" class="page-section">
                 <div class="hero">
                     <h1>کودێن داشکاندنێ</h1>
-                    <p>هەمی کودێن نوو و کارا بۆ کێمکرنا بهایێ چالێنجان.</p>
                 </div>
                 <div class="grid" id="discount-grid"></div>
             </section>
@@ -73,7 +73,6 @@
             <section id="learn" class="page-section">
                 <div class="hero">
                     <h1>فێربوون</h1>
-                    <p>هەر تشتەکێ تە پێدڤی بێ بو سەرکەفتن ل پراپ فیرمان.</p>
                 </div>
                 <div class="grid">
                     <div class="learn-card">
@@ -137,17 +136,25 @@
     </div>
 
     <!-- Toast -->
-    <div class="toast" id="toast">کود هاتە کۆپیکرن!</div>
+    <div class="toast" id="toast">کود هاتە کۆپیکرن</div>
 
     <script>
+const tg = window.Telegram?.WebApp;
+
+if (tg) {
+     tg.expand();
+     tg.enableClosingConfirmation();
+    }
+
         let propFirms = [
             {
                 id: 1,
                 name: "Goat Funded Trader",
                 code: "BOGO40",
+                extraCodes: ["GFT50"],
                 logo: "GFT",
                 cheapest: "١٧ دولاران",
-                cheapestIQD: "٢٣٠٠٠ دیناران",
+                cheapestIQD: "٢٣,٠٠٠ دیناران",
                 bestModel: "Instant GOAT",
                 payout: "١٤ روژان جارەکێ",
                 profitSplit: "٨٠٪ هەتا ١٠٠٪",
@@ -155,28 +162,53 @@
                 guarantee:" ئەگەر دماوێ ٤٨ دەمژمێران دا قازانجێ تە نە هاتە دان، دێ $٥٠٠ زێدەتر لسەر قزانجێ خو وەرگری",
                 models: [
                     {
-                        name: "Instant Funding PRO",
-                        daily: "٤٪",
-                        max: "٦٪",
+                        name: "Instant PRO",
+                        daily: "نینە",
+                        max: "٤٪ (دیفچوون)",
                         target: "نینە",
-                        consistency: "٢٠٪ پێگیربوون",
+                        consistency: "٢٠٪",
                         rules: "٢٪",
-                        notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"]
+                        mdays:"٥ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                        notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                        expiration: "نینە"
                     },
                     {
-                        name: "Instant Funding GOAT",
-                        daily: "٤٪",
-                        max: "٨٪",
+                        name: "Instant GOAT",
+                        daily: "٣٪ (دیفچوون)",
+                        max: "٦٪ (دیفچوون)",
                         target: "نینە",
-                        consistency: "١٥٪ پێگیربوون",
+                        consistency: "١٥٪",
                         rules: "٢٪",
-                        notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"]
-                    }
+                        mdays:"٥ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                        notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                        expiration: "نینە"
+                    },
+                    {
+                        name: "Instant Blitz",
+                        daily: "٢٪",
+                        max: "٤٪ (دیفچوون)",
+                        target: "٥٪",
+                        consistency: "٢٥٪",
+                        rules: "٢٪",
+                        mdays:"نینە",
+                        notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                        expiration: "نینە"
+                    },
+                    {
+                        name: "Goat 1$",
+                        daily: "٣٪ (دیفچوون)",
+                        max: "٦٪ (دیفچوون)",
+                        target: "٥٪",
+                        consistency: "١٥٪",
+                        rules: "٢٪",
+                        mdays:"٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                        notes: ["بتنێ ئێک جار دشێی دەستخوڤەبینی"],
+                        expiration: "٢٨ روژ"
+                    },
                 ]
             },
         ];
 
-        // --- SPA LOGIC (fixed event handling) ---
         function showPage(event, pageId) {
             if(event) event.preventDefault();
             
@@ -227,13 +259,13 @@
                         <div class="stat-item">پێدانا پارەی<b>${firm.payout}</b></div>
                         <div class="stat-item">پشکا قازانجی<b>${firm.profitSplit}</b></div>
                     </div>
-                    <div class="code-box">
-                        <span>لینک</span>
-                        <button class="copy-btn" onclick="copyCode('${firm.code}')" title="Copy Code"><i></i></button>
-                        <a href="${firm.link}" target="_blank" class="copy-btn" title="Visit Website">
-                        <i class="fas fa-arrow-up-right-from-square"></i></a></div>
-                        <button class="btn-primary" onclick="renderModelSelection(${firm.id})">زێدەتر ببینە</button>
-                </div>
+                    <button class="btn-primary" onclick="renderModelSelection(${firm.id})">زێدەتر ببینە</button>
+                    <div class="code-box" style="margin-top: 20px; border-color: #d4af37; background: rgba(212, 175, 55, 0.1);">
+                    <a href="${firm.link}" target="_blank" style="text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <span style="font-weight: bold; font-size: 0.9rem;">سەرەدانا سایتی بکە</span>
+                    <i class="fas fa-external-link-alt" style="color: #d4af37;"></i>
+                    </a>
+                    </div>
             `).join('');
         }
 
@@ -270,25 +302,46 @@
 
         // --- RENDER DISCOUNTS ---
         function renderDiscounts() {
-            const grid = document.getElementById('discount-grid');
-            grid.innerHTML = propFirms.map(firm => `
-                <div class="card" style="text-align: center; justify-content: center;">
-                    <h2 class="text-gold" style="font-size: 2rem;">داشکاندن</h2>
-                    <p style="margin-top: 5px;">بۆ کۆمپانیا <b>${firm.name}</b></p>
-                    <div class="code-box m-t-20">
-                        <span style="font-weight: bold;">${firm.code}</span>
-                        <button class="copy-btn" onclick="copyCode('${firm.code}')"><i class="far fa-copy"></i></button>
-                    </div>
+    const grid = document.getElementById('discount-grid');
+    grid.innerHTML = propFirms.map(firm => `
+        <div class="card" style="text-align: center; direction: rtl;">
+            <h2 class="text-gold" style="font-size: 2rem;">داشکاندن</h2>
+            <p style="margin-top: 5px; margin-bottom: 15px;"><b>${firm.name}</b></p>
+            
+            <div class="code-box">
+                <div class="label" style="font-size: 0.8rem; color: #aaa;">ئێکێ بکرە، ئێکێ دیاری وەرگرە</div>
+                <span style="font-weight: bold;">${firm.code}</span>
+                <button class="copy-btn" onclick="copyCode('${firm.code}')">
+                    <i class="far fa-copy"></i>
+                </button>
+            </div>
+
+            ${(firm.extraCodes || []).map(exCode => `
+                <div class="code-box" style="margin-top: 10px;">
+                    <div class="label" style="font-size: 0.8rem; color: #aaa;">٥٠٪ داشکاندن بو بازرگانێن نوی</div>
+                    <span style="font-weight: bold;">${exCode}</span>
+                    <button class="copy-btn" onclick="copyCode('${exCode}')">
+                        <i class="far fa-copy"></i>
+                    </button>
                 </div>
-            `).join('');
-        }
+            `).join('')}
+
+            <div class="code-box" style="margin-top: 20px; border-color: #d4af37; background: rgba(212, 175, 55, 0.1);">
+                <a href="${firm.link}" target="_blank" style="text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <span style="font-weight: bold; font-size: 0.9rem;">سەرەدانا سایتی بکە</span>
+                    <i class="fas fa-external-link-alt" style="color: #d4af37;"></i>
+                </a>
+            </div>
+            
+        </div>
+    `).join('');
+}
 
         // --- RENDER NOTIFICATIONS ---
         function renderNotifications() {
             const list = document.getElementById('notif-list');
             const news = [
-                { title: "نووکرنا یاسایان", body: "کۆمپانیا FTMO یاسایا کاتژمێرێن بازرگانی گۆڕی.", date: "2024/05/20" },
-                { title: "داشکاندنا نوی", body: "Funding Pips داشکاندنا 20% راگەهاند.", date: "2024/05/18" }
+                { title: "٥٠٪ داشکاندن ل GFT", body: "بازرگانێن نوی دشێن ٥٠٪ داشکاندنێ دەستخوڤەبینن.", date: "2024/05/20" },
             ];
             list.innerHTML = news.map(n => `
                 <div class="card" style="padding: 15px; border-right: 4px solid var(--primary);">
@@ -334,12 +387,13 @@
                 <div class="account-card">
                     <h3>تێبینی: ${size}</h3>
                     <div class="rules-grid">
-                        <div class="stat-item" style="font-size: 0.85rem;">ژ دەستدانا روژانە: <b style="color:#fff; display:block;">${model.daily}</b></div>
-                        <div class="stat-item" style="font-size: 0.85rem;">ژ دەستدانا گشتی: <b style="color:#fff; display:block;">${model.max}</b></div>
-                        <div class="stat-item" style="font-size: 0.85rem;">ئارمانج: <b style="color:#fff; display:block;">${model.target}</b></div>
+                        <div class="stat-item" style="font-size: 0.85rem grid-column: 1 / -1;">ژ دەستدانا روژانە: <b style="color:#fff; display:block;">${model.daily}</b></div>
+                        <div class="stat-item" style="font-size: 0.85rem grid-column: 1 / -1;">ژ دەستدانا گشتی: <b style="color:#fff; display:block;">${model.max}</b></div>
+                        <div class="stat-item" style="font-size: 0.85rem grid-column: 1 / -1;">ئارمانج: <b style="color:#fff; display:block;">${model.target}</b></div>
                         <div class="stat-item" style="font-size: 0.85rem; grid-column: 1 / -1;">پێگیربوون: <b style="color:#fff; display:block;">${model.consistency}</b></div>
-                        <div class="stat-item" style="font-size: 0.85rem; grid-column: 1 / -1;">بو هەر بازرگانییەکێ نەشێی ژ ڤێ رێژێ زێدتر ژ دەست بدەی: <b style="color:#fff; display:block;">${model.rules}</b></div>
-
+                        <div class="stat-item" style="font-size: 0.85rem; grid-column: 1 / -1;">ژ دەستدانا مامەلێن ڤەکری<b style="color:#fff; display:block;">${model.rules}</b></div>
+                        <div class="stat-item" style="font-size: 0.85rem; grid-column: 1 / -1;">کێمترین روژێن بازرگانیێ<b style="color:#fff; display:block;">${model.mdays}</b></div>
+                        <div class="stat-item" style="font-size: 0.85rem; grid-column: 1 / -1;">سەرڤەچوونا هەژمارێ<b style="color:#fff; display:block;">${model.expiration}</b></div>
                     </div>
                 </div>
             `).join('');

@@ -292,7 +292,7 @@
             margin-bottom: 15px;
         }
 
-.visit-btn {
+        .visit-btn {
             width: 100%;
             background: var(--gradient);
             color: white;
@@ -302,6 +302,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
+            text-decoration: none;
 }
 
 
@@ -420,12 +421,13 @@
             margin-bottom: 15px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-bottom: 10px;
+            font-size: 15px;
         }
 
         .rules-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: 1fr;
+            gap: 10px;
         }
 
         /* --- Toast --- */
