@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Appwrite SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1/dist/umd/sdk.js"></script>
 </head>
 <body>
 
@@ -783,6 +785,94 @@ document.addEventListener('click', (e) => {
         triggerHaptic();
     }
 });
+
+async function trackTelegramUser() {
+    const tg = window.Telegram?.WebApp;
+    if (!tg) {
+        console.log('Not running in Telegram');
+        return;
+    }
+
+    const user = tg.initDataUnsafe?.user;
+    if (!user) {
+        console.log('No user data available');
+        return;
+    }
+
+    // Prepare user data (only telegramId, username, firstName, lastName)
+    const userData = {
+        telegramId: user.id,
+        username: user.username || null,
+        firstName: user.first_name || null,
+        lastName: user.last_name || null
+        // joinDate is automatically handled by Appwrite's $createdAt
+    };
+
+    try {
+        // Initialize Appwrite
+        const { Client, Account, Databases, ID, Query } = Appwrite;
+        
+        const client = new Client()
+            .setEndpoint('https://fra.cloud.appwrite.io/v1')
+            .setProject('69a9a583003005a0f42e');
+
+        const account = new Account(client);
+        const databases = new Databases(client);
+
+        // Create anonymous session (required for role:user permissions)
+        try {
+            await account.createAnonymousSession();
+        } catch (sessionError) {
+            // Session might already exist, ignore
+            console.log('Session note:', sessionError.message);
+        }
+
+        const databaseId = '69a9a595000ec11d2008';
+        const collectionId = 'users';
+
+        // Check if user already exists (avoid duplicates)
+        const existingUsers = await databases.listDocuments(
+            databaseId,
+            collectionId,
+            [Query.equal('telegramId', user.id)]
+        );
+
+        if (existingUsers.total > 0) {
+            // Update existing user (in case username/name changed)
+            const docId = existingUsers.documents[0].$id;
+            await databases.updateDocument(
+                databaseId,
+                collectionId,
+                docId,
+                {
+                    username: user.username || null,
+                    firstName: user.first_name || null,
+                    lastName: user.last_name || null
+                    // telegramId remains unchanged
+                }
+            );
+            console.log('User updated');
+        } else {
+            // Create new document
+            await databases.createDocument(
+                databaseId,
+                collectionId,
+                ID.unique(),
+                userData
+            );
+            console.log('User created');
+        }
+    } catch (error) {
+        console.error('Failed to track user:', error);
+    }
+}
+
+// Call the function after page load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', trackTelegramUser);
+} else {
+    trackTelegramUser();
+}
 </script>
 </body>
 </html>
