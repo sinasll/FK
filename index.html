@@ -721,7 +721,6 @@ function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
         
         model.accounts.forEach((acc, idx) => {
             const activeClass = idx === activeSizeIndex ? 'active' : '';
-            
             sizesHtml += `<button class="size-tab-btn ${activeClass}" onclick="switchAccountSize(${firm.id}, ${modelIndex}, ${idx})">${acc.size}</button>`;
         });
         
@@ -735,43 +734,52 @@ function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
         `;
     }
 
-    // --- 2. Rules Rendering ---
+    // --- 2. Notes Rendering (display all notes once) ---
+    let notesHtml = '';
+    if (model.notes && model.notes.length > 0) {
+        notesHtml = `<div class="account-card" style="margin-bottom: 20px;">`;
+        model.notes.forEach(note => {
+            notesHtml += `<p style="font-size: 0.9rem; margin-bottom: 5px;">تێبینی: ${note}</p>`;
+        });
+        notesHtml += `</div>`;
+    }
+
+    // --- 3. Rules Rendering ---
     const renderRules = (rules, phaseTitle = '') => {
         const titleHtml = phaseTitle ? `<h4 style="margin: 10px 0 5px; color: #d4af37;">${phaseTitle}</h4>` : '';
         return `
             ${titleHtml}
             <div class="rules-grid">
-                <div class="stat-item">ژ دەستدانا روژانە <b>${rules.daily}</b></div>
-                <div class="stat-item">ژ دەستدانا گشتی <b>${rules.max}</b></div>
-                <div class="stat-item">ئارمانج <b>${rules.target}</b></div>
-                <div class="stat-item">پێگیربوون <b>${rules.consistency}</b></div>
+                <div class="stat-item">ژ دەستدانا روژانە <b>${rules.daily || 'نینە'}</b></div>
+                <div class="stat-item">ژ دەستدانا گشتی <b>${rules.max || 'نینە'}</b></div>
+                <div class="stat-item">ئارمانج <b>${rules.target || 'نینە'}</b></div>
+                <div class="stat-item">پێگیربوون <b>${rules.consistency || 'نینە'}</b></div>
                 <div class="stat-item">ژ دەستدانا مامەلێن ڤەکری <b>${rules.rules || "نینە"}</b></div>
-                <div class="stat-item">کێمترین روژێن بازرگانیێ <b>${rules.mdays}</b></div>
-                <div class="stat-item">سەرڤەچوونا هەژمارێ <b>${rules.expiration}</b></div>
-                <div class="stat-item">بازرگانیکرن دگەل نووچا <b>${rules.tradenews}</b></div>
-                <div class="stat-item">ڤەکری هێلان د بهێنڤەدانێ دا <b>${rules.holdweekends}</b></div>
+                <div class="stat-item">کێمترین روژێن بازرگانیێ <b>${rules.mdays || 'نینە'}</b></div>
+                <div class="stat-item">سەرڤەچوونا هەژمارێ <b>${rules.expiration || 'نینە'}</b></div>
+                <div class="stat-item">بازرگانیکرن دگەل نووچا <b>${rules.tradenews || 'نینە'}</b></div>
+                <div class="stat-item">ڤەکری هێلان د بهێنڤەدانێ دا <b>${rules.holdweekends || 'نینە'}</b></div>
             </div>
         `;
     };
 
     let rulesContent = '';
-    if (model.phases && Array.isArray(model.phases)) {
-        rulesContent = model.notes.map(note => `
-            <div class="account-card">
-                <h3>تێبینی: ${note}</h3>
-                ${model.phases.map(phase => renderRules(phase, phase.phase)).join('<hr style="border-color:#333; margin:20px 0;">')}
+    if (model.phases && Array.isArray(model.phases) && model.phases.length > 0) {
+        rulesContent = model.phases.map(phase => `
+            <div class="account-card" style="margin-bottom: 10px;">
+                ${renderRules(phase, phase.phase)}
             </div>
         `).join('');
     } else {
-        rulesContent = model.notes.map(note => `
+        // Only render direct model rules if there are no phases
+        rulesContent = `
             <div class="account-card">
-                <h3>تێبینی: ${note}</h3>
                 ${renderRules(model)}
             </div>
-        `).join('');
+        `;
     }
 
-    return sizesHtml + priceHtml + rulesContent;
+    return sizesHtml + priceHtml + notesHtml + rulesContent;
 }
 
 function switchModel(firmId, modelIndex) {
@@ -795,6 +803,11 @@ function switchAccountSize(firmId, modelIndex, sizeIndex) {
         // Re-render the HTML with the newly selected size index
         container.innerHTML = buildAccountsHtml(firm, modelIndex, sizeIndex);
     }
+    // Update active class for size buttons
+    document.querySelectorAll('.size-tab-btn').forEach((btn, idx) => {
+        if (idx === sizeIndex) btn.classList.add('active');
+        else btn.classList.remove('active');
+    });
 }
 
 function closeModal(event) {
@@ -812,7 +825,7 @@ function triggerHaptic() {
 }
 
 document.addEventListener('click', (e) => {
-    const target = e.target.closest('button, a, .tab-btn, .nav-link, .copy-btn');
+    const target = e.target.closest('button, a, .tab-btn, .nav-link, .copy-btn, .size-tab-btn'); // Added .size-tab-btn
     if (target) {
         triggerHaptic();
     }
@@ -823,7 +836,10 @@ document.addEventListener('click', (e) => {
    ----------------------------- */
 function loadScript(url) {
     return new Promise((resolve, reject) => {
-        if (window.Appwrite) return resolve(window.Appwrite);
+        if (window.Appwrite) {
+            console.log('Appwrite SDK already loaded.');
+            return resolve(window.Appwrite);
+        }
         const s = document.createElement('script');
         s.src = url;
         s.async = true;
@@ -869,9 +885,10 @@ async function trackTelegramUser() {
         // Create anonymous session (required for role:user permissions)
         try {
             await account.createAnonymousSession();
+            console.log('Anonymous session created/obtained.');
         } catch (sessionError) {
-            // Session might already exist, ignore
-            console.log('Session note:', sessionError.message || sessionError);
+            // Session might already exist, ignore if it's not a critical error
+            console.warn('Could not create anonymous session (might already exist or permission issue):', sessionError.message || sessionError);
         }
 
         // Check if user already exists (avoid duplicates)
@@ -895,7 +912,7 @@ async function trackTelegramUser() {
                     // telegramId remains unchanged
                 }
             );
-            console.log('User updated');
+            console.log('User updated in Appwrite.');
         } else {
             // Create new document
             await databases.createDocument(
@@ -904,10 +921,10 @@ async function trackTelegramUser() {
                 ID.unique(),
                 userData
             );
-            console.log('User created');
+            console.log('User created in Appwrite.');
         }
     } catch (error) {
-        console.error('Failed to track user:', error);
+        console.error('Failed to track user with Appwrite:', error);
     }
 }
 
@@ -925,7 +942,8 @@ function initTrackingWithLoader() {
         setTimeout(() => trackTelegramUser(), 0);
     })
     .catch(err => {
-        console.error('Appwrite SDK failed to load from CDN:', err);
+        console.warn('Appwrite SDK failed to load from primary CDN:', err.message);
+        console.log('Attempting to load Appwrite SDK from fallback CDN:', APPWRITE_CDN_2);
         // ئەگەر APPWRITE_CDN_1 ئاریشە هەبوو، دشێی APPWRITE_CDN_2 بکاربینی
         loadScript(APPWRITE_CDN_2)
         .then(() => {
@@ -933,10 +951,13 @@ function initTrackingWithLoader() {
             setTimeout(() => trackTelegramUser(), 0);
         })
         .catch(fallbackErr => {
-            console.error('Appwrite SDK failed to load from both CDNs:', fallbackErr);
+            console.error('Appwrite SDK failed to load from both CDNs:', fallbackErr.message);
         });
     });
 }
+
+// Start tracking once the DOM is loaded
+document.addEventListener('DOMContentLoaded', initTrackingWithLoader);
 </script>
 </body>
 </html>
