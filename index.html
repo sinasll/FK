@@ -140,11 +140,18 @@
     <div class="toast" id="toast">کود هاتە کۆپیکرن</div>
 
 <script>
-
-import { Client, Functions } from "https://esm.sh/appwrite@13.0.0";
+// -----------------------------
+// CONFIG: change these if needed
+// -----------------------------
+const APPWRITE_VERSION = '23.0.0'; // pinned version for stability (update deliberately)
+const APPWRITE_CDN = `https://cdn.jsdelivr.net/npm/appwrite@${APPWRITE_VERSION}`;
+const APPWRITE_ENDPOINT = 'https://fra.cloud.appwrite.io/v1';
+const APPWRITE_PROJECT = '69a9a583003005a0f42e';
+const APPWRITE_DATABASE_ID = '69a9a595000ec11d2008';
+const APPWRITE_COLLECTION_ID = 'users';
+// -----------------------------
 
 const tg = window.Telegram?.WebApp;
-
 if (tg) {
     tg.expand();
     tg.enableClosingConfirmation();
@@ -506,7 +513,7 @@ function toggleSidebar(state) {
 function renderHome(firmsToRender) {
     const grid = document.getElementById('firm-grid');
     
-    if (firmsToRender.length === 0) {
+    if (!firmsToRender || firmsToRender.length === 0) {
         grid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--muted);">هیچ کۆمپانیایەک نەدۆزرایەوە.</p>';
         return;
     }
@@ -541,9 +548,31 @@ function renderHome(firmsToRender) {
 
 let sortAscending = true;
 
+/**
+ * Helper: convert Arabic-Indic digits to Latin digits and parse numeric part of price strings.
+ * This makes sorting by `cheapest` robust.
+ */
+function arabicIndicToLatin(s = '') {
+    return s
+        .replace(/[\u0660-\u0669]/g, d => String(d.charCodeAt(0) - 0x0660))
+        .replace(/[\u06F0-\u06F9]/g, d => String(d.charCodeAt(0) - 0x06F0));
+}
+
+function parsePriceNumber(str = '') {
+    const latin = arabicIndicToLatin(String(str));
+    const cleaned = latin.replace(/[,٬\s]/g, '').replace(/[^\d.\-]/g, ''); // remove currency text
+    const n = parseFloat(cleaned);
+    return Number.isFinite(n) ? n : NaN;
+}
+
 function sortFirms() {
     sortAscending = !sortAscending;
-    propFirms.sort((a, b) => sortAscending ? a.cheapest - b.cheapest : b.cheapest - a.cheapest);
+    propFirms.sort((a, b) => {
+        const aVal = parsePriceNumber(a.cheapest);
+        const bVal = parsePriceNumber(b.cheapest);
+        if (isNaN(aVal) || isNaN(bVal)) return 0;
+        return sortAscending ? aVal - bVal : bVal - aVal;
+    });
     filterFirms();
     const icon = document.querySelector('.sort-btn i');
     if(icon) icon.className = sortAscending ? 'fas fa-sort-amount-down' : 'fas fa-sort-amount-up';
@@ -551,7 +580,7 @@ function sortFirms() {
 
 function filterFirms() {
     const query = document.getElementById('searchInput').value.toLowerCase();
-    const filtered = propFirms.filter(f => f.name.toLowerCase().includes(query));
+    const filtered = propFirms.filter(f => (f.name || '').toLowerCase().includes(query));
     renderHome(filtered);
 }
 
@@ -571,7 +600,7 @@ function renderDiscounts() {
     const grid = document.getElementById('discount-grid');
     grid.innerHTML = propFirms.map(firm => `
         <div class="card" style="text-align: center; direction: rtl;">
-            <h2 class="text-gold" style="font-size: 1.5rem;">Goat Funded Trader</h2>
+            <h2 class="text-gold" style="font-size: 1.5rem;">${firm.name}</h2>
             <div class="code-box">
                 <div class="label" style="font-size: 0.8rem; color: #aaa;">ئێکێ بکرە، ئێکێ دیاری وەربگرە</div>
                 <span style="font-weight: bold;">${firm.code}</span>
@@ -617,9 +646,10 @@ function renderNotifications() {
 function renderModelSelection(firmId) {
     const firm = propFirms.find(f => f.id === firmId);
     const modalBody = document.getElementById('modal-body');
+    if (!firm) return;
     
     let tabsHtml = '<div class="tabs">';
-    firm.models.forEach((model, index) => {
+    (firm.models || []).forEach((model, index) => {
         tabsHtml += `<button class="tab-btn ${index === 0 ? 'active' : ''}" onclick="switchModel(${firmId}, ${index})">${model.name}</button>`;
     });
     tabsHtml += '</div>';
@@ -679,7 +709,7 @@ function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
     const model = firm.models[modelIndex];
     if (!model) return '';
 
-// --- 1. Account Sizes & Pricing Sub-tabs ---
+    // --- 1. Account Sizes & Pricing Sub-tabs ---
     let sizesHtml = '';
     let priceHtml = '';
     
@@ -787,6 +817,21 @@ document.addEventListener('click', (e) => {
     }
 });
 
+/* -----------------------------
+   Appwrite loader + tracking
+   ----------------------------- */
+function loadScript(url) {
+    return new Promise((resolve, reject) => {
+        if (window.Appwrite) return resolve(window.Appwrite);
+        const s = document.createElement('script');
+        s.src = url;
+        s.async = true;
+        s.onload = () => resolve(window.Appwrite);
+        s.onerror = (e) => reject(new Error('Failed to load ' + url));
+        document.head.appendChild(s);
+    });
+}
+
 async function trackTelegramUser() {
     const tg = window.Telegram?.WebApp;
     if (!tg) {
@@ -810,12 +855,12 @@ async function trackTelegramUser() {
     };
 
     try {
-        // Initialize Appwrite
+        // Appwrite classes available through global Appwrite after SDK loads
         const { Client, Account, Databases, ID, Query } = Appwrite;
-        
+
         const client = new Client()
-            .setEndpoint('https://fra.cloud.appwrite.io/v1')
-            .setProject('69a9a583003005a0f42e');
+            .setEndpoint(APPWRITE_ENDPOINT) // keep your endpoint
+            .setProject(APPWRITE_PROJECT); // keep your project id
 
         const account = new Account(client);
         const databases = new Databases(client);
@@ -825,16 +870,13 @@ async function trackTelegramUser() {
             await account.createAnonymousSession();
         } catch (sessionError) {
             // Session might already exist, ignore
-            console.log('Session note:', sessionError.message);
+            console.log('Session note:', sessionError.message || sessionError);
         }
-
-        const databaseId = '69a9a595000ec11d2008';
-        const collectionId = 'users';
 
         // Check if user already exists (avoid duplicates)
         const existingUsers = await databases.listDocuments(
-            databaseId,
-            collectionId,
+            APPWRITE_DATABASE_ID,
+            APPWRITE_COLLECTION_ID,
             [Query.equal('telegramId', user.id)]
         );
 
@@ -842,8 +884,8 @@ async function trackTelegramUser() {
             // Update existing user (in case username/name changed)
             const docId = existingUsers.documents[0].$id;
             await databases.updateDocument(
-                databaseId,
-                collectionId,
+                APPWRITE_DATABASE_ID,
+                APPWRITE_COLLECTION_ID,
                 docId,
                 {
                     username: user.username || null,
@@ -856,8 +898,8 @@ async function trackTelegramUser() {
         } else {
             // Create new document
             await databases.createDocument(
-                databaseId,
-                collectionId,
+                APPWRITE_DATABASE_ID,
+                APPWRITE_COLLECTION_ID,
                 ID.unique(),
                 userData
             );
@@ -868,27 +910,30 @@ async function trackTelegramUser() {
     }
 }
 
-// Enhanced tracking with retries and timeout
-function initTracking(attempts = 0) {
-    const maxAttempts = 10;
-    const delay = Math.min(1000 * Math.pow(1.5, attempts), 10000); // exponential backoff up to 10s
-
-    if (typeof Appwrite !== 'undefined') {
+// Enhanced tracking with loader
+function initTrackingWithLoader() {
+    if (window.Appwrite) {
         trackTelegramUser();
-    } else if (attempts < maxAttempts) {
-        console.warn(`Appwrite SDK not loaded (attempt ${attempts + 1}/${maxAttempts}), retrying in ${delay}ms...`);
-        setTimeout(() => initTracking(attempts + 1), delay);
-    } else {
-        console.error('Appwrite SDK failed to load after multiple attempts. User not tracked.');
-        // Optionally show a fallback message or store locally
+        return;
     }
+    loadScript(APPWRITE_CDN)
+    .then(() => {
+        console.log('Appwrite SDK loaded via CDN:', APPWRITE_CDN);
+        // small delay sometimes helps let UMD attach — optional
+        setTimeout(() => trackTelegramUser(), 0);
+    })
+    .catch(err => {
+        console.error('Appwrite SDK failed to load from CDN:', err);
+        // Optional fallback: try unpkg or show a message to user/admin
+        // loadScript('https://unpkg.com/appwrite@23.0.0').then(...).catch(...)
+    });
 }
 
 // Start tracking after the page loads
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => initTracking());
+    document.addEventListener('DOMContentLoaded', () => initTrackingWithLoader());
 } else {
-    initTracking();
+    initTrackingWithLoader();
 }
 </script>
 </body>
