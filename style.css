@@ -252,18 +252,12 @@
             margin-bottom: 20px;
         }
 
-        .card-logo {
-            width: 60px;
-            height: 60px;
-            background: var(--elevated-bg);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: var(--gold);
-            border: 1px solid var(--border);
-        }
+.card-logo img{
+    width:40px;
+    height:40px;
+    object-fit:contain;
+    border-radius: 20px;
+}
 
         .card-title h3 { font-size: 1.25rem; }
         .card-title span { color: var(--muted); font-size: 0.85rem; }
@@ -304,7 +298,7 @@
 
         .code-box {
             background: var(--elevated-bg);
-            border: 1px dashed var(--gold);
+            border: 1px var(--gold);
             padding: 10px;
             border-radius: var(--radius);
             display: flex;
@@ -405,7 +399,7 @@
             gap: 10px;
             margin: 20px 0;
             border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
+            padding: 16px 10px 12px 10px;
             overflow-x: auto;
         }
 
@@ -425,6 +419,28 @@
             color: var(--gold);
             background: rgba(212, 168, 67, 0.1);
         }
+
+        .tabs-wrapper.minimal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.chev {
+  display: none;               /* shown only when overflow via JS */
+  background: transparent;
+  border: none;
+  color: var(--gold);
+  cursor: pointer;
+  padding: 6px;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* keyboard focus */
+.tab-btn:focus { outline: 2px solid rgba(212,168,67,0.12); outline-offset: 2px; }
+        
 
         /* --- Account Cards inside Modal --- */
         .account-card {
@@ -469,5 +485,58 @@
         .toast.active { transform: translateX(-50%) translateY(0); }
 
         /* --- Utilities --- */
-        .text-gold { color: var(--gold); }
+        .text-gold { color: white;
+        margin-bottom: 20px; }
         .m-t-20 { margin-top: 20px; }
+
+        .platform-item {
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+       /* --- Size Sub-Tabs Container (matches .tabs) --- */
+.size-tabs {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 10px 12px 10px;
+    overflow-x: auto;
+    justify-content: flex-start; /* keeps items starting from the right in RTL */
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.size-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+/* --- Size Tab Buttons (matches .tab-btn) --- */
+.size-tab-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    padding: 8px 15px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 0.9rem;
+    border-radius: var(--radius);
+    transition: var(--transition);
+}
+
+.size-tab-btn.active {
+    color: var(--gold);
+    background: rgba(212, 168, 67, 0.1);
+}
+
+.price-display {
+    text-align: center;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border: 1px dashed var(--primary, #d4af37);
+}
