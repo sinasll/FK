@@ -10,6 +10,75 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- Firebase SDKs - MAKE SURE TO USE THE LATEST VERSION NUMBERS -->
+    <!-- For Firebase JS SDK v9+ modular, use these: -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getFirestore, setDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      
+      // Your web app's Firebase configuration
+      // IMPORTANT: Replace these with your actual Firebase project configuration values
+const firebaseConfig = {
+  apiKey: "AIzaSyAuPOSf50H0kvRC5VgmTPPVfKTgyrx_bZc",
+  authDomain: "fkapp-1c6c4.firebaseapp.com",
+  projectId: "fkapp-1c6c4",
+  storageBucket: "fkapp-1c6c4.appspot.com",
+  messagingSenderId: "1081666781814",
+  appId: "1:1081666781814:web:d8e4f8013fd3a4403c5557",
+  measurementId: "G-T5WX3JBX16"
+};
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // Function to store Telegram user data in Firestore
+      async function storeTelegramUserData() {
+          if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+              const user = window.Telegram.WebApp.initDataUnsafe.user;
+              const telegramId = user.id;
+
+              if (!telegramId) {
+                  console.warn("Ayman AI: Telegram user ID not found. Cannot store data.");
+                  return;
+              }
+
+              const userData = {
+                  telegramId: user.id,
+                  username: user.username || null, // username can be null
+                  firstName: user.first_name || null,
+                  lastName: user.last_name || null,
+                  languageCode: user.language_code || null,
+                  isPremium: user.is_premium || false, // is_premium is optional
+                  photoUrl: user.photo_url || null, // photo_url is optional
+                  lastSeen: serverTimestamp() // Timestamp of last access
+              };
+
+              try {
+                  // Use set with { merge: true } to create a new document if it doesn't exist,
+                  // or update existing fields without overwriting the entire document if it does.
+                  await setDoc(doc(db, "telegram_users", String(telegramId)), userData, { merge: true });
+                  console.log("Ayman AI: Telegram user data stored/updated successfully for ID:", telegramId);
+              } catch (error) {
+                  console.error("Ayman AI: Error storing Telegram user data:", error);
+              }
+          } else {
+              console.log("Ayman AI: Telegram WebApp user data not available. Skipping data storage.");
+          }
+      }
+
+      // Call the function to store user data when the DOM is fully loaded.
+      // A small delay can sometimes help ensure Telegram WebApp is fully initialized.
+      document.addEventListener('DOMContentLoaded', () => {
+          setTimeout(storeTelegramUserData, 500); 
+      });
+
+      // Expose the db and storeTelegramUserData to the global scope if needed for other scripts (less common with modules)
+      window.firebaseApp = app;
+      window.firestoreDb = db;
+      window.storeTelegramUserData = storeTelegramUserData; // Useful for debugging or manual trigger
+    </script>
 </head>
 <body>
 
@@ -767,8 +836,8 @@ function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
                 <div class="stat-item">ژ دەستدانا مامەلێن ڤەکری <b>${rules.rules || "نینە"}</b></div>
                 <div class="stat-item">کێمترین روژێن بازرگانیێ <b>${rules.mdays || "نینە"}</b></div>
                 <div class="stat-item">سەرڤەچوونا هەژمارێ <b>${rules.expiration || "نینە"}</b></div>
-                <div class="stat-item">بازرگانیکرن دگەل نووچا <b>${rules.tradenews || "نینە"}</b></div>
-                <div class="stat-item">ڤەکری هێلان د بهێنڤەدانێ دا <b>${rules.holdweekends || "نینە"}</b></div>
+                <div class="stat-item">بازرگانیکرن دگەل نووچا <b>${rules.tradenews || "بەلێ"}</b></div>
+                <div class="stat-item">ڤەکری هێلان د بهێنڤەدانێ دا <b>${rules.holdweekends || "بەلێ"}</b></div>
             </div>
         `;
     };
