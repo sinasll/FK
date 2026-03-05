@@ -28,6 +28,12 @@
             color: var(--text);
             overflow-x: hidden;
             line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
         }
 
         header {
@@ -436,7 +442,7 @@
             margin-bottom: 15px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-bottom: 10px;
-            font-size: 15px;
+            font-size: 10px;
         }
 
         .rules-grid {
