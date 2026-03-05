@@ -140,23 +140,17 @@
     <div class="toast" id="toast">کود هاتە کۆپیکرن</div>
 
 <script>
-// Use version 13.0.0 as in your working example
-import { Client, Functions, Databases, ID, Query } from "https://esm.sh/appwrite@13.0.0";
-
 // -----------------------------
-// CONFIG
+// CONFIG: change these if needed
 // -----------------------------
+const APPWRITE_VERSION = '16.0.0';                     // ✅ latest stable
+const APPWRITE_CDN_1 = `https://cdn.jsdelivr.net/npm/appwrite@${APPWRITE_VERSION}`;
+const APPWRITE_CDN_2 = `https://unpkg.com/appwrite@${APPWRITE_VERSION}`; // fallback
 const APPWRITE_ENDPOINT = 'https://fra.cloud.appwrite.io/v1';
 const APPWRITE_PROJECT = '69a9a583003005a0f42e';
-const DATABASE_ID = '69a9a595000ec11d2008';
-const COLLECTION_ID = 'users';
-
-// Initialize Appwrite
-const client = new Client()
-    .setEndpoint(APPWRITE_ENDPOINT)
-    .setProject(APPWRITE_PROJECT);
-
-const databases = new Databases(client);
+const APPWRITE_DATABASE_ID = '69a9a595000ec11d2008';
+const APPWRITE_COLLECTION_ID = 'users';
+// -----------------------------
 
 const tg = window.Telegram?.WebApp;
 if (tg) {
@@ -945,3 +939,4 @@ if (document.readyState === 'loading') {
 </script>
 </body>
 </html>
+
