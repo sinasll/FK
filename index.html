@@ -917,24 +917,25 @@ function initTrackingWithLoader() {
         trackTelegramUser();
         return;
     }
-    loadScript(APPWRITE_CDN)
+    // گوهێرینا APPWRITE_CDN ب APPWRITE_CDN_1 یان APPWRITE_CDN_2
+    loadScript(APPWRITE_CDN_1) 
     .then(() => {
-        console.log('Appwrite SDK loaded via CDN:', APPWRITE_CDN);
+        console.log('Appwrite SDK loaded via CDN:', APPWRITE_CDN_1); // گوهێرین ل ڤێرە ژی
         // small delay sometimes helps let UMD attach — optional
         setTimeout(() => trackTelegramUser(), 0);
     })
     .catch(err => {
         console.error('Appwrite SDK failed to load from CDN:', err);
-        // Optional fallback: try unpkg or show a message to user/admin
-        // loadScript('https://unpkg.com/appwrite@23.0.0').then(...).catch(...)
+        // ئەگەر APPWRITE_CDN_1 ئاریشە هەبوو، دشێی APPWRITE_CDN_2 بکاربینی
+        loadScript(APPWRITE_CDN_2)
+        .then(() => {
+            console.log('Appwrite SDK loaded via fallback CDN:', APPWRITE_CDN_2);
+            setTimeout(() => trackTelegramUser(), 0);
+        })
+        .catch(fallbackErr => {
+            console.error('Appwrite SDK failed to load from both CDNs:', fallbackErr);
+        });
     });
-}
-
-// Start tracking after the page loads
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => initTrackingWithLoader());
-} else {
-    initTrackingWithLoader();
 }
 </script>
 </body>
