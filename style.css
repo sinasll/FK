@@ -30,7 +30,6 @@
             line-height: 1.6;
         }
 
-        /* --- Header --- */
         header {
             position: fixed;
             top: 0;
@@ -45,6 +44,22 @@
             justify-content: space-between;
             padding: 0 5%;
             z-index: 1000;
+            width: 100%;
+        }
+
+        main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100dvh;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            padding-top: 70px; /* Adjust this if your header is taller/shorter */
+            padding-bottom: 20px;
+            box-sizing: border-box;
+            touch-action: pan-y; /* Only allow vertical scrolling */
+            overscroll-behavior-y: contain; /* Stops scroll chaining */
         }
 
         .logo {
