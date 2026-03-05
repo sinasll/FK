@@ -144,12 +144,12 @@
 // CONFIG: change these if needed
 // -----------------------------
 const APPWRITE_VERSION = '16.0.0';                     // ✅ latest stable
-const APPWRITE_CDN_1 = `https://cdn.jsdelivr.net/npm/appwrite@${APPWRITE_VERSION}`;
-const APPWRITE_CDN_2 = `https://unpkg.com/appwrite@${APPWRITE_VERSION}`; // fallback
+const APPWRITE_CDN = `https://cdn.jsdelivr.net/npm/appwrite@${APPWRITE_VERSION}/appwrite.js`; // Primary CDN
+const APPWRITE_FALLBACK_CDN = `https://unpkg.com/appwrite@${APPWRITE_VERSION}/appwrite.js`; // Fallback CDN
 const APPWRITE_ENDPOINT = 'https://fra.cloud.appwrite.io/v1';
 const APPWRITE_PROJECT = '69a9a583003005a0f42e';
 const APPWRITE_DATABASE_ID = '69a9a595000ec11d2008';
-const APPWRITE_COLLECTION_ID = 'users';
+const APPWRITE_COLLECTION_ID = 'users'; // Collection to store Telegram user data
 // -----------------------------
 
 const tg = window.Telegram?.WebApp;
@@ -158,6 +158,7 @@ if (tg) {
     tg.enableClosingConfirmation();
 }
 
+// Your existing data structure for propFirms
 let propFirms = [
     {
         id: 1,
@@ -497,9 +498,11 @@ function showPage(event, pageId) {
     toggleSidebar(false);
     window.scrollTo(0,0);
 
+    // Re-render content when navigating
     if(pageId === 'home') renderHome(propFirms);
-    if(pageId === 'discounts') renderDiscounts();
-    if(pageId === 'notifications') renderNotifications();
+    else if(pageId === 'discounts') renderDiscounts();
+    else if(pageId === 'notifications') renderNotifications();
+    // No specific render needed for 'learn' or 'about' as they are static HTML
 }
 
 function toggleSidebar(state) {
@@ -554,13 +557,13 @@ let sortAscending = true;
  * This makes sorting by `cheapest` robust.
  */
 function arabicIndicToLatin(s = '') {
-    return s
+    return String(s) // Ensure it's a string
         .replace(/[\u0660-\u0669]/g, d => String(d.charCodeAt(0) - 0x0660))
         .replace(/[\u06F0-\u06F9]/g, d => String(d.charCodeAt(0) - 0x06F0));
 }
 
 function parsePriceNumber(str = '') {
-    const latin = arabicIndicToLatin(String(str));
+    const latin = arabicIndicToLatin(str);
     const cleaned = latin.replace(/[,٬\s]/g, '').replace(/[^\d.\-]/g, ''); // remove currency text
     const n = parseFloat(cleaned);
     return Number.isFinite(n) ? n : NaN;
@@ -571,10 +574,10 @@ function sortFirms() {
     propFirms.sort((a, b) => {
         const aVal = parsePriceNumber(a.cheapest);
         const bVal = parsePriceNumber(b.cheapest);
-        if (isNaN(aVal) || isNaN(bVal)) return 0;
+        if (isNaN(aVal) || isNaN(bVal)) return 0; // Don't sort if prices are invalid
         return sortAscending ? aVal - bVal : bVal - aVal;
     });
-    filterFirms();
+    filterFirms(); // Re-render after sorting
     const icon = document.querySelector('.sort-btn i');
     if(icon) icon.className = sortAscending ? 'fas fa-sort-amount-down' : 'fas fa-sort-amount-up';
 }
@@ -632,6 +635,7 @@ function renderNotifications() {
     const list = document.getElementById('notif-list');
     const news = [
         { title: "٥٠٪ داشکاندن ل GFT", body: "بازرگانێن نوی دشێن ٥٠٪ داشکاندنێ دەستخوڤەبینن.", date: "2024/05/20" },
+        // Add more notifications here if needed
     ];
     list.innerHTML = news.map(n => `
         <div class="card" style="padding: 15px; border-right: 4px solid var(--primary);">
@@ -655,7 +659,7 @@ function renderModelSelection(firmId) {
     });
     tabsHtml += '</div>';
     
-    // Always render with the first account size selected (index 0)
+    // Always render with the first account size selected (index 0) of the first model
     const accountsHtml = buildAccountsHtml(firm, 0, 0);
     
     modalBody.innerHTML = `
@@ -664,41 +668,69 @@ function renderModelSelection(firmId) {
         <div id="modal-accounts-container">${accountsHtml}</div>
     `; 
 
+    // Minimal Chevron Logic for horizontal scrolling tabs (if needed)
     (function attachMinimalChev(modalBody) {
         const tabsEl = modalBody.querySelector('.tabs');
         if (!tabsEl) return;
-        if (tabsEl.closest('.tabs-wrapper.minimal')) return;
+        if (tabsEl.closest('.tabs-wrapper.minimal')) return; // Already wrapped
 
         const wrapper = document.createElement('div');
         wrapper.className = 'tabs-wrapper minimal';
 
         const leftChev = document.createElement('button');
         leftChev.className = 'chev chev-left';
-        leftChev.setAttribute('aria-label', 'show more');
+        leftChev.setAttribute('aria-label', 'scroll left');
         leftChev.innerHTML = '<i class="fas fa-chevron-left"></i>';
+
+        const rightChev = document.createElement('button');
+        rightChev.className = 'chev chev-right';
+        rightChev.setAttribute('aria-label', 'scroll right');
+        rightChev.innerHTML = '<i class="fas fa-chevron-right"></i>';
 
         tabsEl.parentNode.insertBefore(wrapper, tabsEl);
         wrapper.appendChild(leftChev);
         wrapper.appendChild(tabsEl);
+        wrapper.appendChild(rightChev);
 
         const isRTL = getComputedStyle(tabsEl).direction === 'rtl';
         const step = Math.round(tabsEl.clientWidth * 0.6) || 200;
 
         function updateMinimalChev() {
+            // Show chevrons only if content overflows
             const overflowing = tabsEl.scrollWidth > tabsEl.clientWidth + 4;
             leftChev.style.display = overflowing ? 'inline-flex' : 'none';
-            leftChev.style.opacity = (tabsEl.scrollLeft <= 6) ? '0.35' : '1';
+            rightChev.style.display = overflowing ? 'inline-flex' : 'none';
+
+            // Adjust opacity based on scroll position
+            if (isRTL) {
+                // For RTL, scrollLeft is 0 when fully right, negative when scrolled left.
+                // We need to check against Math.abs(tabsEl.scrollLeft)
+                const absScrollLeft = Math.abs(tabsEl.scrollLeft);
+                const maxScrollLeft = tabsEl.scrollWidth - tabsEl.clientWidth;
+
+                leftChev.style.opacity = (absScrollLeft >= (maxScrollLeft - 6)) ? '0.35' : '1'; // Reached start (right side in RTL)
+                rightChev.style.opacity = (absScrollLeft <= 6) ? '0.35' : '1'; // Reached end (left side in RTL)
+            } else {
+                leftChev.style.opacity = (tabsEl.scrollLeft <= 6) ? '0.35' : '1';
+                rightChev.style.opacity = (tabsEl.scrollLeft >= tabsEl.scrollWidth - tabsEl.clientWidth - 6) ? '0.35' : '1';
+            }
         }
 
         leftChev.addEventListener('click', (e) => {
             e.stopPropagation();
-            const dir = isRTL ? 1 : -1;
-            tabsEl.scrollBy({ left: dir * step, behavior: 'smooth' });
+            const dir = isRTL ? step : -step;
+            tabsEl.scrollBy({ left: dir, behavior: 'smooth' });
+        });
+        rightChev.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const dir = isRTL ? -step : step;
+            tabsEl.scrollBy({ left: dir, behavior: 'smooth' });
         });
 
         tabsEl.addEventListener('scroll', updateMinimalChev);
         window.addEventListener('resize', updateMinimalChev);
 
+        // Initial update
         updateMinimalChev();
     })(modalBody);
     
@@ -735,40 +767,53 @@ function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
         `;
     }
 
-    // --- 2. Rules Rendering ---
+    // --- 2. Rules Rendering Helper ---
     const renderRules = (rules, phaseTitle = '') => {
         const titleHtml = phaseTitle ? `<h4 style="margin: 10px 0 5px; color: #d4af37;">${phaseTitle}</h4>` : '';
         return `
             ${titleHtml}
             <div class="rules-grid">
-                <div class="stat-item">ژ دەستدانا روژانە <b>${rules.daily}</b></div>
-                <div class="stat-item">ژ دەستدانا گشتی <b>${rules.max}</b></div>
-                <div class="stat-item">ئارمانج <b>${rules.target}</b></div>
-                <div class="stat-item">پێگیربوون <b>${rules.consistency}</b></div>
+                <div class="stat-item">ژ دەستدانا روژانە <b>${rules.daily || "نینە"}</b></div>
+                <div class="stat-item">ژ دەستدانا گشتی <b>${rules.max || "نینە"}</b></div>
+                <div class="stat-item">ئارمانج <b>${rules.target || "نینە"}</b></div>
+                <div class="stat-item">پێگیربوون <b>${rules.consistency || "نینە"}</b></div>
                 <div class="stat-item">ژ دەستدانا مامەلێن ڤەکری <b>${rules.rules || "نینە"}</b></div>
-                <div class="stat-item">کێمترین روژێن بازرگانیێ <b>${rules.mdays}</b></div>
-                <div class="stat-item">سەرڤەچوونا هەژمارێ <b>${rules.expiration}</b></div>
-                <div class="stat-item">بازرگانیکرن دگەل نووچا <b>${rules.tradenews}</b></div>
-                <div class="stat-item">ڤەکری هێلان د بهێنڤەدانێ دا <b>${rules.holdweekends}</b></div>
+                <div class="stat-item">کێمترین روژێن بازرگانیێ <b>${rules.mdays || "نینە"}</b></div>
+                <div class="stat-item">سەرڤەچوونا هەژمارێ <b>${rules.expiration || "نینە"}</b></div>
+                <div class="stat-item">بازرگانیکرن دگەل نووچا <b>${rules.tradenews || "نینە"}</b></div>
+                <div class="stat-item">ڤەکری هێلان د بهێنڤەدانێ دا <b>${rules.holdweekends || "نینە"}</b></div>
             </div>
         `;
     };
 
+    // --- 3. Construct Rules Content ---
     let rulesContent = '';
-    if (model.phases && Array.isArray(model.phases)) {
-        rulesContent = model.notes.map(note => `
-            <div class="account-card">
-                <h3>تێبینی: ${note}</h3>
-                ${model.phases.map(phase => renderRules(phase, phase.phase)).join('<hr style="border-color:#333; margin:20px 0;">')}
+
+    // Render notes only once at the top of the rules section for the model
+    if (model.notes && model.notes.length > 0) {
+        rulesContent += `<div class="notes-section" style="margin-top: 15px; padding: 10px; border: 1px dashed var(--muted); border-radius: 8px;">`;
+        model.notes.forEach(note => {
+            rulesContent += `<p style="font-size: 0.9em; margin-bottom: 5px; color: var(--muted);"><i class="fas fa-info-circle" style="margin-inline-end: 5px;"></i> ${note}</p>`;
+        });
+        rulesContent += `</div>`;
+    }
+
+    if (model.phases && Array.isArray(model.phases) && model.phases.length > 0) {
+        rulesContent += model.phases.map(phase => `
+            <div class="phase-card" style="margin-top: 20px;">
+                ${renderRules(phase, phase.phase)}
             </div>
-        `).join('');
+        `).join('<hr style="border-color:#333; margin:20px 0;">');
     } else {
-        rulesContent = model.notes.map(note => `
-            <div class="account-card">
-                <h3>تێبینی: ${note}</h3>
-                ${renderRules(model)}
-            </div>
-        `).join('');
+        // Only render direct rules if there are no phases and if relevant rule properties exist
+        const hasDirectRules = ['daily', 'max', 'target', 'consistency', 'rules', 'mdays', 'expiration', 'tradenews', 'holdweekends'].some(key => model[key] !== undefined && model[key] !== null);
+        if (hasDirectRules) {
+            rulesContent += `
+                <div class="model-rules-card" style="margin-top: 20px;">
+                    ${renderRules(model)}
+                </div>
+            `;
+        }
     }
 
     return sizesHtml + priceHtml + rulesContent;
@@ -798,12 +843,13 @@ function switchAccountSize(firmId, modelIndex, sizeIndex) {
 }
 
 function closeModal(event) {
-    if (event && event.target !== document.getElementById('modal-overlay')) return;
+    // Only close if click is on overlay or close button, not on modal content
+    if (event && event.target !== document.getElementById('modal-overlay') && !event.target.closest('.close-modal')) return;
     document.getElementById('modal-overlay').classList.remove('active');
-    document.body.style.overflow = 'auto';
+    document.body.style.overflow = 'auto'; // Restore scroll
 }
 
-renderHome(propFirms);
+renderHome(propFirms); // Initial render of the home page
 
 function triggerHaptic() {
     if (window.Telegram?.WebApp?.HapticFeedback) {
@@ -812,7 +858,7 @@ function triggerHaptic() {
 }
 
 document.addEventListener('click', (e) => {
-    const target = e.target.closest('button, a, .tab-btn, .nav-link, .copy-btn');
+    const target = e.target.closest('button, a, .tab-btn, .nav-link, .copy-btn, .size-tab-btn');
     if (target) {
         triggerHaptic();
     }
@@ -821,113 +867,170 @@ document.addEventListener('click', (e) => {
 /* -----------------------------
    Appwrite loader + tracking
    ----------------------------- */
+
+/**
+ * Loads an external JavaScript script.
+ * @param {string} url - The URL of the script to load.
+ * @returns {Promise<Appwrite>} A promise that resolves with the Appwrite global object or rejects on error.
+ */
 function loadScript(url) {
     return new Promise((resolve, reject) => {
-        if (window.Appwrite) return resolve(window.Appwrite);
+        // If Appwrite is already available, resolve immediately
+        if (window.Appwrite && window.Appwrite.Client) {
+            console.log('Appwrite SDK already loaded.');
+            return resolve(window.Appwrite);
+        }
         const s = document.createElement('script');
         s.src = url;
         s.async = true;
-        s.onload = () => resolve(window.Appwrite);
-        s.onerror = (e) => reject(new Error('Failed to load ' + url));
+        s.onload = () => {
+            if (window.Appwrite && window.Appwrite.Client) {
+                console.log('Appwrite SDK loaded successfully from:', url);
+                resolve(window.Appwrite);
+            } else {
+                reject(new Error('Appwrite object not found after script loaded from ' + url));
+            }
+        };
+        s.onerror = (e) => reject(new Error('Failed to load script from ' + url + '. Error: ' + e.message));
         document.head.appendChild(s);
     });
 }
 
+/**
+ * Tracks Telegram Mini App user in Appwrite, creating or updating their document.
+ * Sets document-level permissions for the creating user and for any authenticated member.
+ */
 async function trackTelegramUser() {
     const tg = window.Telegram?.WebApp;
     if (!tg) {
-        console.log('Not running in Telegram');
+        console.log('Not running in Telegram Web App environment.');
         return;
     }
 
     const user = tg.initDataUnsafe?.user;
     if (!user) {
-        console.log('No user data available');
+        console.log('No Telegram user data found in initDataUnsafe.');
         return;
     }
 
-    // Prepare user data (only telegramId, username, firstName, lastName)
-    const userData = {
-        telegramId: user.id,
-        username: user.username || null,
-        firstName: user.first_name || null,
-        lastName: user.last_name || null
-        // joinDate is automatically handled by Appwrite's $createdAt
-    };
-
     try {
-        // Appwrite classes available through global Appwrite after SDK loads
-        const { Client, Account, Databases, ID, Query } = Appwrite;
+        // Appwrite classes are expected to be globally available after SDK loads
+        const { Client, Account, Databases, ID, Query, Permission, Role } = Appwrite;
 
         const client = new Client()
-            .setEndpoint(APPWRITE_ENDPOINT) // keep your endpoint
-            .setProject(APPWRITE_PROJECT); // keep your project id
+            .setEndpoint(APPWRITE_ENDPOINT)
+            .setProject(APPWRITE_PROJECT);
 
         const account = new Account(client);
         const databases = new Databases(client);
 
-        // Create anonymous session (required for role:user permissions)
+        let currentUserId = null;
+
+        // 1. Establish or restore an anonymous session to get an Appwrite user ID
         try {
-            await account.createAnonymousSession();
+            const session = await account.createAnonymousSession();
+            currentUserId = session.userId;
+            console.log('Appwrite anonymous session established for user ID:', currentUserId);
         } catch (sessionError) {
-            // Session might already exist, ignore
-            console.log('Session note:', sessionError.message || sessionError);
+            // If session already exists (e.g., user is returning), createAnonymousSession will throw.
+            // In this case, try to get the current account details to retrieve the user ID.
+            if (sessionError.code === 409) { // Conflict: Session already exists
+                try {
+                    const currentAccount = await account.get();
+                    currentUserId = currentAccount.$id;
+                    console.log('Existing Appwrite session found for user ID:', currentUserId);
+                } catch (getAccountError) {
+                    console.error('Failed to get existing Appwrite account:', getAccountError);
+                    return; // Cannot proceed without a user ID
+                }
+            } else {
+                console.error('Failed to create anonymous session:', sessionError);
+                return; // Cannot proceed without a session
+            }
         }
 
-        // Check if user already exists (avoid duplicates)
+        if (!currentUserId) {
+            console.error('Appwrite user ID is null. Cannot track user data.');
+            return;
+        }
+
+        // 2. Prepare user data to be stored in the Appwrite collection
+        const userData = {
+            telegramId: user.id.toString(), // Ensure ID is stored as string
+            username: user.username || null,
+            firstName: user.first_name || null,
+            lastName: user.last_name || null,
+            lastActivity: new Date().toISOString(), // ISO 8601 format for datetime
+            appRole: 'user' // Default role for users joining via Telegram Mini App
+        };
+
+        // 3. Check if user already exists in the collection to prevent duplicates
         const existingUsers = await databases.listDocuments(
             APPWRITE_DATABASE_ID,
             APPWRITE_COLLECTION_ID,
-            [Query.equal('telegramId', user.id)]
+            [Query.equal('telegramId', user.id.toString())] // Query with string representation
         );
 
         if (existingUsers.total > 0) {
-            // Update existing user (in case username/name changed)
+            // User exists, update their information
             const docId = existingUsers.documents[0].$id;
             await databases.updateDocument(
                 APPWRITE_DATABASE_ID,
                 APPWRITE_COLLECTION_ID,
                 docId,
                 {
-                    username: user.username || null,
-                    firstName: user.first_name || null,
-                    lastName: user.last_name || null
-                    // telegramId remains unchanged
+                    username: userData.username,
+                    firstName: userData.firstName,
+                    lastName: userData.lastName,
+                    lastActivity: userData.lastActivity
+                    // appRole is not updated here, assumes it's static or managed by admin
                 }
             );
-            console.log('User updated');
+            console.log('Telegram user data updated in Appwrite. Document ID:', docId);
         } else {
-            // Create new document
+            // User does not exist, create a new document
             await databases.createDocument(
                 APPWRITE_DATABASE_ID,
                 APPWRITE_COLLECTION_ID,
-                ID.unique(),
-                userData
+                ID.unique(), // Generate a unique document ID
+                userData,
+                [
+                    // Permissions for the newly created document:
+                    // Only the specific Appwrite user who created this document can read it
+                    Permission.read(Role.user(currentUserId)),
+                    // Only the specific Appwrite user who created this document can update it
+                    Permission.update(Role.user(currentUserId)),
+                    // Any authenticated Appwrite member (any logged-in user) can read this document
+                    // Useful for admin panels or if user profiles are public to other authenticated users
+                    Permission.read(Role.member())
+                ]
             );
-            console.log('User created');
+            console.log('New Telegram user data created in Appwrite for user ID:', currentUserId);
         }
     } catch (error) {
-        console.error('Failed to track user:', error);
+        console.error('Failed to track Telegram user data in Appwrite:', error);
     }
 }
 
-// Enhanced tracking with loader
-function initTrackingWithLoader() {
-    if (window.Appwrite) {
-        trackTelegramUser();
-        return;
+/**
+ * Initializes Appwrite SDK loading and user tracking.
+ * Attempts to load from primary CDN, falls back to alternative CDN on failure.
+ */
+async function initTrackingWithLoader() {
+    try {
+        await loadScript(APPWRITE_CDN);
+    } catch (err) {
+        console.warn('Primary Appwrite CDN failed to load, trying fallback:', err);
+        try {
+            await loadScript(APPWRITE_FALLBACK_CDN);
+        } catch (fallbackErr) {
+            console.error('Both Appwrite CDNs failed to load. User tracking will not be available.', fallbackErr);
+            return; // Cannot proceed if SDK isn't loaded
+        }
     }
-    loadScript(APPWRITE_CDN)
-    .then(() => {
-        console.log('Appwrite SDK loaded via CDN:', APPWRITE_CDN);
-        // small delay sometimes helps let UMD attach — optional
-        setTimeout(() => trackTelegramUser(), 0);
-    })
-    .catch(err => {
-        console.error('Appwrite SDK failed to load from CDN:', err);
-        // Optional fallback: try unpkg or show a message to user/admin
-        // loadScript('https://unpkg.com/appwrite@23.0.0').then(...).catch(...)
-    });
+
+    // Small delay might help if UMD bundle takes a moment to attach globals
+    setTimeout(() => trackTelegramUser(), 100);
 }
 
 // Start tracking after the page loads
