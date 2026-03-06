@@ -196,8 +196,12 @@
         }
     }
 
-    // Call tracking when page loads
     trackTelegramUser();
+
+if (window.Telegram?.WebApp) {
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+}
 
     // -----------------------------
     // YOUR EXISTING CODE (unchanged below)
