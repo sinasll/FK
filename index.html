@@ -9,76 +9,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-    <!-- Firebase SDKs - MAKE SURE TO USE THE LATEST VERSION NUMBERS -->
-    <!-- For Firebase JS SDK v9+ modular, use these: -->
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-      import { getFirestore, setDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-      
-      // Your web app's Firebase configuration
-      // IMPORTANT: Replace these with your actual Firebase project configuration values
-const firebaseConfig = {
-  apiKey: "AIzaSyAuPOSf50H0kvRC5VgmTPPVfKTgyrx_bZc",
-  authDomain: "fkapp-1c6c4.firebaseapp.com",
-  projectId: "fkapp-1c6c4",
-  storageBucket: "fkapp-1c6c4.appspot.com",
-  messagingSenderId: "1081666781814",
-  appId: "1:1081666781814:web:d8e4f8013fd3a4403c5557",
-  measurementId: "G-T5WX3JBX16"
-};
-
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-
-      // Function to store Telegram user data in Firestore
-      async function storeTelegramUserData() {
-          if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
-              const user = window.Telegram.WebApp.initDataUnsafe.user;
-              const telegramId = user.id;
-
-              if (!telegramId) {
-                  console.warn("Ayman AI: Telegram user ID not found. Cannot store data.");
-                  return;
-              }
-
-              const userData = {
-                  telegramId: user.id,
-                  username: user.username || null, // username can be null
-                  firstName: user.first_name || null,
-                  lastName: user.last_name || null,
-                  languageCode: user.language_code || null,
-                  isPremium: user.is_premium || false, // is_premium is optional
-                  photoUrl: user.photo_url || null, // photo_url is optional
-                  lastSeen: serverTimestamp() // Timestamp of last access
-              };
-
-              try {
-                  // Use set with { merge: true } to create a new document if it doesn't exist,
-                  // or update existing fields without overwriting the entire document if it does.
-                  await setDoc(doc(db, "telegram_users", String(telegramId)), userData, { merge: true });
-                  console.log("Ayman AI: Telegram user data stored/updated successfully for ID:", telegramId);
-              } catch (error) {
-                  console.error("Ayman AI: Error storing Telegram user data:", error);
-              }
-          } else {
-              console.log("Ayman AI: Telegram WebApp user data not available. Skipping data storage.");
-          }
-      }
-
-      // Call the function to store user data when the DOM is fully loaded.
-      // A small delay can sometimes help ensure Telegram WebApp is fully initialized.
-      document.addEventListener('DOMContentLoaded', () => {
-          setTimeout(storeTelegramUserData, 500); 
-      });
-
-      // Expose the db and storeTelegramUserData to the global scope if needed for other scripts (less common with modules)
-      window.firebaseApp = app;
-      window.firestoreDb = db;
-      window.storeTelegramUserData = storeTelegramUserData; // Useful for debugging or manual trigger
-    </script>
+    <!-- Firebase SDKs (compat version for simplicity) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -209,12 +144,79 @@ const firebaseConfig = {
     <div class="toast" id="toast">کود هاتە کۆپیکرن</div>
 
 <script>
-// -----------------------------
-// CONFIG: change these if needed
-// -----------------------------
-// (Appwrite-related config removed)
 
-// Your existing data structure for propFirms
+const firebaseConfig = {
+    apiKey: "AIzaSyAl0isgL-Kycr_Z2qSlWbH5Bqn0QL-0Il8",
+    authDomain: "fund-kurd-mini-app.firebaseapp.com",
+    projectId: "fund-kurd-mini-app",
+    storageBucket: "fund-kurd-mini-app.firebasestorage.app",
+    messagingSenderId: "520050036487",
+    appId: "1:520050036487:web:bb5ae05729bebfdbf1bfa2",  
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// -----------------------------
+// SAVE TELEGRAM USER DATA
+// -----------------------------
+async function saveTelegramUser() {
+    try {
+        const tg = window.Telegram?.WebApp;
+        if (!tg) {
+            console.log("Not in Telegram environment");
+            return;
+        }
+        
+        const user = tg.initDataUnsafe?.user;
+        if (!user) {
+            console.log("No user data available");
+            return;
+        }
+
+        const userId = String(user.id);
+        const userRef = db.collection("users").doc(userId);
+
+        await db.runTransaction(async (transaction) => {
+            const doc = await transaction.get(userRef);
+            const now = firebase.firestore.FieldValue.serverTimestamp();
+
+            if (!doc.exists) {
+                // New user: set both firstSeen and lastSeen
+                transaction.set(userRef, {
+                    telegramId: user.id,
+                    username: user.username || null,
+                    firstName: user.first_name || null,
+                    lastName: user.last_name || null,
+                    languageCode: user.language_code || null,
+                    firstSeen: now,
+                    lastSeen: now
+                });
+                console.log("New user saved");
+            } else {
+                // Returning user: update info and lastSeen only
+                transaction.update(userRef, {
+                    username: user.username || null,
+                    firstName: user.first_name || null,
+                    lastName: user.last_name || null,
+                    languageCode: user.language_code || null,
+                    lastSeen: now
+                });
+                console.log("Existing user updated");
+            }
+        });
+    } catch (error) {
+        console.error("Error saving user to Firestore:", error);
+    }
+}
+
+// Run when the page has loaded
+document.addEventListener("DOMContentLoaded", saveTelegramUser);
+
+// -----------------------------
+// YOUR EXISTING CODE (unchanged below)
+// -----------------------------
 let propFirms = [
     {
         id: 1,
@@ -305,7 +307,7 @@ let propFirms = [
             },
             {
                 name: "Pay Later",
-                notes: ["پارێ ڤێ هەژمارێ پشتی دەرچوونێ دهێتە دان و هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                notes: ["پارێ ڤێ هەژمارێ پشتی دەرچوونێ دهێتە دان و هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
                 accounts: [
                     { size: "5K", price: "$0 (پاشێ بدە)" },
                     { size: "10K", price: "$0 (پاشێ بدە)" },
@@ -340,7 +342,7 @@ let propFirms = [
             },
             {
                 name: "1 Step",
-                notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
                 accounts: [
                     { size: "5K", price: "$29" },
                     { size: "10K", price: "$49" },
@@ -392,7 +394,7 @@ let propFirms = [
             },
             {
                 name: "2 Step Standard",
-                notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
                 accounts: [
                     { size: "5K", price: "$32" },
                     { size: "10K", price: "$60" }
@@ -426,7 +428,7 @@ let propFirms = [
             },
             {
                 name: "2 Step Goat",
-                notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
                 accounts: [
                     { size: "5K", price: "$25" },
                     { size: "10K", price: "$45" }
@@ -460,7 +462,7 @@ let propFirms = [
             },
             {
                 name: "2 Step Pro",
-                notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
                 accounts: [
                     { size: "5K", price: "$20" },
                     { size: "10K", price: "$38" }
@@ -494,7 +496,7 @@ let propFirms = [
             },
             {
                 name: "3 Step",
-                notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
                 accounts: [
                     { size: "10K", price: "$35" },
                     { size: "25K", price: "$75" }
@@ -558,7 +560,6 @@ function showPage(event, pageId) {
     if(pageId === 'home') renderHome(propFirms);
     else if(pageId === 'discounts') renderDiscounts();
     else if(pageId === 'notifications') renderNotifications();
-    // No specific render needed for 'learn' or 'about' as they are static HTML
 }
 
 function toggleSidebar(state) {
@@ -608,19 +609,15 @@ function renderHome(firmsToRender) {
 
 let sortAscending = true;
 
-/**
- * Helper: convert Arabic-Indic digits to Latin digits and parse numeric part of price strings.
- * This makes sorting by `cheapest` robust.
- */
 function arabicIndicToLatin(s = '') {
-    return String(s) // Ensure it's a string
+    return String(s)
         .replace(/[\u0660-\u0669]/g, d => String(d.charCodeAt(0) - 0x0660))
         .replace(/[\u06F0-\u06F9]/g, d => String(d.charCodeAt(0) - 0x06F0));
 }
 
 function parsePriceNumber(str = '') {
     const latin = arabicIndicToLatin(str);
-    const cleaned = latin.replace(/[,٬\s]/g, '').replace(/[^\d.\-]/g, ''); // remove currency text
+    const cleaned = latin.replace(/[,٬\s]/g, '').replace(/[^\d.\-]/g, '');
     const n = parseFloat(cleaned);
     return Number.isFinite(n) ? n : NaN;
 }
@@ -630,10 +627,10 @@ function sortFirms() {
     propFirms.sort((a, b) => {
         const aVal = parsePriceNumber(a.cheapest);
         const bVal = parsePriceNumber(b.cheapest);
-        if (isNaN(aVal) || isNaN(bVal)) return 0; // Don't sort if prices are invalid
+        if (isNaN(aVal) || isNaN(bVal)) return 0;
         return sortAscending ? aVal - bVal : bVal - aVal;
     });
-    filterFirms(); // Re-render after sorting
+    filterFirms();
     const icon = document.querySelector('.sort-btn i');
     if(icon) icon.className = sortAscending ? 'fas fa-sort-amount-down' : 'fas fa-sort-amount-up';
 }
@@ -691,7 +688,6 @@ function renderNotifications() {
     const list = document.getElementById('notif-list');
     const news = [
         { title: "٥٠٪ داشکاندن ل GFT", body: "بازرگانێن نوی دشێن ٥٠٪ داشکاندنێ دەستخوڤەبینن.", date: "2024/05/20" },
-        // Add more notifications here if needed
     ];
     list.innerHTML = news.map(n => `
         <div class="card" style="padding: 15px; border-right: 4px solid var(--primary);">
@@ -715,7 +711,6 @@ function renderModelSelection(firmId) {
     });
     tabsHtml += '</div>';
     
-    // Always render with the first account size selected (index 0) of the first model
     const accountsHtml = buildAccountsHtml(firm, 0, 0);
     
     modalBody.innerHTML = `
@@ -724,11 +719,10 @@ function renderModelSelection(firmId) {
         <div id="modal-accounts-container">${accountsHtml}</div>
     `; 
 
-    // Minimal Chevron Logic for horizontal scrolling tabs (if needed)
     (function attachMinimalChev(modalBody) {
         const tabsEl = modalBody.querySelector('.tabs');
         if (!tabsEl) return;
-        if (tabsEl.closest('.tabs-wrapper.minimal')) return; // Already wrapped
+        if (tabsEl.closest('.tabs-wrapper.minimal')) return;
 
         const wrapper = document.createElement('div');
         wrapper.className = 'tabs-wrapper minimal';
@@ -752,20 +746,15 @@ function renderModelSelection(firmId) {
         const step = Math.round(tabsEl.clientWidth * 0.6) || 200;
 
         function updateMinimalChev() {
-            // Show chevrons only if content overflows
             const overflowing = tabsEl.scrollWidth > tabsEl.clientWidth + 4;
             leftChev.style.display = overflowing ? 'inline-flex' : 'none';
             rightChev.style.display = overflowing ? 'inline-flex' : 'none';
 
-            // Adjust opacity based on scroll position
             if (isRTL) {
-                // For RTL, scrollLeft is 0 when fully right, negative when scrolled left.
-                // We need to check against Math.abs(tabsEl.scrollLeft)
                 const absScrollLeft = Math.abs(tabsEl.scrollLeft);
                 const maxScrollLeft = tabsEl.scrollWidth - tabsEl.clientWidth;
-
-                leftChev.style.opacity = (absScrollLeft >= (maxScrollLeft - 6)) ? '0.35' : '1'; // Reached start (right side in RTL)
-                rightChev.style.opacity = (absScrollLeft <= 6) ? '0.35' : '1'; // Reached end (left side in RTL)
+                leftChev.style.opacity = (absScrollLeft >= (maxScrollLeft - 6)) ? '0.35' : '1';
+                rightChev.style.opacity = (absScrollLeft <= 6) ? '0.35' : '1';
             } else {
                 leftChev.style.opacity = (tabsEl.scrollLeft <= 6) ? '0.35' : '1';
                 rightChev.style.opacity = (tabsEl.scrollLeft >= tabsEl.scrollWidth - tabsEl.clientWidth - 6) ? '0.35' : '1';
@@ -785,8 +774,6 @@ function renderModelSelection(firmId) {
 
         tabsEl.addEventListener('scroll', updateMinimalChev);
         window.addEventListener('resize', updateMinimalChev);
-
-        // Initial update
         updateMinimalChev();
     })(modalBody);
     
@@ -798,7 +785,6 @@ function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
     const model = firm.models[modelIndex];
     if (!model) return '';
 
-    // --- 1. Account Sizes & Pricing Sub-tabs ---
     let sizesHtml = '';
     let priceHtml = '';
     
@@ -809,7 +795,6 @@ function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
         
         model.accounts.forEach((acc, idx) => {
             const activeClass = idx === activeSizeIndex ? 'active' : '';
-            
             sizesHtml += `<button class="size-tab-btn ${activeClass}" onclick="switchAccountSize(${firm.id}, ${modelIndex}, ${idx})">${acc.size}</button>`;
         });
         
@@ -823,7 +808,6 @@ function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
         `;
     }
 
-    // --- 2. Rules Rendering Helper ---
     const renderRules = (rules, phaseTitle = '') => {
         const titleHtml = phaseTitle ? `<h4 style="margin: 10px 0 5px; color: #d4af37;">${phaseTitle}</h4>` : '';
         return `
@@ -836,16 +820,14 @@ function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
                 <div class="stat-item">ژ دەستدانا مامەلێن ڤەکری <b>${rules.rules || "نینە"}</b></div>
                 <div class="stat-item">کێمترین روژێن بازرگانیێ <b>${rules.mdays || "نینە"}</b></div>
                 <div class="stat-item">سەرڤەچوونا هەژمارێ <b>${rules.expiration || "نینە"}</b></div>
-                <div class="stat-item">بازرگانیکرن دگەل نووچا <b>${rules.tradenews || "بەلێ"}</b></div>
-                <div class="stat-item">ڤەکری هێلان د بهێنڤەدانێ دا <b>${rules.holdweekends || "بەلێ"}</b></div>
+                <div class="stat-item">بازرگانیکرن دگەل نووچا <b>${rules.tradenews || "نینە"}</b></div>
+                <div class="stat-item">ڤەکری هێلان د بهێنڤەدانێ دا <b>${rules.holdweekends || "نینە"}</b></div>
             </div>
         `;
     };
 
-    // --- 3. Construct Rules Content ---
     let rulesContent = '';
 
-    // Render notes only once at the top of the rules section for the model
     if (model.notes && model.notes.length > 0) {
         rulesContent += `<div class="notes-section" style="margin-top: 15px; padding: 10px; border: 1px dashed var(--muted); border-radius: 8px;">`;
         model.notes.forEach(note => {
@@ -861,7 +843,6 @@ function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
             </div>
         `).join('<hr style="border-color:#333; margin:20px 0;">');
     } else {
-        // Only render direct rules if there are no phases and if relevant rule properties exist
         const hasDirectRules = ['daily', 'max', 'target', 'consistency', 'rules', 'mdays', 'expiration', 'tradenews', 'holdweekends'].some(key => model[key] !== undefined && model[key] !== null);
         if (hasDirectRules) {
             rulesContent += `
@@ -879,7 +860,6 @@ function switchModel(firmId, modelIndex) {
     const firm = propFirms.find(f => f.id === firmId);
     const container = document.getElementById('modal-accounts-container');
     if (container) {
-        // Always load the first size (index 0) when switching main model tabs
         container.innerHTML = buildAccountsHtml(firm, modelIndex, 0);
     }
     
@@ -893,19 +873,17 @@ function switchAccountSize(firmId, modelIndex, sizeIndex) {
     const firm = propFirms.find(f => f.id === firmId);
     const container = document.getElementById('modal-accounts-container');
     if (container) {
-        // Re-render the HTML with the newly selected size index
         container.innerHTML = buildAccountsHtml(firm, modelIndex, sizeIndex);
     }
 }
 
 function closeModal(event) {
-    // Only close if click is on overlay or close button, not on modal content
     if (event && event.target !== document.getElementById('modal-overlay') && !event.target.closest('.close-modal')) return;
     document.getElementById('modal-overlay').classList.remove('active');
-    document.body.style.overflow = 'auto'; // Restore scroll
+    document.body.style.overflow = 'auto';
 }
 
-renderHome(propFirms); // Initial render of the home page
+renderHome(propFirms);
 
 function triggerHaptic() {
     if (window.Telegram?.WebApp?.HapticFeedback) {
