@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="style.css">
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Firebase SDKs (compat version for simplicity) -->
+    <!-- Firebase SDKs (compat version) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
@@ -144,743 +144,744 @@
     <div class="toast" id="toast">کود هاتە کۆپیکرن</div>
 
 <script>
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-import { getFirestore, doc, setDoc, serverTimestamp, initializeFirestore } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-
-    // Firebase configuration
+    // -----------------------------
+    // Firebase Configuration (compat)
+    // -----------------------------
     const firebaseConfig = {
-    apiKey: "AIzaSyAl0isgL-Kycr_Z2qSlWbH5Bqn0QL-0Il8",
-    authDomain: "fund-kurd-mini-app.firebaseapp.com",
-    projectId: "fund-kurd-mini-app",
-    storageBucket: "fund-kurd-mini-app.firebasestorage.app",
-    messagingSenderId: "520050036487",
-    appId: "1:520050036487:web:bb5ae05729bebfdbf1bfa2",
+        apiKey: "AIzaSyAl0isgL-Kycr_Z2qSlWbH5Bqn0QL-0Il8",
+        authDomain: "fund-kurd-mini-app.firebaseapp.com",
+        projectId: "fund-kurd-mini-app",
+        storageBucket: "fund-kurd-mini-app.firebasestorage.app",
+        messagingSenderId: "520050036487",
+        appId: "1:520050036487:web:bb5ae05729bebfdbf1bfa2",
     };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    
-    // Initialize Firestore with persistence
-    const db = initializeFirestore(app, {
-      experimentalForceLongPolling: true
-    });
+    // Initialize Firebase (compat)
+    firebase.initializeApp(firebaseConfig);
+    // Initialize Firestore with persistence (optional)
+    const db = firebase.firestore();
+    db.settings({ experimentalForceLongPolling: true });
 
+    // -----------------------------
     // Telegram User Tracking Function
+    // -----------------------------
     async function trackTelegramUser() {
-      try {
-        const tg = window.Telegram?.WebApp;
-        if (!tg) return;
+        try {
+            const tg = window.Telegram?.WebApp;
+            if (!tg) return;
 
-        const userData = tg.initDataUnsafe?.user;
-        if (!userData) return;
+            const userData = tg.initDataUnsafe?.user;
+            if (!userData) return;
 
-        const userId = String(userData.id);
-        const userRef = doc(db, "users", userId);
+            const userId = String(userData.id);
+            const userRef = db.collection("users").doc(userId);
 
-        await setDoc(userRef, {
-          telegramId: userId,
-          username: userData.username || userData.first_name,
-          firstName: userData.first_name || "Anonymous",
-          lastName: userData.last_name || null,
-          languageCode: userData.language_code || "en",
-          chatId: tg.initDataUnsafe.chat?.id || "personal",
-          photoUrl: userData.photo_url || null,
-          joinedAt: serverTimestamp(),
-          lastActive: serverTimestamp(),
-          userAgent: navigator.userAgent,
-          platform: navigator.platform
-        }, { merge: true });
+            await userRef.set({
+                telegramId: userId,
+                username: userData.username || userData.first_name,
+                firstName: userData.first_name || "Anonymous",
+                lastName: userData.last_name || null,
+                languageCode: userData.language_code || "en",
+                chatId: tg.initDataUnsafe.chat?.id || "personal",
+                photoUrl: userData.photo_url || null,
+                joinedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                userAgent: navigator.userAgent,
+                platform: navigator.platform
+            }, { merge: true });
 
-        console.log("User tracking successful");
-      } catch (error) {
-        console.error("User tracking failed:", error);
-      }
+            console.log("User tracking successful");
+        } catch (error) {
+            console.error("User tracking failed:", error);
+        }
     }
 
-// -----------------------------
-// YOUR EXISTING CODE (unchanged below)
-// -----------------------------
-let propFirms = [
-    {
-        id: 1,
-        name: "Goat Funded Trader",
-        code: "BOGO40",
-        extraCodes: ["GFT50"],
-        logo: "GFT.png",
-        cheapest: "١٧ دولاران",
-        cheapestIQD: "٢٣,٠٠٠ دیناران",
-        bestModel: "Instant GOAT",
-        payout: "١٤ روژان جارەکێ",
-        profitSplit: "٨٠٪ هەتا ١٠٠٪",
-        platforms: "MT5 - TradeLocker - CTrader - MatchTrader - Volumetrica",
-        link: "https://goatfundedtrader.com",
-        guarantee: "ئەگەر دماوێ ٤٨ دەمژمێران دا قازانجێ تە نە هاتە دان، دێ $٥٠٠ زێدەتر لسەر قزانجێ خو وەرگری",
-        models: [
-            {
-                name: "Instant PRO",
-                daily: "نینە",
-                max: "٤٪ (دیفچوون)",
-                target: "نینە",
-                consistency: "٢٠٪",
-                rules: "٢٪",
-                mdays: "٥ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
-                expiration: "نینە",
-                tradenews: "بەلێ",
-                holdweekends: "بەلێ",
-                accounts: [
-                    { size: "٢,٥٠٠$", price: "٦٨$" },
-                    { size: "٥,٠٠٠$", price: "١١٨$" },
-                    { size: "١٠,٠٠٠$", price: "١٦٨$" },
-                    { size: "١٥,٠٠٠$", price: "٢٣٨$" },
-                    { size: "٢٥,٠٠٠$", price: "٣٢٨$" },
-                    { size: "٥٠,٠٠٠$", price: "٤٩٨$" },
-                    { size: "١٠٠,٠٠٠$", price: "٨٥٨$" }
-                ]
-            },
-            {
-                name: "Instant GOAT",
-                daily: "٣٪ (دیفچوون)",
-                max: "٦٪ (دیفچوون)",
-                target: "نینە",
-                consistency: "١٥٪",
-                rules: "٢٪",
-                mdays: "٥ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
-                expiration: "نینە",
-                tradenews: "بەلێ",
-                holdweekends: "بەلێ",
-                accounts: [
-                    { size: "5K", price: "$25" },
-                    { size: "10K", price: "$50" }
-                ]
-            },
-            {
-                name: "Instant Blitz",
-                daily: "٢٪",
-                max: "٤٪ (دیفچوون)",
-                target: "٥٪",
-                consistency: "٢٥٪",
-                rules: "٢٪",
-                mdays: "نینە",
-                notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
-                expiration: "نینە",
-                tradenews: "بەلێ",
-                holdweekends: "بەلێ",
-                accounts: [
-                    { size: "8K", price: "$35" },
-                    { size: "15K", price: "$65" }
-                ]
-            },
-            {
-                name: "Goat 1$",
-                daily: "٣٪ (دیفچوون)",
-                max: "٦٪ (دیفچوون)",
-                target: "٥٪",
-                consistency: "١٥٪",
-                rules: "٢٪",
-                mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                notes: ["بتنێ ئێک جار دشێی ڤێ هەژمارێ دەستخوڤەبینی"],
-                expiration: "٢٨ روژ",
-                tradenews: "بەلێ",
-                holdweekends: "بەلێ",
-                accounts: [
-                    { size: "1K", price: "$1" }
-                ]
-            },
-            {
-                name: "Pay Later",
-                notes: ["پارێ ڤێ هەژمارێ پشتی دەرچوونێ دهێتە دان و هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
-                accounts: [
-                    { size: "5K", price: "$0 (پاشێ بدە)" },
-                    { size: "10K", price: "$0 (پاشێ بدە)" },
-                    { size: "50K", price: "$0 (پاشێ بدە)" }
-                ],
-                phases: [
-                    {
-                        phase: "قۆناغا هەڵسەنگاندنێ",
-                        daily: "نینە",
-                        max: "٨٪",
-                        target: "٤٪",
-                        consistency: "نینە",
-                        rules: "نینە",
-                        mdays: "نینە",
-                        expiration: "نینە",
-                        tradenews: "بەلێ",
-                        holdweekends: "بەلێ"
-                    },
-                    {
-                        phase: "قۆناغا فەندکری",
-                        daily: "٣٪ (دیفچوون)",
-                        max: "٦٪ (دیفچوون)",
-                        target: "نینە",
-                        consistency: "٢٠٪",
-                        rules: "٢٪",
-                        mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                        expiration: "نینە",
-                        tradenews: "بەلێ",
-                        holdweekends: "بەلێ"
-                    }
-                ]
-            },
-            {
-                name: "1 Step",
-                notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
-                accounts: [
-                    { size: "5K", price: "$29" },
-                    { size: "10K", price: "$49" },
-                    { size: "100K", price: "$399" }
-                ],
-                phases: [
-                    {
-                        phase: "قۆناغا هەڵسەنگاندنێ",
-                        daily: "٤٪",
-                        max: "٦٪",
-                        target: "١٠٪",
-                        consistency: "نینە",
-                        rules: "نینە",
-                        mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                        expiration: "نینە",
-                        tradenews: "بەلێ",
-                        holdweekends: "بەلێ"
-                    },
-                    {
-                        phase: "قۆناغا فەندکری",
-                        daily: "٤٪",
-                        max: "٦٪",
-                        target: "١٠٪",
-                        consistency: "نینە",
-                        rules: "نینە",
-                        mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                        expiration: "نینە",
-                        tradenews: "بەلێ",
-                        holdweekends: "بەلێ"
-                    }
-                ]
-            },
-            {
-                name: "Goat Blitz",
-                notes: ["ئەڤ مودێلە ب شێوەکێ دەمکی و بتنێ ل دوو بێهنڤەدانێن هەیڤێ ژ نشکەکیڤە دهێت"],
-                daily: "٣٪ (دیفچوون)",
-                max: "٥٪ (دیفچوون)",
-                target: "٣٪",
-                consistency: "١٥٪",
-                rules: "٢٪",
-                mdays: "٥ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                expiration: "نینە",
-                tradenews: "بەلێ",
-                holdweekends: "بەلێ",
-                accounts: [
-                    { size: "25K", price: "$99" },
-                    { size: "50K", price: "$149" }
-                ]
-            },
-            {
-                name: "2 Step Standard",
-                notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
-                accounts: [
-                    { size: "5K", price: "$32" },
-                    { size: "10K", price: "$60" }
-                ],
-                phases: [
-                    {
-                        phase: "قۆناغا ئێکێ",
-                        daily: "٥٪",
-                        max: "١٠٪",
-                        target: "١٠٪",
-                        consistency: "نینە",
-                        rules: "نینە",
-                        mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                        expiration: "نینە",
-                        tradenews: "بەلێ",
-                        holdweekends: "بەلێ"
-                    },
-                    {
-                        phase: "قۆناغا دووێ",
-                        daily: "٥٪",
-                        max: "١٠٪",
-                        target: "٥٪",
-                        consistency: "نینە",
-                        rules: "نینە",
-                        mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                        expiration: "نینە",
-                        tradenews: "بەلێ",
-                        holdweekends: "بەلێ"
-                    }
-                ]
-            },
-            {
-                name: "2 Step Goat",
-                notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
-                accounts: [
-                    { size: "5K", price: "$25" },
-                    { size: "10K", price: "$45" }
-                ],
-                phases: [
-                    {
-                        phase: "قۆناغا ئێکێ",
-                        daily: "٤٪",
-                        max: "١٠٪",
-                        target: "٨٪",
-                        consistency: "نینە",
-                        rules: "نینە",
-                        mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                        expiration: "نینە",
-                        tradenews: "بەلێ",
-                        holdweekends: "بەلێ"
-                    },
-                    {
-                        phase: "قۆناغا دووێ",
-                        daily: "٤٪",
-                        max: "١0٪",
-                        target: "٦٪",
-                        consistency: "نینە",
-                        rules: "نینە",
-                        mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                        expiration: "نینە",
-                        tradenews: "بەلێ",
-                        holdweekends: "بەلێ"
-                    }
-                ]
-            },
-            {
-                name: "2 Step Pro",
-                notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
-                accounts: [
-                    { size: "5K", price: "$20" },
-                    { size: "10K", price: "$38" }
-                ],
-                phases: [
-                    {
-                        phase: "قۆناغا ئێکێ",
-                        daily: "٤٪",
-                        max: "٨٪",
-                        target: "٨٪",
-                        consistency: "نینە",
-                        rules: "نینە",
-                        mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                        expiration: "نینە",
-                        tradenews: "بەلێ",
-                        holdweekends: "بەلێ"
-                    },
-                    {
-                        phase: "قۆناغا دووێ",
-                        daily: "٤٪",
-                        max: "٨٪",
-                        target: "٤٪",
-                        consistency: "نینە",
-                        rules: "نینە",
-                        mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                        expiration: "نینە",
-                        tradenews: "بەلێ",
-                        holdweekends: "بەلێ"
-                    }
-                ]
-            },
-            {
-                name: "3 Step",
-                notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
-                accounts: [
-                    { size: "10K", price: "$35" },
-                    { size: "25K", price: "$75" }
-                ],
-                phases: [
-                    {
-                        phase: "قۆناغا ئێکێ",
-                        daily: "٤٪",
-                        max: "٨٪",
-                        target: "٦٪",
-                        consistency: "نینە",
-                        rules: "نینە",
-                        mdays: "نینە",
-                        expiration: "نینە",
-                        tradenews: "بەلێ",
-                        holdweekends: "بەلێ"
-                    },
-                    {
-                        phase: "قۆناغا دووێ",
-                        daily: "٤٪",
-                        max: "٨٪",
-                        target: "٦٪",
-                        consistency: "نینە",
-                        rules: "نینە",
-                        mdays: "نینە",
-                        expiration: "نینە",
-                        tradenews: "بەلێ",
-                        holdweekends: "بەلێ"
-                    },
-                    {
-                        phase: "قۆناغا سیێ",
-                        daily: "٤٪",
-                        max: "٨٪",
-                        target: "٦٪",
-                        consistency: "نینە",
-                        rules: "نینە",
-                        mdays: "نینە",
-                        expiration: "نینە",
-                        tradenews: "بەلێ",
-                        holdweekends: "بەلێ"
-                    }
-                ]
-            }
-        ]
-    }
-];
+    // Call tracking when page loads
+    trackTelegramUser();
 
-function showPage(event, pageId) {
-    if(event) event.preventDefault();
-    
-    document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    
-    document.getElementById(pageId).classList.add('active');
-    if(event) event.currentTarget.classList.add('active');
-    
-    toggleSidebar(false);
-    window.scrollTo(0,0);
+    // -----------------------------
+    // YOUR EXISTING CODE (unchanged below)
+    // -----------------------------
+    let propFirms = [
+        {
+            id: 1,
+            name: "Goat Funded Trader",
+            code: "BOGO40",
+            extraCodes: ["GFT50"],
+            logo: "GFT.png",
+            cheapest: "١٧ دولاران",
+            cheapestIQD: "٢٣,٠٠٠ دیناران",
+            bestModel: "Instant GOAT",
+            payout: "١٤ روژان جارەکێ",
+            profitSplit: "٨٠٪ هەتا ١٠٠٪",
+            platforms: "MT5 - TradeLocker - CTrader - MatchTrader - Volumetrica",
+            link: "https://goatfundedtrader.com",
+            guarantee: "ئەگەر دماوێ ٤٨ دەمژمێران دا قازانجێ تە نە هاتە دان، دێ $٥٠٠ زێدەتر لسەر قزانجێ خو وەرگری",
+            models: [
+                {
+                    name: "Instant PRO",
+                    daily: "نینە",
+                    max: "٤٪ (دیفچوون)",
+                    target: "نینە",
+                    consistency: "٢٠٪",
+                    rules: "٢٪",
+                    mdays: "٥ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                    notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    expiration: "نینە",
+                    tradenews: "بەلێ",
+                    holdweekends: "بەلێ",
+                    accounts: [
+                        { size: "٢,٥٠٠$", price: "٦٨$" },
+                        { size: "٥,٠٠٠$", price: "١١٨$" },
+                        { size: "١٠,٠٠٠$", price: "١٦٨$" },
+                        { size: "١٥,٠٠٠$", price: "٢٣٨$" },
+                        { size: "٢٥,٠٠٠$", price: "٣٢٨$" },
+                        { size: "٥٠,٠٠٠$", price: "٤٩٨$" },
+                        { size: "١٠٠,٠٠٠$", price: "٨٥٨$" }
+                    ]
+                },
+                {
+                    name: "Instant GOAT",
+                    daily: "٣٪ (دیفچوون)",
+                    max: "٦٪ (دیفچوون)",
+                    target: "نینە",
+                    consistency: "١٥٪",
+                    rules: "٢٪",
+                    mdays: "٥ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                    notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    expiration: "نینە",
+                    tradenews: "بەلێ",
+                    holdweekends: "بەلێ",
+                    accounts: [
+                        { size: "5K", price: "$25" },
+                        { size: "10K", price: "$50" }
+                    ]
+                },
+                {
+                    name: "Instant Blitz",
+                    daily: "٢٪",
+                    max: "٤٪ (دیفچوون)",
+                    target: "٥٪",
+                    consistency: "٢٥٪",
+                    rules: "٢٪",
+                    mdays: "نینە",
+                    notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    expiration: "نینە",
+                    tradenews: "بەلێ",
+                    holdweekends: "بەلێ",
+                    accounts: [
+                        { size: "8K", price: "$35" },
+                        { size: "15K", price: "$65" }
+                    ]
+                },
+                {
+                    name: "Goat 1$",
+                    daily: "٣٪ (دیفچوون)",
+                    max: "٦٪ (دیفچوون)",
+                    target: "٥٪",
+                    consistency: "١٥٪",
+                    rules: "٢٪",
+                    mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                    notes: ["بتنێ ئێک جار دشێی ڤێ هەژمارێ دەستخوڤەبینی"],
+                    expiration: "٢٨ روژ",
+                    tradenews: "بەلێ",
+                    holdweekends: "بەلێ",
+                    accounts: [
+                        { size: "1K", price: "$1" }
+                    ]
+                },
+                {
+                    name: "Pay Later",
+                    notes: ["پارێ ڤێ هەژمارێ پشتی دەرچوونێ دهێتە دان و هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    accounts: [
+                        { size: "5K", price: "$0 (پاشێ بدە)" },
+                        { size: "10K", price: "$0 (پاشێ بدە)" },
+                        { size: "50K", price: "$0 (پاشێ بدە)" }
+                    ],
+                    phases: [
+                        {
+                            phase: "قۆناغا هەڵسەنگاندنێ",
+                            daily: "نینە",
+                            max: "٨٪",
+                            target: "٤٪",
+                            consistency: "نینە",
+                            rules: "نینە",
+                            mdays: "نینە",
+                            expiration: "نینە",
+                            tradenews: "بەلێ",
+                            holdweekends: "بەلێ"
+                        },
+                        {
+                            phase: "قۆناغا فەندکری",
+                            daily: "٣٪ (دیفچوون)",
+                            max: "٦٪ (دیفچوون)",
+                            target: "نینە",
+                            consistency: "٢٠٪",
+                            rules: "٢٪",
+                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                            expiration: "نینە",
+                            tradenews: "بەلێ",
+                            holdweekends: "بەلێ"
+                        }
+                    ]
+                },
+                {
+                    name: "1 Step",
+                    notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    accounts: [
+                        { size: "5K", price: "$29" },
+                        { size: "10K", price: "$49" },
+                        { size: "100K", price: "$399" }
+                    ],
+                    phases: [
+                        {
+                            phase: "قۆناغا هەڵسەنگاندنێ",
+                            daily: "٤٪",
+                            max: "٦٪",
+                            target: "١٠٪",
+                            consistency: "نینە",
+                            rules: "نینە",
+                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                            expiration: "نینە",
+                            tradenews: "بەلێ",
+                            holdweekends: "بەلێ"
+                        },
+                        {
+                            phase: "قۆناغا فەندکری",
+                            daily: "٤٪",
+                            max: "٦٪",
+                            target: "١٠٪",
+                            consistency: "نینە",
+                            rules: "نینە",
+                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                            expiration: "نینە",
+                            tradenews: "بەلێ",
+                            holdweekends: "بەلێ"
+                        }
+                    ]
+                },
+                {
+                    name: "Goat Blitz",
+                    notes: ["ئەڤ مودێلە ب شێوەکێ دەمکی و بتنێ ل دوو بێهنڤەدانێن هەیڤێ ژ نشکەکیڤە دهێت"],
+                    daily: "٣٪ (دیفچوون)",
+                    max: "٥٪ (دیفچوون)",
+                    target: "٣٪",
+                    consistency: "١٥٪",
+                    rules: "٢٪",
+                    mdays: "٥ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                    expiration: "نینە",
+                    tradenews: "بەلێ",
+                    holdweekends: "بەلێ",
+                    accounts: [
+                        { size: "25K", price: "$99" },
+                        { size: "50K", price: "$149" }
+                    ]
+                },
+                {
+                    name: "2 Step Standard",
+                    notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    accounts: [
+                        { size: "5K", price: "$32" },
+                        { size: "10K", price: "$60" }
+                    ],
+                    phases: [
+                        {
+                            phase: "قۆناغا ئێکێ",
+                            daily: "٥٪",
+                            max: "١٠٪",
+                            target: "١٠٪",
+                            consistency: "نینە",
+                            rules: "نینە",
+                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                            expiration: "نینە",
+                            tradenews: "بەلێ",
+                            holdweekends: "بەلێ"
+                        },
+                        {
+                            phase: "قۆناغا دووێ",
+                            daily: "٥٪",
+                            max: "١٠٪",
+                            target: "٥٪",
+                            consistency: "نینە",
+                            rules: "نینە",
+                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                            expiration: "نینە",
+                            tradenews: "بەلێ",
+                            holdweekends: "بەلێ"
+                        }
+                    ]
+                },
+                {
+                    name: "2 Step Goat",
+                    notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    accounts: [
+                        { size: "5K", price: "$25" },
+                        { size: "10K", price: "$45" }
+                    ],
+                    phases: [
+                        {
+                            phase: "قۆناغا ئێکێ",
+                            daily: "٤٪",
+                            max: "١٠٪",
+                            target: "٨٪",
+                            consistency: "نینە",
+                            rules: "نینە",
+                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                            expiration: "نینە",
+                            tradenews: "بەلێ",
+                            holdweekends: "بەلێ"
+                        },
+                        {
+                            phase: "قۆناغا دووێ",
+                            daily: "٤٪",
+                            max: "١0٪",
+                            target: "٦٪",
+                            consistency: "نینە",
+                            rules: "نینە",
+                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                            expiration: "نینە",
+                            tradenews: "بەلێ",
+                            holdweekends: "بەلێ"
+                        }
+                    ]
+                },
+                {
+                    name: "2 Step Pro",
+                    notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    accounts: [
+                        { size: "5K", price: "$20" },
+                        { size: "10K", price: "$38" }
+                    ],
+                    phases: [
+                        {
+                            phase: "قۆناغا ئێکێ",
+                            daily: "٤٪",
+                            max: "٨٪",
+                            target: "٨٪",
+                            consistency: "نینە",
+                            rules: "نینە",
+                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                            expiration: "نینە",
+                            tradenews: "بەلێ",
+                            holdweekends: "بەلێ"
+                        },
+                        {
+                            phase: "قۆناغا دووێ",
+                            daily: "٤٪",
+                            max: "٨٪",
+                            target: "٤٪",
+                            consistency: "نینە",
+                            rules: "نینە",
+                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
+                            expiration: "نینە",
+                            tradenews: "بەلێ",
+                            holdweekends: "بەلێ"
+                        }
+                    ]
+                },
+                {
+                    name: "3 Step",
+                    notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    accounts: [
+                        { size: "10K", price: "$35" },
+                        { size: "25K", price: "$75" }
+                    ],
+                    phases: [
+                        {
+                            phase: "قۆناغا ئێکێ",
+                            daily: "٤٪",
+                            max: "٨٪",
+                            target: "٦٪",
+                            consistency: "نینە",
+                            rules: "نینە",
+                            mdays: "نینە",
+                            expiration: "نینە",
+                            tradenews: "بەلێ",
+                            holdweekends: "بەلێ"
+                        },
+                        {
+                            phase: "قۆناغا دووێ",
+                            daily: "٤٪",
+                            max: "٨٪",
+                            target: "٦٪",
+                            consistency: "نینە",
+                            rules: "نینە",
+                            mdays: "نینە",
+                            expiration: "نینە",
+                            tradenews: "بەلێ",
+                            holdweekends: "بەلێ"
+                        },
+                        {
+                            phase: "قۆناغا سیێ",
+                            daily: "٤٪",
+                            max: "٨٪",
+                            target: "٦٪",
+                            consistency: "نینە",
+                            rules: "نینە",
+                            mdays: "نینە",
+                            expiration: "نینە",
+                            tradenews: "بەلێ",
+                            holdweekends: "بەلێ"
+                        }
+                    ]
+                }
+            ]
+        }
+    ];
 
-    // Re-render content when navigating
-    if(pageId === 'home') renderHome(propFirms);
-    else if(pageId === 'discounts') renderDiscounts();
-    else if(pageId === 'notifications') renderNotifications();
-}
+    function showPage(event, pageId) {
+        if(event) event.preventDefault();
+        
+        document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        
+        document.getElementById(pageId).classList.add('active');
+        if(event) event.currentTarget.classList.add('active');
+        
+        toggleSidebar(false);
+        window.scrollTo(0,0);
 
-function toggleSidebar(state) {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.querySelector('.sidebar-overlay');
-    const isActive = state !== undefined ? state : !sidebar.classList.contains('active');
-    
-    sidebar.classList.toggle('active', isActive);
-    overlay.classList.toggle('active', isActive);
-}
-
-function renderHome(firmsToRender) {
-    const grid = document.getElementById('firm-grid');
-    
-    if (!firmsToRender || firmsToRender.length === 0) {
-        grid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--muted);">هیچ کۆمپانیایەک نەدۆزرایەوە.</p>';
-        return;
+        // Re-render content when navigating
+        if(pageId === 'home') renderHome(propFirms);
+        else if(pageId === 'discounts') renderDiscounts();
+        else if(pageId === 'notifications') renderNotifications();
     }
 
-    grid.innerHTML = firmsToRender.map(firm => `
-        <div class="card">
-            <div class="card-header">
-                <div class="card-logo">
-                    <img src="${firm.logo}" alt="${firm.name} logo">
+    function toggleSidebar(state) {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        const isActive = state !== undefined ? state : !sidebar.classList.contains('active');
+        
+        sidebar.classList.toggle('active', isActive);
+        overlay.classList.toggle('active', isActive);
+    }
+
+    function renderHome(firmsToRender) {
+        const grid = document.getElementById('firm-grid');
+        
+        if (!firmsToRender || firmsToRender.length === 0) {
+            grid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--muted);">هیچ کۆمپانیایەک نەدۆزرایەوە.</p>';
+            return;
+        }
+
+        grid.innerHTML = firmsToRender.map(firm => `
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-logo">
+                        <img src="${firm.logo}" alt="${firm.name} logo">
+                    </div>
+                    <div class="card-title">
+                        <h3>${firm.name}</h3>
+                    </div>
                 </div>
-                <div class="card-title">
-                    <h3>${firm.name}</h3>
+                <div class="guarantee">قازانج دان ب گرەنتییە</div>
+                <div class="price-tag">دەستپێدکەت ژ ${firm.cheapest} / ${firm.cheapestIQD}</div>
+                <div class="card-stats">
+                    <div class="stat-item">پێدانا پارەی<b>${firm.payout}</b></div>
+                    <div class="stat-item">پشکا قازانجی<b>${firm.profitSplit}</b></div>
+                    <div class="stat-item">پلاتفورم<b class="platform-item">${firm.platforms}</b></div>
+                </div>
+                <button class="btn-primary" onclick="renderModelSelection(${firm.id})">زێدەتر ببینە</button>
+                <div class="code-box" style="margin-top: 20px; border-color: #d4af37; background: rgba(212, 175, 55, 0.1);">
+                    <a href="${firm.link}" target="_blank" style="text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <span style="font-weight: bold; font-size: 0.9rem;">سەرەدانا سایتی بکە</span>
+                        <i class="fas fa-external-link-alt" style="color: #d4af37;"></i>
+                    </a>
                 </div>
             </div>
-            <div class="guarantee">قازانج دان ب گرەنتییە</div>
-            <div class="price-tag">دەستپێدکەت ژ ${firm.cheapest} / ${firm.cheapestIQD}</div>
-            <div class="card-stats">
-                <div class="stat-item">پێدانا پارەی<b>${firm.payout}</b></div>
-                <div class="stat-item">پشکا قازانجی<b>${firm.profitSplit}</b></div>
-                <div class="stat-item">پلاتفورم<b class="platform-item">${firm.platforms}</b></div>
-            </div>
-            <button class="btn-primary" onclick="renderModelSelection(${firm.id})">زێدەتر ببینە</button>
-            <div class="code-box" style="margin-top: 20px; border-color: #d4af37; background: rgba(212, 175, 55, 0.1);">
-                <a href="${firm.link}" target="_blank" style="text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                    <span style="font-weight: bold; font-size: 0.9rem;">سەرەدانا سایتی بکە</span>
-                    <i class="fas fa-external-link-alt" style="color: #d4af37;"></i>
-                </a>
-            </div>
-        </div>
-    `).join('');
-}
+        `).join('');
+    }
 
-let sortAscending = true;
+    let sortAscending = true;
 
-function arabicIndicToLatin(s = '') {
-    return String(s)
-        .replace(/[\u0660-\u0669]/g, d => String(d.charCodeAt(0) - 0x0660))
-        .replace(/[\u06F0-\u06F9]/g, d => String(d.charCodeAt(0) - 0x06F0));
-}
+    function arabicIndicToLatin(s = '') {
+        return String(s)
+            .replace(/[\u0660-\u0669]/g, d => String(d.charCodeAt(0) - 0x0660))
+            .replace(/[\u06F0-\u06F9]/g, d => String(d.charCodeAt(0) - 0x06F0));
+    }
 
-function parsePriceNumber(str = '') {
-    const latin = arabicIndicToLatin(str);
-    const cleaned = latin.replace(/[,٬\s]/g, '').replace(/[^\d.\-]/g, '');
-    const n = parseFloat(cleaned);
-    return Number.isFinite(n) ? n : NaN;
-}
+    function parsePriceNumber(str = '') {
+        const latin = arabicIndicToLatin(str);
+        const cleaned = latin.replace(/[,٬\s]/g, '').replace(/[^\d.\-]/g, '');
+        const n = parseFloat(cleaned);
+        return Number.isFinite(n) ? n : NaN;
+    }
 
-function sortFirms() {
-    sortAscending = !sortAscending;
-    propFirms.sort((a, b) => {
-        const aVal = parsePriceNumber(a.cheapest);
-        const bVal = parsePriceNumber(b.cheapest);
-        if (isNaN(aVal) || isNaN(bVal)) return 0;
-        return sortAscending ? aVal - bVal : bVal - aVal;
-    });
-    filterFirms();
-    const icon = document.querySelector('.sort-btn i');
-    if(icon) icon.className = sortAscending ? 'fas fa-sort-amount-down' : 'fas fa-sort-amount-up';
-}
+    function sortFirms() {
+        sortAscending = !sortAscending;
+        propFirms.sort((a, b) => {
+            const aVal = parsePriceNumber(a.cheapest);
+            const bVal = parsePriceNumber(b.cheapest);
+            if (isNaN(aVal) || isNaN(bVal)) return 0;
+            return sortAscending ? aVal - bVal : bVal - aVal;
+        });
+        filterFirms();
+        const icon = document.querySelector('.sort-btn i');
+        if(icon) icon.className = sortAscending ? 'fas fa-sort-amount-down' : 'fas fa-sort-amount-up';
+    }
 
-function filterFirms() {
-    const query = document.getElementById('searchInput').value.toLowerCase();
-    const filtered = propFirms.filter(f => (f.name || '').toLowerCase().includes(query));
-    renderHome(filtered);
-}
+    function filterFirms() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = propFirms.filter(f => (f.name || '').toLowerCase().includes(query));
+        renderHome(filtered);
+    }
 
-function copyCode(code) {
-    navigator.clipboard.writeText(code).then(() => {
-        const toast = document.getElementById('toast');
-        toast.classList.add('active');
-        setTimeout(() => {
-            toast.classList.remove('active');
-        }, 3000);
-    }).catch(err => {
-        console.error('Failed to copy text: ', err);
-    });
-}
+    function copyCode(code) {
+        navigator.clipboard.writeText(code).then(() => {
+            const toast = document.getElementById('toast');
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+    }
 
-function renderDiscounts() {
-    const grid = document.getElementById('discount-grid');
-    grid.innerHTML = propFirms.map(firm => `
-        <div class="card" style="text-align: center; direction: rtl;">
-            <h2 class="text-gold" style="font-size: 1.5rem;">${firm.name}</h2>
-            <div class="code-box">
-                <div class="label" style="font-size: 0.8rem; color: #aaa;">ئێکێ بکرە، ئێکێ دیاری وەربگرە</div>
-                <span style="font-weight: bold;">${firm.code}</span>
-                <button class="copy-btn" onclick="copyCode('${firm.code}')">
-                    <i class="far fa-copy"></i>
-                </button>
-            </div>
-            ${(firm.extraCodes || []).map(exCode => `
-                <div class="code-box" style="margin-top: 10px;">
-                    <div class="label" style="font-size: 0.8rem; color: #aaa;">٥٠٪ داشکاندن بو بازرگانێن نوی</div>
-                    <span style="font-weight: bold;">${exCode}</span>
-                    <button class="copy-btn" onclick="copyCode('${exCode}')">
+    function renderDiscounts() {
+        const grid = document.getElementById('discount-grid');
+        grid.innerHTML = propFirms.map(firm => `
+            <div class="card" style="text-align: center; direction: rtl;">
+                <h2 class="text-gold" style="font-size: 1.5rem;">${firm.name}</h2>
+                <div class="code-box">
+                    <div class="label" style="font-size: 0.8rem; color: #aaa;">ئێکێ بکرە، ئێکێ دیاری وەربگرە</div>
+                    <span style="font-weight: bold;">${firm.code}</span>
+                    <button class="copy-btn" onclick="copyCode('${firm.code}')">
                         <i class="far fa-copy"></i>
                     </button>
                 </div>
-            `).join('')}
-            <div class="code-box" style="margin-top: 20px; border-color: #d4af37; background: rgba(212, 175, 55, 0.1);">
-                <a href="${firm.link}" target="_blank" style="text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                    <span style="font-weight: bold; font-size: 0.9rem;">سەرەدانا سایتی بکە</span>
-                    <i class="fas fa-external-link-alt" style="color: #d4af37;"></i>
-                </a>
+                ${(firm.extraCodes || []).map(exCode => `
+                    <div class="code-box" style="margin-top: 10px;">
+                        <div class="label" style="font-size: 0.8rem; color: #aaa;">٥٠٪ داشکاندن بو بازرگانێن نوی</div>
+                        <span style="font-weight: bold;">${exCode}</span>
+                        <button class="copy-btn" onclick="copyCode('${exCode}')">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                `).join('')}
+                <div class="code-box" style="margin-top: 20px; border-color: #d4af37; background: rgba(212, 175, 55, 0.1);">
+                    <a href="${firm.link}" target="_blank" style="text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <span style="font-weight: bold; font-size: 0.9rem;">سەرەدانا سایتی بکە</span>
+                        <i class="fas fa-external-link-alt" style="color: #d4af37;"></i>
+                    </a>
+                </div>
             </div>
-        </div>
-    `).join('');
-}
+        `).join('');
+    }
 
-function renderNotifications() {
-    const list = document.getElementById('notif-list');
-    const news = [
-        { title: "٥٠٪ داشکاندن ل GFT", body: "بازرگانێن نوی دشێن ٥٠٪ داشکاندنێ دەستخوڤەبینن.", date: "2024/05/20" },
-    ];
-    list.innerHTML = news.map(n => `
-        <div class="card" style="padding: 15px; border-right: 4px solid var(--primary);">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h4 style="margin: 0;">${n.title}</h4>
-                <span style="font-size: 0.75rem; color: var(--muted);">${n.date}</span>
+    function renderNotifications() {
+        const list = document.getElementById('notif-list');
+        const news = [
+            { title: "٥٠٪ داشکاندن ل GFT", body: "بازرگانێن نوی دشێن ٥٠٪ داشکاندنێ دەستخوڤەبینن.", date: "2024/05/20" },
+        ];
+        list.innerHTML = news.map(n => `
+            <div class="card" style="padding: 15px; border-right: 4px solid var(--primary);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h4 style="margin: 0;">${n.title}</h4>
+                    <span style="font-size: 0.75rem; color: var(--muted);">${n.date}</span>
+                </div>
+                <p style="color: var(--muted); font-size: 0.9rem; margin-top: 8px;">${n.body}</p>
             </div>
-            <p style="color: var(--muted); font-size: 0.9rem; margin-top: 8px;">${n.body}</p>
-        </div>
-    `).join('');
-}
+        `).join('');
+    }
 
-function renderModelSelection(firmId) {
-    const firm = propFirms.find(f => f.id === firmId);
-    const modalBody = document.getElementById('modal-body');
-    if (!firm) return;
-    
-    let tabsHtml = '<div class="tabs">';
-    (firm.models || []).forEach((model, index) => {
-        tabsHtml += `<button class="tab-btn ${index === 0 ? 'active' : ''}" onclick="switchModel(${firmId}, ${index})">${model.name}</button>`;
-    });
-    tabsHtml += '</div>';
-    
-    const accountsHtml = buildAccountsHtml(firm, 0, 0);
-    
-    modalBody.innerHTML = `
-        <h2 style="margin-bottom: 20px;">${firm.name}</h2>
-        ${tabsHtml}
-        <div id="modal-accounts-container">${accountsHtml}</div>
-    `; 
+    function renderModelSelection(firmId) {
+        const firm = propFirms.find(f => f.id === firmId);
+        const modalBody = document.getElementById('modal-body');
+        if (!firm) return;
+        
+        let tabsHtml = '<div class="tabs">';
+        (firm.models || []).forEach((model, index) => {
+            tabsHtml += `<button class="tab-btn ${index === 0 ? 'active' : ''}" onclick="switchModel(${firmId}, ${index})">${model.name}</button>`;
+        });
+        tabsHtml += '</div>';
+        
+        const accountsHtml = buildAccountsHtml(firm, 0, 0);
+        
+        modalBody.innerHTML = `
+            <h2 style="margin-bottom: 20px;">${firm.name}</h2>
+            ${tabsHtml}
+            <div id="modal-accounts-container">${accountsHtml}</div>
+        `; 
 
-    (function attachMinimalChev(modalBody) {
-        const tabsEl = modalBody.querySelector('.tabs');
-        if (!tabsEl) return;
-        if (tabsEl.closest('.tabs-wrapper.minimal')) return;
+        (function attachMinimalChev(modalBody) {
+            const tabsEl = modalBody.querySelector('.tabs');
+            if (!tabsEl) return;
+            if (tabsEl.closest('.tabs-wrapper.minimal')) return;
 
-        const wrapper = document.createElement('div');
-        wrapper.className = 'tabs-wrapper minimal';
+            const wrapper = document.createElement('div');
+            wrapper.className = 'tabs-wrapper minimal';
 
-        const leftChev = document.createElement('button');
-        leftChev.className = 'chev chev-left';
-        leftChev.setAttribute('aria-label', 'scroll left');
-        leftChev.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            const leftChev = document.createElement('button');
+            leftChev.className = 'chev chev-left';
+            leftChev.setAttribute('aria-label', 'scroll left');
+            leftChev.innerHTML = '<i class="fas fa-chevron-left"></i>';
 
-        const rightChev = document.createElement('button');
-        rightChev.className = 'chev chev-right';
-        rightChev.setAttribute('aria-label', 'scroll right');
-        rightChev.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            const rightChev = document.createElement('button');
+            rightChev.className = 'chev chev-right';
+            rightChev.setAttribute('aria-label', 'scroll right');
+            rightChev.innerHTML = '<i class="fas fa-chevron-right"></i>';
 
-        tabsEl.parentNode.insertBefore(wrapper, tabsEl);
-        wrapper.appendChild(leftChev);
-        wrapper.appendChild(tabsEl);
-        wrapper.appendChild(rightChev);
+            tabsEl.parentNode.insertBefore(wrapper, tabsEl);
+            wrapper.appendChild(leftChev);
+            wrapper.appendChild(tabsEl);
+            wrapper.appendChild(rightChev);
 
-        const isRTL = getComputedStyle(tabsEl).direction === 'rtl';
-        const step = Math.round(tabsEl.clientWidth * 0.6) || 200;
+            const isRTL = getComputedStyle(tabsEl).direction === 'rtl';
+            const step = Math.round(tabsEl.clientWidth * 0.6) || 200;
 
-        function updateMinimalChev() {
-            const overflowing = tabsEl.scrollWidth > tabsEl.clientWidth + 4;
-            leftChev.style.display = overflowing ? 'inline-flex' : 'none';
-            rightChev.style.display = overflowing ? 'inline-flex' : 'none';
+            function updateMinimalChev() {
+                const overflowing = tabsEl.scrollWidth > tabsEl.clientWidth + 4;
+                leftChev.style.display = overflowing ? 'inline-flex' : 'none';
+                rightChev.style.display = overflowing ? 'inline-flex' : 'none';
 
-            if (isRTL) {
-                const absScrollLeft = Math.abs(tabsEl.scrollLeft);
-                const maxScrollLeft = tabsEl.scrollWidth - tabsEl.clientWidth;
-                leftChev.style.opacity = (absScrollLeft >= (maxScrollLeft - 6)) ? '0.35' : '1';
-                rightChev.style.opacity = (absScrollLeft <= 6) ? '0.35' : '1';
-            } else {
-                leftChev.style.opacity = (tabsEl.scrollLeft <= 6) ? '0.35' : '1';
-                rightChev.style.opacity = (tabsEl.scrollLeft >= tabsEl.scrollWidth - tabsEl.clientWidth - 6) ? '0.35' : '1';
+                if (isRTL) {
+                    const absScrollLeft = Math.abs(tabsEl.scrollLeft);
+                    const maxScrollLeft = tabsEl.scrollWidth - tabsEl.clientWidth;
+                    leftChev.style.opacity = (absScrollLeft >= (maxScrollLeft - 6)) ? '0.35' : '1';
+                    rightChev.style.opacity = (absScrollLeft <= 6) ? '0.35' : '1';
+                } else {
+                    leftChev.style.opacity = (tabsEl.scrollLeft <= 6) ? '0.35' : '1';
+                    rightChev.style.opacity = (tabsEl.scrollLeft >= tabsEl.scrollWidth - tabsEl.clientWidth - 6) ? '0.35' : '1';
+                }
             }
-        }
 
-        leftChev.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const dir = isRTL ? step : -step;
-            tabsEl.scrollBy({ left: dir, behavior: 'smooth' });
-        });
-        rightChev.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const dir = isRTL ? -step : step;
-            tabsEl.scrollBy({ left: dir, behavior: 'smooth' });
-        });
+            leftChev.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const dir = isRTL ? step : -step;
+                tabsEl.scrollBy({ left: dir, behavior: 'smooth' });
+            });
+            rightChev.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const dir = isRTL ? -step : step;
+                tabsEl.scrollBy({ left: dir, behavior: 'smooth' });
+            });
 
-        tabsEl.addEventListener('scroll', updateMinimalChev);
-        window.addEventListener('resize', updateMinimalChev);
-        updateMinimalChev();
-    })(modalBody);
-    
-    document.getElementById('modal-overlay').classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
-    const model = firm.models[modelIndex];
-    if (!model) return '';
-
-    let sizesHtml = '';
-    let priceHtml = '';
-    
-    if (model.accounts && model.accounts.length > 0) {
-        const activeAccount = model.accounts[activeSizeIndex] || model.accounts[0];
+            tabsEl.addEventListener('scroll', updateMinimalChev);
+            window.addEventListener('resize', updateMinimalChev);
+            updateMinimalChev();
+        })(modalBody);
         
-        sizesHtml = `<div class="size-tabs">`;
-        
-        model.accounts.forEach((acc, idx) => {
-            const activeClass = idx === activeSizeIndex ? 'active' : '';
-            sizesHtml += `<button class="size-tab-btn ${activeClass}" onclick="switchAccountSize(${firm.id}, ${modelIndex}, ${idx})">${acc.size}</button>`;
-        });
-        
-        sizesHtml += `</div>`;
-        
-        priceHtml = `
-            <div class="price-display">
-                <span>بهایێ هەژمارێ بێی داشکاندن</span>
-                <b>${activeAccount.price}</b>
-            </div>
-        `;
+        document.getElementById('modal-overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
     }
 
-    const renderRules = (rules, phaseTitle = '') => {
-        const titleHtml = phaseTitle ? `<h4 style="margin: 10px 0 5px; color: #d4af37;">${phaseTitle}</h4>` : '';
-        return `
-            ${titleHtml}
-            <div class="rules-grid">
-                <div class="stat-item">ژ دەستدانا روژانە <b>${rules.daily || "نینە"}</b></div>
-                <div class="stat-item">ژ دەستدانا گشتی <b>${rules.max || "نینە"}</b></div>
-                <div class="stat-item">ئارمانج <b>${rules.target || "نینە"}</b></div>
-                <div class="stat-item">پێگیربوون <b>${rules.consistency || "نینە"}</b></div>
-                <div class="stat-item">ژ دەستدانا مامەلێن ڤەکری <b>${rules.rules || "نینە"}</b></div>
-                <div class="stat-item">کێمترین روژێن بازرگانیێ <b>${rules.mdays || "نینە"}</b></div>
-                <div class="stat-item">سەرڤەچوونا هەژمارێ <b>${rules.expiration || "نینە"}</b></div>
-                <div class="stat-item">بازرگانیکرن دگەل نووچا <b>${rules.tradenews || "نینە"}</b></div>
-                <div class="stat-item">ڤەکری هێلان د بهێنڤەدانێ دا <b>${rules.holdweekends || "نینە"}</b></div>
-            </div>
-        `;
-    };
+    function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
+        const model = firm.models[modelIndex];
+        if (!model) return '';
 
-    let rulesContent = '';
-
-    if (model.notes && model.notes.length > 0) {
-        rulesContent += `<div class="notes-section" style="margin-top: 15px; padding: 10px; border: 1px dashed var(--muted); border-radius: 8px;">`;
-        model.notes.forEach(note => {
-            rulesContent += `<p style="font-size: 0.9em; margin-bottom: 5px; color: var(--muted);"><i class="fas fa-info-circle" style="margin-inline-end: 5px;"></i> ${note}</p>`;
-        });
-        rulesContent += `</div>`;
-    }
-
-    if (model.phases && Array.isArray(model.phases) && model.phases.length > 0) {
-        rulesContent += model.phases.map(phase => `
-            <div class="phase-card" style="margin-top: 20px;">
-                ${renderRules(phase, phase.phase)}
-            </div>
-        `).join('<hr style="border-color:#333; margin:20px 0;">');
-    } else {
-        const hasDirectRules = ['daily', 'max', 'target', 'consistency', 'rules', 'mdays', 'expiration', 'tradenews', 'holdweekends'].some(key => model[key] !== undefined && model[key] !== null);
-        if (hasDirectRules) {
-            rulesContent += `
-                <div class="model-rules-card" style="margin-top: 20px;">
-                    ${renderRules(model)}
+        let sizesHtml = '';
+        let priceHtml = '';
+        
+        if (model.accounts && model.accounts.length > 0) {
+            const activeAccount = model.accounts[activeSizeIndex] || model.accounts[0];
+            
+            sizesHtml = `<div class="size-tabs">`;
+            
+            model.accounts.forEach((acc, idx) => {
+                const activeClass = idx === activeSizeIndex ? 'active' : '';
+                sizesHtml += `<button class="size-tab-btn ${activeClass}" onclick="switchAccountSize(${firm.id}, ${modelIndex}, ${idx})">${acc.size}</button>`;
+            });
+            
+            sizesHtml += `</div>`;
+            
+            priceHtml = `
+                <div class="price-display">
+                    <span>بهایێ هەژمارێ بێی داشکاندن</span>
+                    <b>${activeAccount.price}</b>
                 </div>
             `;
         }
+
+        const renderRules = (rules, phaseTitle = '') => {
+            const titleHtml = phaseTitle ? `<h4 style="margin: 10px 0 5px; color: #d4af37;">${phaseTitle}</h4>` : '';
+            return `
+                ${titleHtml}
+                <div class="rules-grid">
+                    <div class="stat-item">ژ دەستدانا روژانە <b>${rules.daily || "نینە"}</b></div>
+                    <div class="stat-item">ژ دەستدانا گشتی <b>${rules.max || "نینە"}</b></div>
+                    <div class="stat-item">ئارمانج <b>${rules.target || "نینە"}</b></div>
+                    <div class="stat-item">پێگیربوون <b>${rules.consistency || "نینە"}</b></div>
+                    <div class="stat-item">ژ دەستدانا مامەلێن ڤەکری <b>${rules.rules || "نینە"}</b></div>
+                    <div class="stat-item">کێمترین روژێن بازرگانیێ <b>${rules.mdays || "نینە"}</b></div>
+                    <div class="stat-item">سەرڤەچوونا هەژمارێ <b>${rules.expiration || "نینە"}</b></div>
+                    <div class="stat-item">بازرگانیکرن دگەل نووچا <b>${rules.tradenews || "نینە"}</b></div>
+                    <div class="stat-item">ڤەکری هێلان د بهێنڤەدانێ دا <b>${rules.holdweekends || "نینە"}</b></div>
+                </div>
+            `;
+        };
+
+        let rulesContent = '';
+
+        if (model.notes && model.notes.length > 0) {
+            rulesContent += `<div class="notes-section" style="margin-top: 15px; padding: 10px; border: 1px dashed var(--muted); border-radius: 8px;">`;
+            model.notes.forEach(note => {
+                rulesContent += `<p style="font-size: 0.9em; margin-bottom: 5px; color: var(--muted);"><i class="fas fa-info-circle" style="margin-inline-end: 5px;"></i> ${note}</p>`;
+            });
+            rulesContent += `</div>`;
+        }
+
+        if (model.phases && Array.isArray(model.phases) && model.phases.length > 0) {
+            rulesContent += model.phases.map(phase => `
+                <div class="phase-card" style="margin-top: 20px;">
+                    ${renderRules(phase, phase.phase)}
+                </div>
+            `).join('<hr style="border-color:#333; margin:20px 0;">');
+        } else {
+            const hasDirectRules = ['daily', 'max', 'target', 'consistency', 'rules', 'mdays', 'expiration', 'tradenews', 'holdweekends'].some(key => model[key] !== undefined && model[key] !== null);
+            if (hasDirectRules) {
+                rulesContent += `
+                    <div class="model-rules-card" style="margin-top: 20px;">
+                        ${renderRules(model)}
+                    </div>
+                `;
+            }
+        }
+
+        return sizesHtml + priceHtml + rulesContent;
     }
 
-    return sizesHtml + priceHtml + rulesContent;
-}
-
-function switchModel(firmId, modelIndex) {
-    const firm = propFirms.find(f => f.id === firmId);
-    const container = document.getElementById('modal-accounts-container');
-    if (container) {
-        container.innerHTML = buildAccountsHtml(firm, modelIndex, 0);
+    function switchModel(firmId, modelIndex) {
+        const firm = propFirms.find(f => f.id === firmId);
+        const container = document.getElementById('modal-accounts-container');
+        if (container) {
+            container.innerHTML = buildAccountsHtml(firm, modelIndex, 0);
+        }
+        
+        document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+            if (idx === modelIndex) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
     }
-    
-    document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
-        if (idx === modelIndex) btn.classList.add('active');
-        else btn.classList.remove('active');
+
+    function switchAccountSize(firmId, modelIndex, sizeIndex) {
+        const firm = propFirms.find(f => f.id === firmId);
+        const container = document.getElementById('modal-accounts-container');
+        if (container) {
+            container.innerHTML = buildAccountsHtml(firm, modelIndex, sizeIndex);
+        }
+    }
+
+    function closeModal(event) {
+        if (event && event.target !== document.getElementById('modal-overlay') && !event.target.closest('.close-modal')) return;
+        document.getElementById('modal-overlay').classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    renderHome(propFirms);
+
+    function triggerHaptic() {
+        if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+        }
+    }
+
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('button, a, .tab-btn, .nav-link, .copy-btn, .size-tab-btn');
+        if (target) {
+            triggerHaptic();
+        }
     });
-}
-
-function switchAccountSize(firmId, modelIndex, sizeIndex) {
-    const firm = propFirms.find(f => f.id === firmId);
-    const container = document.getElementById('modal-accounts-container');
-    if (container) {
-        container.innerHTML = buildAccountsHtml(firm, modelIndex, sizeIndex);
-    }
-}
-
-function closeModal(event) {
-    if (event && event.target !== document.getElementById('modal-overlay') && !event.target.closest('.close-modal')) return;
-    document.getElementById('modal-overlay').classList.remove('active');
-    document.body.style.overflow = 'auto';
-}
-
-renderHome(propFirms);
-
-function triggerHaptic() {
-    if (window.Telegram?.WebApp?.HapticFeedback) {
-        window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
-    }
-}
-
-document.addEventListener('click', (e) => {
-    const target = e.target.closest('button, a, .tab-btn, .nav-link, .copy-btn, .size-tab-btn');
-    if (target) {
-        triggerHaptic();
-    }
-});
 </script>
 </body>
 </html>
