@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fund Kurd</title>
+    <title><span data-i18n="app_title">Fund Kurd</span></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -14,12 +14,85 @@
     <!-- Firebase SDKs (compat version) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <style>
+        /* New styles for the enhanced Learn page */
+        .learn-category-header {
+            grid-column: 1 / -1; /* Make header span all columns */
+            text-align: center;
+            margin-bottom: 25px;
+            margin-top: 40px; /* Add margin to separate categories */
+        }
+
+        .learn-category-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .learn-category-header h2 i {
+            margin-inline-end: 10px;
+            color: var(--gold-primary);
+        }
+
+        .learn-category-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--gold-primary);
+            border-radius: 5px;
+        }
+
+        .learn-cards-row {
+            grid-column: 1 / -1; /* Make the row span all columns of the main grid */
+            display: grid; /* Inner grid for cards */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .learn-card-dynamic {
+            background: var(--elevated-bg-mid);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-small);
+            text-align: start; /* Adjusted from center in static cards */
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .learn-card-dynamic:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            border-color: var(--gold-light);
+        }
+
+        .learn-card-dynamic h3 {
+            color: var(--gold-light);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 8px;
+        }
+
+        .learn-card-dynamic p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 <body>
 
     <header>
         <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <button class="lang-btn" id="languageSwitcher" onclick="toggleLanguage()"></button>
+
         <div class="logo"><img class="logo-img" src="FK.png" alt="Fund Kurd logo"></div>
+        <!-- Button for language switching -->
     </header>
 
     <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -28,19 +101,19 @@
         <div class="logo"><img class="logo-img" src="FK.png" alt="Fund Kurd logo"></div>
         <nav>
             <a href="#" class="nav-link active" onclick="showPage(event, 'home')">
-                <i class="fas fa-home"></i> سەرەکی
+                <i class="fas fa-home"></i> <span data-i18n="home">سەرەکی</span>
             </a>
             <a href="#" class="nav-link" onclick="showPage(event, 'discounts')">
-                <i class="fas fa-tag"></i> کودێن داشکاندنێ
+                <i class="fas fa-tag"></i> <span data-i18n="discount_codes">کودێن داشکاندنێ</span>
             </a>
             <a href="#" class="nav-link" onclick="showPage(event, 'learn')">
-                <i class="fas fa-graduation-cap"></i> فێربوون
+                <i class="fas fa-graduation-cap"></i> <span data-i18n="learn">فێربوون</span>
             </a>
             <a href="#" class="nav-link" onclick="showPage(event, 'notifications')">
-                <i class="fas fa-bell"></i> ئاگەهداری
+                <i class="fas fa-bell"></i> <span data-i18n="notifications">ئاگەهداری</span>
             </a>
             <a href="#" class="nav-link" onclick="showPage(event, 'about')">
-                <i class="fas fa-info-circle"></i> دەربارەی مە
+                <i class="fas fa-info-circle"></i> <span data-i18n="about_us">دەربارەی مە</span>
             </a>
         </nav>
     </aside>
@@ -51,8 +124,8 @@
             <!-- Home Page -->
             <section id="home" class="page-section active">
                 <div class="hero">
-                    <h1>باشترین رێبەرێ تە بو پراپ فیرمان</h1>
-                    <p>ئەرزانترین و باشترین پراپ بو بازرگانێن کورد ل ڤێرە ببینە.</p>
+                    <h1 data-i18n="hero_title">باشترین رێبەرێ تە بو پراپ فیرمان</h1>
+                    <p data-i18n="hero_description">ئەرزانترین و باشترین پراپ بو بازرگانێن کورد ل ڤێرە ببینە.</p>
                 </div>
 
                 <div class="grid" id="firm-grid"></div>
@@ -62,7 +135,7 @@
             <!-- Discounts Page -->
             <section id="discounts" class="page-section">
                 <div class="hero">
-                    <h1>کودێن داشکاندنێ</h1>
+                    <h1 data-i18n="discount_codes">کودێن داشکاندنێ</h1>
                 </div>
                 <div class="grid" id="discount-grid"></div>
             </section>
@@ -70,31 +143,18 @@
             <!-- Learn Page -->
             <section id="learn" class="page-section">
                 <div class="hero">
-                    <h1>فێربوون</h1>
+                    <h1 data-i18n="learn">فێربوون</h1>
                 </div>
                 <div class="grid">
-                    <div class="learn-card">
-                        <i class="fas fa-question-circle"></i>
-                        <h3>پراپ فیرم چنە؟</h3>
-                        <p>کومپانیێن دابینکرنا سەرمایەی نە بۆ تریدەران بەرامبەر پارەکرنا تێستەکێ.</p>
-                    </div>
-                    <div class="learn-card">
-                        <i class="fas fa-shield-alt"></i>
-                        <h3>رێکخستنا مەترسیێ</h3>
-                        <p>څەوانیا پاراستنا ئەکاونتی ژ دۆڕاندنێ و رێساێن توند.</p>
-                    </div>
-                    <div class="learn-card">
-                        <i class="fas fa-brain"></i>
-                        <h3>دەروونیەت تریدینگێ</h3>
-                        <p>څەوان کونترۆلا هەستێن خۆ بکەی دەمێ بازرگانیێ دکەی.</p>
-                    </div>
+                    <!-- Dynamic content will be rendered here by renderLearn() -->
+                    <!-- The original learn-cards are replaced by dynamic content -->
                 </div>
             </section>
 
             <!-- Notifications Page -->
             <section id="notifications" class="page-section">
                 <div class="hero">
-                    <h1>ئاگەهداری</h1>
+                    <h1 data-i18n="notifications">ئاگەهداری</h1>
                 </div>
                 <div id="notif-list" style="display: flex; flex-direction: column; gap: 15px;"></div>
             </section>
@@ -103,21 +163,21 @@
             <section id="about" class="page-section">
                 <div class="hero">
                     <div style="font-size: 4rem; color: var(--gold);"><i class="fas fa-rocket"></i></div>
-                    <h1>دەربارەی Fund Kurd</h1>
-                    <p>ئەم ئێکەمین و مەزنترین رێبەرێ کوردین بۆ پراپ فیرمان، ئارمانجا مە ئاسانکرنا کارێ تریدەری یە.</p>
+                    <h1 data-i18n="about_fund_kurd">دەربارەی Fund Kurd</h1>
+                    <p data-i18n="about_fund_kurd_desc">ئەم ئێکەمین و مەزنترین رێبەرێ کوردین بۆ پراپ فیرمان، ئارمانجا مە ئاسانکرنا کارێ تریدەری یە.</p>
                 </div>
                 <div class="grid">
                     <div class="learn-card" style="text-align: center;">
                         <i class="fas fa-check-circle"></i>
-                        <h3>شەفافیەت</h3>
+                        <h3 data-i18n="transparency">شەفافیەت</h3>
                     </div>
                     <div class="learn-card" style="text-align: center;">
                         <i class="fas fa-users"></i>
-                        <h3>پشتەڤانیا کوردی</h3>
+                        <h3 data-i18n="kurdish_support">پشتەڤانیا کوردی</h3>
                     </div>
                     <div class="learn-card" style="text-align: center;">
                         <i class="fas fa-sync"></i>
-                        <h3>نووکرنا بەردەوام</h3>
+                        <h3 data-i18n="continuous_updates">نووکرنا بەردەوام</h3>
                     </div>
                 </div>
             </section>
@@ -134,9 +194,10 @@
     </div>
 
     <!-- Toast -->
-    <div class="toast" id="toast">کود هاتە کۆپیکرن</div>
+    <div class="toast" id="toast" data-i18n="code_copied">کود هاتە کۆپیکرن</div>
 
 <script>
+    // ... (Firebase and Telegram tracking code remains the same) ...
     // -----------------------------
     // Firebase Configuration (compat)
     // -----------------------------
@@ -195,36 +256,331 @@ if (window.Telegram?.WebApp) {
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
 }
+    // -----------------------------
+    // START OF LANGUAGE PROTOCOL
+    // -----------------------------
+    const translations = {
+        'بادینی': {
+            // General UI
+            'app_title': 'Fund Kurd',
+            'home': 'سەرەکی',
+            'discount_codes': 'کودێن داشکاندنێ',
+            'learn': 'فێربوون',
+            'notifications': 'ئاگەهداری',
+            'about_us': 'دەربارەی مە',
+            'hero_title': 'باشترین رێبەرێ تە بو پراپ فیرمان',
+            'hero_description': 'ئەرزانترین و باشترین پراپ بو بازرگانێن کورد ل ڤێرە ببینە.',
+            'see_more': 'زێدەتر ببینە',
+            'visit_website': 'سەرەدانا سایتی بکە',
+            'code_copied': 'کود هاتە کۆپیکرن',
+            'no_firms_found': 'هیچ کۆمپانیایەک نەدۆزرایەوە.',
+            
+            // Firm Details
+            'payout': 'پێدانا پارەی',
+            'profit_split': 'پشکا قازانجی',
+            'platforms': 'پلاتفورم',
+            'starting_from': 'دەستپێدکەت ژ',
+            'price_without_discount': 'بهایێ هەژمارێ بێی داشکاندن',
+            'daily_drawdown': 'ژ دەستدانا روژانە',
+            'max_drawdown': 'ژ دەستدانا گشتی',
+            'target_profit': 'ئارمانج',
+            'consistency_rule': 'پێگیربوون',
+            'open_trades_drawdown': 'ژ دەستدانا مامەلێن ڤەکری',
+            'min_trading_days': 'کێمترین روژێن بازرگانیێ',
+            'account_expiration': 'سەرڤەچوونا هەژمارێ',
+            'trade_news': 'بازرگانیکرن دگەل نووچا',
+            'hold_weekends': 'ڤەکری هێلان د بهێنڤەدانێ دا',
+            'not_applicable': 'نینە',
+            'yes': 'بەلێ',
+            'no': 'نەخێر',
+            'phase_evaluation': 'قۆناغا هەڵسەنگاندنێ',
+            'phase_funded': 'قۆناغا فەندکری',
+            'phase_one': 'قۆناغا ئێکێ',
+            'phase_two': 'قۆناغا دووێ',
+            'phase_three': 'قۆناغا سیێ',
+            'notes_prefix': 'تێبینی:',
+
+            // Firm specific dynamic strings for Goat Funded Trader
+            'firm_gft_payout': '١٤ روژان جارەکێ',
+            'firm_gft_profit_split': '٨٠٪ هەتا ١٠٠٪',
+            'firm_gft_guarantee': 'ئەگەر دماوێ ٤٨ دەمژمێران دا قازانجێ تە نە هاتە دان، دێ $٥٠٠ زێدەتر لسەر قازانجێ خو وەرگری',
+
+            // Model Notes (general keys for common phrases)
+            'note_all_accounts_same_rules': 'هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە',
+            'note_one_time_account': 'بتنێ ئێک جار دشێی ڤێ هەژمارێ دەستخوڤەبینی',
+            'note_goat_blitz_temp': 'ئەڤ مودێلە ب شێوەکێ دەمکی و بتنێ ل دوو بێهنڤەدانێن هەیڤێ ژ نشکەکیڤە دهێت',
+            'note_pay_later': 'بتنێ ٥$ وەک پێشەکی، پاشی پارێ ڤێ هەژمارێ پشتی دەرچوونێ دهێتە دان و هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە',
+            'note_daily_profit_required': '(هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)', // Used for mdays note
+            'days_duration': 'روژ', // for "28 روژ" => "28 روژ"
+
+            // Learn Page (Original Static Content - now dynamic)
+            'what_is_prop_firm': 'پراپ فیرم چنە؟', // Kept for reference, though new structure is different
+            'what_is_prop_firm_desc': 'کومپانیێن دابینکرنا سەرمایەی نە بۆ تریدەران بەرامبەر پارەکرنا تێستەکێ.', // Kept for reference
+
+            // New Learn Page Content
+            'prop_firm_types_title': 'سوڕانی پڕاپ فیرمێ',
+            'rules_explanation_title': 'شلوڤەکرنا یاسایان',
+
+            // Prop Firm Types
+            'instant_accounts_title': 'هەژمارێن ئیستنت (Instant Accounts)',
+            'instant_accounts_desc': 'ئەڤ جورە هەژمارە قۆناغێن هەڵسەنگاندنێ نینن. تۆ ئێکسەر دهێی فەندکرن و دشێی دەست ب بازرگانیێ بکەی.',
+            'one_step_challenge_title': 'تێستێن ئێک قۆناغی (1-Step Challenges)',
+            'one_step_challenge_desc': 'پێدڤی ب دەربازکرنا بتنێ ئێک قۆناغا هەڵسەنگاندنێ یە. پشتی وێ، دێ هەژمارا تە هێتە فەندکرن.',
+            'two_step_challenge_title': 'تێستێن دوو قۆناغی (2-Step Challenges)',
+            'two_step_challenge_desc': 'پێدڤی ب دەربازکرنا دوو قۆناغێن هەڵسەنگاندنێ یە. پشتی وان، دێ هەژمارا تە هێتە فەندکرن.',
+            'three_step_challenge_title': 'تێستێن سێ قۆناغی (3-Step Challenges)',
+            'three_step_challenge_desc': 'پێدڤی ب دەربازکرنا سێ قۆناغێن هەڵسەنگاندنێ یە. پشتی وان، دێ هەژمارا تە هێتە فەندکرن.',
+            'pay_later_title': 'پڕاپێن پارەدان پشتی قازانجی (Pay Later Prop Firms)',
+            'pay_later_desc': 'تۆ بتنێ پارەکا کێم وەک پێشەکی ددەی و پارێ تەواوی یێ هەژمارێ پشتی دەربازکرنا تێستێ وەرگرتنا قازانجی دهێتە ژێبڕین.',
+            'goat_one_dollar_title': 'پڕاپێن ١$ (Goat 1$ Challenges)',
+            'goat_one_dollar_desc': 'ئەڤە ب شێوەیەکێ دەمکی و ب بهایەکێ گەلەک ئەرزان دهێنە پێشکێشکرن، زۆربە گاڤان ب ئێک دولاری.',
+            'what_is_prop_firm_learn_title': 'پراپ فیرم چنە؟',
+            'what_is_prop_firm_learn_desc': 'کومپانیێن دابینکرنا سەرمایەی نە بۆ تریدەران بەرامبەر پارەکرنا تێستەکێ، ئارمانج ئەوە کو تریدەر نەچار نەبن سەرمایەیەکێ گەلەک مەزن بکاربینن، ب ڤی رەنگی دشێن ب سەرمایەکێ مەزنتر وەک نوکە ٥٠$ دەستپێبکەن ب رێیا پراپ فیرمێ.',
+
+            // Rules Explanations
+            'daily_drawdown_rule_title': 'ژ دەستدانا روژانە (Daily Drawdown)',
+            'daily_drawdown_rule_desc': 'ئەڤە ئەو زێدەترین رێژەیا ژ دەستدانێ یە کو رێ پێ دهێت د ماوێ ٢٤ دەمژمێران دا (ژ دەمێ دەستپێکرنا تریدێ). نابیت زێدەتر ژ وێ رێژەیێ ژدەست بدەی، بێ گومان ئەگەر تۆ ڤێ یاسایێ بشکێنی دێ هەژمارا تە هێتە وەرگرتن.',
+            'max_drawdown_rule_title': 'ژ دەستدانا گشتی (Max Drawdown)',
+            'max_drawdown_rule_desc': 'ئەڤە ئەو زێدەترین ژ دەستدانا تەواوی یە کو رێ پێ دهێت هەژمارا تە بگەهیتێ، ژ دەستدان ژ سەرەتایێ هەژمارێ یان بلندترین رێژا قازانجا هاتیە وەرگرتن. ئەگەر تۆ ڤێ یاسایێ بشکێنی دێ هەژمارا تە هێتە وەرگرتن.',
+            'target_profit_rule_title': 'ئارمانجا قازانجی (Target Profit)',
+            'target_profit_rule_desc': 'ئەڤە ئەو رێژەیا قازانجی یە کو دڤێت تۆ بگەهیێ بۆ دەربازکرنا قۆناغەکێ. پشتی گەهشتنێ، دێ چیە قۆناغا بهێت یان دێ هێیە فەندکرن. بۆ نموونە 10% target profit و ژمارا ئەکاونتێ 10,000$ بیت، دڤێت تۆ 1,000$ قازانج بکەی.',
+            'consistency_rule_exp_title': 'یاسا پێگیربوونێ (Consistency Rule)',
+            'consistency_rule_exp_desc': 'ئەڤ یاسا بۆ پاراستنا تریدەرێن نوی و زێدە بازرگانیکرنێ یە. ڤێ یاسایێ دڤێت تۆ ب شێوەیەکێ بەرداوام بازرگانیێ بکەی و ئەڤە ب رامانا وێ نایێت کو تو دشێی هەمی قازانجێ خوە د ئێک مامەلێ دا وەرگری. بۆ نموونە دڤێت 10% قازانج بکەی، نابیت د ئێک تریدێ دا 8% قازانج بکەی و دوو تریدێن دی یێن 1% و ب وێ چەندێ یاسایا پێگیربوونێ دێ شکێنێ.',
+            'open_trades_drawdown_rule_title': 'ژ دەستدانا مامەلێن ڤەکری (Open Trades Drawdown)',
+            'open_trades_drawdown_rule_desc': 'ئەڤە ئەو زێدەترین رێژەیا ژ دەستدانێ یە کو رێ پێ دهێت بۆ مامەلێن تە یێن ڤەکری. دڤێت ژ ڤێ رێژەیێ زێدەتر نەبیت. ئەڤ یاسایە کێم پراب فیرم هەی کو بکاربینیت.',
+            'min_trading_days_rule_title': 'کێمترین روژێن بازرگانیێ (Minimum Trading Days)',
+            'min_trading_days_rule_desc': 'ئەڤە کێمترین ژمارا روژانە کو دڤێت تۆ تێدا بازرگانیێ بکەی د قۆناغەکێ دا بۆ وێ چەندێ کو دەرچوونی. بۆ نموونە ئەگەر 3 روژێن بازرگانیێ بێت، دڤێت تۆ د 3 روژێن جودا دا تریدێ بکەی و پاشی ئەکاونتێ تە یێ دەرباز بێت.',
+            'account_expiration_rule_title': 'سەرڤەچوونا هەژمارێ (Account Expiration)',
+            'account_expiration_rule_desc': 'ئەڤە ماوێ دەمە کو تێدا دڤێت تۆ تێستێ دەرباز بکەی. ئەگەر د ڤی ماوه‌ی دا تێستێ دەرباز نەکەي، دێ هەژمارا تە هێتە وەرگرتن. گەلەک پراپ فیرم نوکە ڤێ یاسایێ نینن.',
+            'trade_news_rule_title': 'بازرگانیکرن دگەل نووچا (Trading News)',
+            'trade_news_rule_desc': 'ئەگەر یاسا "بەلێ" بیت، دشێی د دەمێ نووچەیێن گرنگ دا بازرگانیێ بکەی. ئەگەر "نەخێر" بیت، رێ پێ نایێت، بێ گومان دڤێت 2 خولەکان پێش نووچەیێ و 2 خولەکان پشتی نووچەیێ تریدێ نەکەی.',
+            'hold_weekends_rule_title': 'ڤەکری هێلان د بهێنڤەدانێ دا (Hold Weekends)',
+            'hold_weekends_rule_desc': 'ئەگەر یاسا "بەلێ" بیت، دشێی مامەلێن خۆ د بهێنڤەدانێن حەفتیێ دا ڤەکری بهێلی. ئەگەر "نەخێر" بیت، دڤێت هەمی مامەلێن خۆ پێش بهێنڤەدانێ بگری.',
+            'trade_size_rule_title': 'رێژا سایزا تریدێ (Trade Size)',
+            'trade_size_rule_desc': 'ئەڤ یاسایێ دڤێت تۆ رێژەکا دیارکری یا قەبارێ مامەلێ بکاربینی و نەشێی ژ وێ رێژەیێ زێدەتر قەبارە بکاربینی.',
+
+
+            // Notifications Page
+            'news_gft_discount_title': '٥٠٪ داشکاندن ل GFT',
+            'news_gft_discount_body': 'بازرگانێن نوی دشێن ٥٠٪ داشکاندنێ دەستخوڤەبینن.',
+
+            // Discount Page
+            'buy_one_get_one_free': 'ئێکێ بکرە، ئێکێ دیاری وەربگرە',
+            'new_trader_discount': '٥٠٪ داشکاندن بو بازرگانێن نوی',
+
+            // About Us Page
+            'about_fund_kurd': 'دەربارەی Fund Kurd',
+            'about_fund_kurd_desc': 'ئەم ئێکەمین و مەزنترین رێبەرێ کوردین بۆ پراپ فیرمان، ئارمانجا مە ئاسانکرنا کارێ تریدەری یە.',
+            'transparency': 'شەفافیەت',
+            'kurdish_support': 'پشتەڤانیا کوردی',
+            'continuous_updates': 'نووکرنا بەردەوام',
+            'cheapest': 'ئەرزانترین',
+            'iqd_currency': 'دیناران',
+            'dollars_currency': 'دولاران',
+            // New translation keys for "Coming Soon" card
+            'coming_soon_title': 'هیڤییە چاڤەرێ بن',
+            'coming_soon_description': 'ل نێزیک دێ پتر پڕاپ هێنە زێدەکرن'
+        },
+        'سورانی': {
+            // General UI
+            'app_title': 'فەند کورد',
+            'home': 'ماڵەوە',
+            'discount_codes': 'کۆدی داشکاندن',
+            'learn': 'فێربوون',
+            'notifications': 'ئاگاداری',
+            'about_us': 'دەربارەی ئێمە',
+            'hero_title': 'باشترین ڕێبەری تۆ بۆ پڕۆپ فیرمەکان',
+            'hero_description': 'هەرزانترین و باشترین پڕۆپ بۆ بازرگانانی کورد لێرە ببینە.',
+            'see_more': 'زیاتر ببینە',
+            'visit_website': 'سەردانی ماڵپەڕ بکە',
+            'code_copied': 'کۆد کۆپی کرایەوە',
+            'no_firms_found': 'هیچ کۆمپانیایەک نەدۆزرایەوە.',
+
+            // Firm Details
+            'payout': 'دابەشکردنی پارە',
+            'profit_split': 'پشکی قازانج',
+            'platforms': 'پلاتفۆرم',
+            'starting_from': 'دەستپێدەکات لە',
+            'price_without_discount': 'نرخی ئەکاونت بە بێ داشکاندن',
+            'daily_drawdown': 'زیانی ڕۆژانە',
+            'max_drawdown': 'زیانی گشتی',
+            'target_profit': 'ئامانج',
+            'consistency_rule': 'پابەندبوون',
+            'open_trades_drawdown': 'زیانی مامەڵە کراوەکان',
+            'min_trading_days': 'کەمترین ڕۆژەکانی بازرگانی',
+            'account_expiration': 'کۆتایی هاتنی ئەکاونت',
+            'trade_news': 'بازرگانی لەگەڵ هەواڵ',
+            'hold_weekends': 'کراوەهێڵان لە پشوودا',
+            'not_applicable': 'نییە',
+            'yes': 'بەڵێ',
+            'no': 'نەخێر',
+            'phase_evaluation': 'قۆناغی هەڵسەنگاندن',
+            'phase_funded': 'قۆناغی فەندکراو',
+            'phase_one': 'قۆناغی یەکەم',
+            'phase_two': 'قۆناغی دووەم',
+            'phase_three': 'قۆناغی سێیەم',
+            'notes_prefix': 'تێبینی:',
+
+            // Firm specific dynamic strings for Goat Funded Trader
+            'firm_gft_payout': 'هەر ١٤ ڕۆژ جارێک',
+            'firm_gft_profit_split': '٨٠٪ بۆ ١٠٠٪',
+            'firm_gft_guarantee': 'ئەگەر لە ماوەی ٤٨ کاتژمێردا قازانجەکەت نەدرا، ٥٠٠$ زیاتر لەسەر قازانجەکەت وەردەگریت',
+
+            // Model Notes (general keys for common phrases)
+            'note_all_accounts_same_rules': 'هەموو ئەکاونتەکانی ئەم مۆدێلە هەمان یاسایان هەیە',
+            'note_one_time_account': 'تەنها یەک جار دەتوانیت ئەم ئەکاونتە بەدەست بهێنیت',
+            'note_goat_blitz_temp': 'ئەم مۆدێلە بە شێوەیەکی کاتی و تەنها لە دوو پشووی مانگدا بەناکاو دێت',
+            'note_pay_later': 'تەنها ٥$ وەک پێشەکی، پاشان نرخی ئەم ئەکاونتە دوای دەرچوون دەدرێت و هەموو ئەکاونتەکانی ئەم مۆدێلە هەمان یاسایان هەیە',
+            'note_daily_profit_required': '(هەر ڕۆژێک پێویستی بە ٠,٥٪ قازانجە)',
+            'days_duration': 'ڕۆژ', // for "28 ڕۆژ" => "28 ڕۆژ"
+
+            // Learn Page (Original Static Content - now dynamic)
+            'what_is_prop_firm': 'پڕۆپ فیرم چییە؟',
+            'what_is_prop_firm_desc': 'کۆمپانیای دابینکردنی سەرمایە بۆ تڕەیدەرەکان بەرامبەر پارەدانێکی تێست.',
+
+            // New Learn Page Content
+            'prop_firm_types_title': 'جۆرەکانی پڕۆپ فیرم',
+            'rules_explanation_title': 'شیکردنەوەی یاساکان',
+
+            // Prop Firm Types
+            'instant_accounts_title': 'ئەکاونتەکانی Instant (Instant Accounts)',
+            'instant_accounts_desc': 'ئەم جۆرە ئەکاونتە قۆناغی هەڵسەنگاندنی نییە. تۆ ڕاستەوخۆ فەند دەکرێیت و دەتوانیت دەست بە بازرگانی بکەیت.',
+            'one_step_challenge_title': 'تێستەکانی یەک قۆناغی (1-Step Challenges)',
+            'one_step_challenge_desc': 'پێویستە تەنها یەک قۆناغی هەڵسەنگاندن تێپەڕێنیت. دوای ئەوە، ئەکاونتەکەت فەند دەکرێت.',
+            'two_step_challenge_title': 'تێستەکانی دوو قۆناغی (2-Step Challenges)',
+            'two_step_challenge_desc': 'پێویستە دوو قۆناغی هەڵسەنگاندن تێپەڕێنیت. دوای ئەوان، ئەکاونتەکەت فەند دەکرێت.',
+            'three_step_challenge_title': 'تێستەکانی سێ قۆناغی (3-Step Challenges)',
+            'three_step_challenge_desc': 'پێویستە سێ قۆناغی هەڵسەنگاندن تێپەڕێنیت. دوای ئەوان، ئەکاونتەکەت فەند دەکرێت.',
+            'pay_later_title': 'پڕۆپەکانی پارەدان لە دوای قازانج (Pay Later Prop Firms)',
+            'pay_later_desc': 'تۆ تەنها بڕێکی کەم وەک پێشەکی دەدەیت و نرخی تەواوی ئەکاونتەکە دوای تێپەڕاندنی تێستەکە و وەرگرتنی قازانجەکە لێدەبڕدرێت.',
+            'goat_one_dollar_title': 'پڕۆپەکانی ١$ (Goat 1$ Challenges)',
+            'goat_one_dollar_desc': 'ئەمە بە شێوەیەکی کاتی و بە نرخێکی زۆر هەرزان پێشکەش دەکرێت، زۆربەی کات بە یەک دۆلار.',
+            'what_is_prop_firm_learn_title': 'پڕۆپ فیرم چییە؟',
+            'what_is_prop_firm_learn_desc': 'کۆمپانیای دابینکردنی سەرمایە بۆ تڕەیدەرەکان بەرامبەر پارەدانێکی تێست، ئامانج ئەوەیە کە تڕەیدەر ناچار نەبن سەرمایەیەکی زۆر گەورە بەکاربهێنن، بەم شێوەیە دەتوانن بە سەرمایەیەکی گەورەتر وەک ئێستا ٥٠$ دەستپێبکەن بە ڕێگەی پڕۆپ فیرم.',
+
+            // Rules Explanations
+            'daily_drawdown_rule_title': 'زیانی ڕۆژانە (Daily Drawdown)',
+            'daily_drawdown_rule_desc': 'ئەمە ئەو زۆرترین ڕێژەی زیانە کە ڕێگەپێدراوە لە ماوەی ٢٤ کاتژمێردا (لە کاتی دەستپێکردنی تڕەیدەکە). نابێت زیاتر لەو ڕێژەیە زیان بکەیت، بە دڵنیاییەوە ئەگەر تۆ ئەم یاسایە بشکێنیت ئەکاونتەکەت دەدرێتەوە.',
+            'max_drawdown_rule_title': 'زیانی گشتی (Max Drawdown)',
+            'max_drawdown_rule_desc': 'ئەمە ئەو زۆرترین زیانی گشتییە کە ڕێگەپێدراوە ئەکاونتەکەت پێی بگات، زیان لە سەرەتای ئەکاونتەکەوە یان بەرزترین ڕێژەی قازانجی وەرگیراو. ئەگەر تۆ ئەم یاسایە بشکێنیت ئەکاونتەکەت دەدرێتەوە.',
+            'target_profit_rule_title': 'ئامانجی قازانج (Target Profit)',
+            'target_profit_rule_desc': 'ئەمە ئەو ڕێژەیەی قازانجە کە دەبێت تۆ پێی بگەیت بۆ تێپەڕاندنی قۆناغێک. دوای گەیشتن بەوە، دەچیتە قۆناغی داهاتوو یان فەند دەکرێیت. بۆ نموونە 10% target profit و ژمارەی ئەکاونتەکە 10,000$ بێت، دەبێت تۆ 1,000$ قازانج بکەیت.',
+            'consistency_rule_exp_title': 'یاسای پابەندبوون (Consistency Rule)',
+            'consistency_rule_exp_desc': 'ئەم یاسایە بۆ پاراستنی تڕەیدەرە نوێکان و زۆر بازرگانی کردنە. ئەم یاسایە دەبێت تۆ بە شێوەیەکی بەردەوام بازرگانی بکەیت و ئەمە بەو مانایە نایەت کە تۆ دەتوانیت هەموو قازانجەکەت لە یەک مامەڵەدا وەربگریت. بۆ نموونە دەبێت 10% قازانج بکەیت، نابێت لە یەک تڕەیددا 8% قازانج بکەیت و دوو تڕەیدی دیکەی 1% و بەوە یاسای پابەندبوون دەشکێنیت.',
+            'open_trades_drawdown_rule_title': 'زیانی مامەڵە کراوەکان (Open Trades Drawdown)',
+            'open_trades_drawdown_rule_desc': 'ئەمە ئەو زۆرترین ڕێژەی زیانە کە ڕێگەپێدراوە بۆ مامەڵە کراوەکانت. نابێت لەم ڕێژەیە زیاتر بێت. ئەم یاسایە کەم پڕۆپ فیرم هەیە کە بەکاری بهێنێت.',
+            'min_trading_days_rule_title': 'کەمترین ڕۆژەکانی بازرگانی (Minimum Trading Days)',
+            'min_trading_days_rule_desc': 'ئەمە کەمترین ژمارەی ڕۆژانەیە کە دەبێت تۆ تێیدا بازرگانی بکەیت لە قۆناغێکدا بۆ ئەوەی تێپەڕێنیت. بۆ نموونە ئەگەر 3 ڕۆژی بازرگانی بێت، دەبێت تۆ لە 3 ڕۆژی جیاوازدا تڕەید بکەیت و پاشان ئەکاونتەکەت تێپەڕیبێت.',
+            'account_expiration_rule_title': 'کۆتایی هاتنی ئەکاونت (Account Expiration)',
+            'account_expiration_rule_desc': 'ئەمە ماوەی ئەو کاتەیە کە دەبێت تۆ تێستەکە تێپەڕێنیت. ئەگەر لەم ماوەیەدا تێستەکە تێپەڕنەکەیت، ئەکاونتەکەت دەدرێتەوە. زۆر پڕۆپ فیرم ئێستا ئەم یاسایەیان نییە.',
+            'trade_news_rule_title': 'بازرگانی لەگەڵ هەواڵ (Trading News)',
+            'trade_news_rule_desc': 'ئەگەر یاساکە "بەڵێ" بێت، دەتوانیت لە کاتی هەواڵە گرنگەکاندا بازرگانی بکەیت. ئەگەر "نەخێر" بێت، ڕێگەپێدراو نییە، بە دڵنیاییەوە دەبێت 2 خولەک پێش هەواڵەکە و 2 خولەک دوای هەواڵەکە تڕەید نەکەیت.',
+            'hold_weekends_rule_title': 'کراوەهێڵان لە پشوودا (Hold Weekends)',
+            'hold_weekends_rule_desc': 'ئەگەر یاساکە "بەڵێ" بێت، دەتوانیت مامەڵەکانت لە پشووەکانی هەفتەدا کراوە بهێڵیتەوە. ئەگەر "نەخێر" بێت، دەبێت هەموو مامەڵەکانت پێش پشوو دابخەیت.',
+            'trade_size_rule_title': 'ڕێژەی سایزی تڕەید (Trade Size)',
+            'trade_size_rule_desc': 'ئەم یاسایە دەبێت تۆ ڕێژەیەکی دیاریکراو لە قەبارەی مامەڵە بەکاربهێنیت و ناتوانیت لەو ڕێژەیە زیاتر قەبارە بەکاربهێنیت.',
+
+            // Notifications Page
+            'news_gft_discount_title': '٥٠٪ داشکاندن لە GFT',
+            'news_gft_discount_body': 'بازرگانانی نوێ دەتوانن ٥٠٪ داشکاندن بەدەستبهێنن.',
+
+            // Discount Page
+            'buy_one_get_one_free': 'یەکێک بکڕە، یەکێکی دیکە بە دیاری وەربگرە',
+            'new_trader_discount': '٥٠٪ داشکاندن بۆ بازرگانانی نوێ',
+
+            // About Us Page
+            'about_fund_kurd': 'دەربارەی فەند کورد',
+            'about_fund_kurd_desc': 'ئێمە یەکەمین و گەورەترین ڕێبەری کوردین بۆ پڕۆپ فیرمەکان، ئامانجی ئێمە ئاسانکردنی کاری تڕەیدەرە.',
+            'transparency': 'شەفافیەت',
+            'kurdish_support': 'پشتیوانی کوردی',
+            'continuous_updates': 'نوێکردنەوەی بەردەوام',
+            'cheapest': 'هەرزانترین',
+            'iqd_currency': 'دینار',
+            'dollars_currency': 'دۆلار',
+            // New translation keys for "Coming Soon" card
+            'coming_soon_title': 'تکایە چاوەڕوان بن',
+            'coming_soon_description': 'بەم زووانە پڕۆپ فیرمی زیاتر زیاد دەکرێت'
+        }
+    };
+
+    let currentLang = localStorage.getItem('appLang') || 'بادینی'; // Default to بادینی
+
+    function updateTextContent(lang) {
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                element.innerHTML = translations[lang][key];
+            }
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-i18n-placeholder');
+            if (translations[lang] && translations[lang][key]) {
+                element.setAttribute('placeholder', translations[lang][key]);
+            }
+        });
+
+        // Update language switcher button text
+        const langSwitcher = document.getElementById('languageSwitcher');
+        if (langSwitcher) {
+            langSwitcher.textContent = lang === 'بادینی' ? 'سورانی' : 'بادینی';
+        }
+
+        // Update HTML lang attribute
+        document.documentElement.setAttribute('lang', lang === 'بادینی' ? 'ku' : 'ku-sr');
+        document.documentElement.setAttribute('dir', 'rtl'); // Both are RTL
+    }
+
+    function toggleLanguage() {
+        currentLang = currentLang === 'بادینی' ? 'سورانی' : 'بادینی';
+        localStorage.setItem('appLang', currentLang);
+        updateTextContent(currentLang);
+        // Re-render current page content to update dynamic parts
+        const activePage = document.querySelector('.page-section.active');
+        if (activePage) {
+            const pageId = activePage.id;
+            if(pageId === 'home') renderHome(propFirms);
+            else if(pageId === 'discounts') renderDiscounts();
+            else if(pageId === 'notifications') renderNotifications();
+            else if(pageId === 'learn') renderLearn(); 
+            else if(pageId === 'about') renderAbout(); 
+        }
+    }
+
+    // Call updateTextContent on initial load
+    document.addEventListener('DOMContentLoaded', () => {
+        updateTextContent(currentLang);
+    });
 
     // -----------------------------
-    // YOUR EXISTING CODE (unchanged below)
+    // YOUR EXISTING CODE (modified to use translations)
     // -----------------------------
     let propFirms = [
         {
             id: 1,
             name: "Goat Funded Trader",
             code: "BOGO40",
-            extraCodes: ["GFT50"],
+            extraCodes: ["FIRSTGFT"],
             logo: "GFT.png",
             cheapest: "١٧ دولاران",
             cheapestIQD: "٢٣,٠٠٠ دیناران",
             bestModel: "Instant GOAT",
-            payout: "١٤ روژان جارەکێ",
-            profitSplit: "٨٠٪ هەتا ١٠٠٪",
+            payout: "firm_gft_payout", // Changed to translation key
+            profitSplit: "firm_gft_profit_split", // Changed to translation key
             platforms: "MT5 - TradeLocker - CTrader - MatchTrader - Volumetrica",
             link: "https://goatfundedtrader.com",
-            guarantee: "ئەگەر دماوێ ٤٨ دەمژمێران دا قازانجێ تە نە هاتە دان، دێ $٥٠٠ زێدەتر لسەر قزانجێ خو وەرگری",
+            guarantee: "firm_gft_guarantee", // Changed to translation key
             models: [
                 {
                     name: "Instant PRO",
-                    daily: "نینە",
-                    max: "٤٪ (دیفچوون)",
-                    target: "نینە",
+                    daily: "٣٪", // Keep percentages as strings, they often include special chars
+                    max: "٤٪ (دیفچوون)", 
+                    target: undefined, // Use undefined for "نینە"
                     consistency: "٢٠٪",
                     rules: "٢٪",
-                    mdays: "٥ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                    notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
-                    expiration: "نینە",
+                    mdays: 5, // numeric
+                    mdaysNoteKey: 'note_daily_profit_required', // key for note
+                    notes: ["note_all_accounts_same_rules"], // Changed to translation key
+                    expiration: undefined, // Use undefined for "نینە"
                     tradenews: "بەلێ",
                     holdweekends: "بەلێ",
                     accounts: [
@@ -241,17 +597,27 @@ if (window.Telegram?.WebApp) {
                     name: "Instant GOAT",
                     daily: "٣٪ (دیفچوون)",
                     max: "٦٪ (دیفچوون)",
-                    target: "نینە",
+                    target: undefined,
                     consistency: "١٥٪",
                     rules: "٢٪",
-                    mdays: "٥ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                    notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
-                    expiration: "نینە",
+                    mdays: 5,
+                    mdaysNoteKey: 'note_daily_profit_required',
+                    notes: ["note_all_accounts_same_rules"],
+                    expiration: undefined,
                     tradenews: "بەلێ",
                     holdweekends: "بەلێ",
                     accounts: [
-                        { size: "5K", price: "$25" },
-                        { size: "10K", price: "$50" }
+                        { size: "٥,٠٠٠$", price: "١٠٨$" },
+                        { size: "١٠,٠٠٠$", price: "١٥٨$" },
+                        { size: "١٥,٠٠٠$", price: "٢٢٨$" },
+                        { size: "٢٥,٠٠٠$", price: "٣١٨$" },
+                        { size: "٥٠,٠٠٠$", price: "٤٨٨$" },
+                        { size: "١٠٠,٠٠٠$", price: "٨٣٨$" },
+                        { size: "١٥٠,٠٠٠$", price: "١١٩٨$" },
+                        { size: "٢٠٠,٠٠٠$", price: "١٧٠٨$" },
+                        { size: "٢٥٠,٠٠٠$", price: "٢٠٨٨$" },
+                        { size: "٣٠٠,٠٠٠$", price: "٢٣٩٨$" },
+                        { size: "٤٠٠,٠٠٠$", price: "٢٩٩٨$" }
                     ]
                 },
                 {
@@ -261,14 +627,18 @@ if (window.Telegram?.WebApp) {
                     target: "٥٪",
                     consistency: "٢٥٪",
                     rules: "٢٪",
-                    mdays: "نینە",
-                    notes: ["هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
-                    expiration: "نینە",
+                    mdays: undefined,
+                    notes: ["note_all_accounts_same_rules"],
+                    expiration: undefined,
                     tradenews: "بەلێ",
                     holdweekends: "بەلێ",
                     accounts: [
-                        { size: "8K", price: "$35" },
-                        { size: "15K", price: "$65" }
+                        { size: "٥,٠٠٠$", price: "" },
+                        { size: "١٠,٠٠٠$", price: "" },
+                        { size: "١٥,٠٠٠$", price: "" },
+                        { size: "٢٥,٠٠٠$", price: "" },
+                        { size: "٥٠,٠٠٠$", price: "" },
+                        { size: "١٠٠,٠٠٠$", price: "" }
                     ]
                 },
                 {
@@ -278,33 +648,38 @@ if (window.Telegram?.WebApp) {
                     target: "٥٪",
                     consistency: "١٥٪",
                     rules: "٢٪",
-                    mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                    notes: ["بتنێ ئێک جار دشێی ڤێ هەژمارێ دەستخوڤەبینی"],
-                    expiration: "٢٨ روژ",
+                    mdays: 3,
+                    mdaysNoteKey: 'note_daily_profit_required',
+                    notes: ["note_one_time_account"],
+                    expiration: 28, // numeric
+                    expirationUnitKey: 'days_duration', // key for unit
                     tradenews: "بەلێ",
                     holdweekends: "بەلێ",
                     accounts: [
-                        { size: "1K", price: "$1" }
+                        { size: "١,٠٠٠$", price: "١$" }
                     ]
                 },
                 {
                     name: "Pay Later",
-                    notes: ["پارێ ڤێ هەژمارێ پشتی دەرچوونێ دهێتە دان و هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    notes: ["note_pay_later"],
                     accounts: [
-                        { size: "5K", price: "$0 (پاشێ بدە)" },
-                        { size: "10K", price: "$0 (پاشێ بدە)" },
-                        { size: "50K", price: "$0 (پاشێ بدە)" }
+                        { size: "٥,٠٠٠$", price: "٥$" },
+                        { size: "١٠,٠٠٠$", price: "٥$" },
+                        { size: "١٥,٠٠٠$", price: "٥$" },
+                        { size: "٢٥,٠٠٠$", price: "٥$" },
+                        { size: "٥٠,٠٠٠$", price: "٥$" },
+                        { size: "١٠٠,٠٠٠$", price: "٥$" }
                     ],
                     phases: [
                         {
-                            phase: "قۆناغا هەڵسەنگاندنێ",
-                            daily: "نینە",
+                            phase: "قۆناغا هەڵسەنگاندنێ", // This string is used as a key lookup
+                            daily: undefined,
                             max: "٨٪",
                             target: "٤٪",
-                            consistency: "نینە",
-                            rules: "نینە",
-                            mdays: "نینە",
-                            expiration: "نینە",
+                            consistency: undefined,
+                            rules: undefined,
+                            mdays: undefined,
+                            expiration: undefined,
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         },
@@ -312,11 +687,12 @@ if (window.Telegram?.WebApp) {
                             phase: "قۆناغا فەندکری",
                             daily: "٣٪ (دیفچوون)",
                             max: "٦٪ (دیفچوون)",
-                            target: "نینە",
+                            target: undefined,
                             consistency: "٢٠٪",
                             rules: "٢٪",
-                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                            expiration: "نینە",
+                            mdays: 3,
+                            mdaysNoteKey: 'note_daily_profit_required',
+                            expiration: undefined,
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         }
@@ -324,11 +700,13 @@ if (window.Telegram?.WebApp) {
                 },
                 {
                     name: "1 Step",
-                    notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    notes: ["note_all_accounts_same_rules"],
                     accounts: [
-                        { size: "5K", price: "$29" },
-                        { size: "10K", price: "$49" },
-                        { size: "100K", price: "$399" }
+                        { size: "١٥,٠٠٠$", price: "١٧٨$" },
+                        { size: "٢٥,٠٠٠$", price: "٢٤٨$" },
+                        { size: "٥٠,٠٠٠$", price: "٣٥٨$" },
+                        { size: "١٠٠,٠٠٠$", price: "٦٧٨$" },
+                        { size: "٢٠٠,٠٠٠$", price: "١٠٩٨$" }
                     ],
                     phases: [
                         {
@@ -336,10 +714,11 @@ if (window.Telegram?.WebApp) {
                             daily: "٤٪",
                             max: "٦٪",
                             target: "١٠٪",
-                            consistency: "نینە",
-                            rules: "نینە",
-                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                            expiration: "نینە",
+                            consistency: undefined,
+                            rules: undefined,
+                            mdays: 3,
+                            mdaysNoteKey: 'note_daily_profit_required',
+                            expiration: undefined,
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         },
@@ -348,10 +727,11 @@ if (window.Telegram?.WebApp) {
                             daily: "٤٪",
                             max: "٦٪",
                             target: "١٠٪",
-                            consistency: "نینە",
-                            rules: "نینە",
-                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                            expiration: "نینە",
+                            consistency: undefined,
+                            rules: undefined,
+                            mdays: 3,
+                            mdaysNoteKey: 'note_daily_profit_required',
+                            expiration: undefined,
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         }
@@ -359,27 +739,37 @@ if (window.Telegram?.WebApp) {
                 },
                 {
                     name: "Goat Blitz",
-                    notes: ["ئەڤ مودێلە ب شێوەکێ دەمکی و بتنێ ل دوو بێهنڤەدانێن هەیڤێ ژ نشکەکیڤە دهێت"],
+                    notes: ["note_goat_blitz_temp"],
                     daily: "٣٪ (دیفچوون)",
                     max: "٥٪ (دیفچوون)",
                     target: "٣٪",
                     consistency: "١٥٪",
                     rules: "٢٪",
-                    mdays: "٥ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                    expiration: "نینە",
+                    mdays: 5,
+                    mdaysNoteKey: 'note_daily_profit_required',
+                    expiration: undefined,
                     tradenews: "بەلێ",
                     holdweekends: "بەلێ",
                     accounts: [
-                        { size: "25K", price: "$99" },
-                        { size: "50K", price: "$149" }
+                        { size: "٥,٠٠٠$", price: "" },
+                        { size: "١٠,٠٠٠$", price: "" },
+                        { size: "١٥,٠٠٠$", price: "" },
+                        { size: "٢٥,٠٠٠$", price: "" },
+                        { size: "٥٠,٠٠٠$", price: "" },
+                        { size: "١٠٠,٠٠٠$", price: "" }
                     ]
                 },
                 {
                     name: "2 Step Standard",
-                    notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    notes: ["note_all_accounts_same_rules"],
                     accounts: [
-                        { size: "5K", price: "$32" },
-                        { size: "10K", price: "$60" }
+                        { size: "٥,٠٠٠$", price: "٥٢$" },
+                        { size: "٨,٠٠٠$", price: "١٠٨$" },
+                        { size: "١٥,٠٠٠$", price: "٢٠٨$" },
+                        { size: "٢٥,٠٠٠$", price: "٢٢٨$" },
+                        { size: "٥٠,٠٠٠$", price: "٣٣٨$" },
+                        { size: "١٠٠,٠٠٠$", price: "٥٩٤$" },
+                        { size: "٢٠٠,٠٠٠$", price: "١١٧٤$" }
                     ],
                     phases: [
                         {
@@ -387,10 +777,11 @@ if (window.Telegram?.WebApp) {
                             daily: "٥٪",
                             max: "١٠٪",
                             target: "١٠٪",
-                            consistency: "نینە",
-                            rules: "نینە",
-                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                            expiration: "نینە",
+                            consistency: undefined,
+                            rules: undefined,
+                            mdays: 3,
+                            mdaysNoteKey: 'note_daily_profit_required',
+                            expiration: undefined,
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         },
@@ -399,10 +790,11 @@ if (window.Telegram?.WebApp) {
                             daily: "٥٪",
                             max: "١٠٪",
                             target: "٥٪",
-                            consistency: "نینە",
-                            rules: "نینە",
-                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                            expiration: "نینە",
+                            consistency: undefined,
+                            rules: undefined,
+                            mdays: 3,
+                            mdaysNoteKey: 'note_daily_profit_required',
+                            expiration: undefined,
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         }
@@ -410,10 +802,15 @@ if (window.Telegram?.WebApp) {
                 },
                 {
                     name: "2 Step Goat",
-                    notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    notes: ["note_all_accounts_same_rules"],
                     accounts: [
-                        { size: "5K", price: "$25" },
-                        { size: "10K", price: "$45" }
+                        { size: "٥,٠٠٠$", price: "٣٦$" },
+                        { size: "٨,٠٠٠$", price: "٥٦$" },
+                        { size: "١٥,٠٠٠$", price: "٩٨$" },
+                        { size: "٢٥,٠٠٠$", price: "١٤٨$" },
+                        { size: "٥٠,٠٠٠$", price: "٢٨٨$" },
+                        { size: "١٠٠,٠٠٠$", price: "٤٥٨$" },
+                        { size: "١٥٠,٠٠٠$", price: "٧٢٨$" }
                     ],
                     phases: [
                         {
@@ -421,10 +818,11 @@ if (window.Telegram?.WebApp) {
                             daily: "٤٪",
                             max: "١٠٪",
                             target: "٨٪",
-                            consistency: "نینە",
-                            rules: "نینە",
-                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                            expiration: "نینە",
+                            consistency: undefined,
+                            rules: undefined,
+                            mdays: 3,
+                            mdaysNoteKey: 'note_daily_profit_required',
+                            expiration: undefined,
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         },
@@ -433,10 +831,11 @@ if (window.Telegram?.WebApp) {
                             daily: "٤٪",
                             max: "١0٪",
                             target: "٦٪",
-                            consistency: "نینە",
-                            rules: "نینە",
-                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                            expiration: "نینە",
+                            consistency: undefined,
+                            rules: undefined,
+                            mdays: 3,
+                            mdaysNoteKey: 'note_daily_profit_required',
+                            expiration: undefined,
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         }
@@ -444,10 +843,15 @@ if (window.Telegram?.WebApp) {
                 },
                 {
                     name: "2 Step Pro",
-                    notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    notes: ["note_all_accounts_same_rules"],
                     accounts: [
-                        { size: "5K", price: "$20" },
-                        { size: "10K", price: "$38" }
+                        { size: "٥,٠٠٠$", price: "٦٢$" },
+                        { size: "٨,٠٠٠$", price: "٩٢$" },
+                        { size: "١٥,٠٠٠$", price: "١٦٨$" },
+                        { size: "٢٥,٠٠٠$", price: "٢٣٨$" },
+                        { size: "٥٠,٠٠٠$", price: "٣١٨$" },
+                        { size: "١٠٠,٠٠٠$", price: "٥٨٨$" },
+                        { size: "٢٠٠,٠٠٠$", price: "١٠٩٨$" }
                     ],
                     phases: [
                         {
@@ -455,10 +859,11 @@ if (window.Telegram?.WebApp) {
                             daily: "٤٪",
                             max: "٨٪",
                             target: "٨٪",
-                            consistency: "نینە",
-                            rules: "نینە",
-                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                            expiration: "نینە",
+                            consistency: undefined,
+                            rules: undefined,
+                            mdays: 3,
+                            mdaysNoteKey: 'note_daily_profit_required',
+                            expiration: undefined,
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         },
@@ -467,10 +872,11 @@ if (window.Telegram?.WebApp) {
                             daily: "٤٪",
                             max: "٨٪",
                             target: "٤٪",
-                            consistency: "نینە",
-                            rules: "نینە",
-                            mdays: "٣ (هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)",
-                            expiration: "نینە",
+                            consistency: undefined,
+                            rules: undefined,
+                            mdays: 3,
+                            mdaysNoteKey: 'note_daily_profit_required',
+                            expiration: undefined,
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         }
@@ -478,10 +884,14 @@ if (window.Telegram?.WebApp) {
                 },
                 {
                     name: "3 Step",
-                    notes: ["هەمی ہەژمارێن ڤێ مودێلێ هەمان یاسا هەنە"],
+                    notes: ["note_all_accounts_same_rules"],
                     accounts: [
-                        { size: "10K", price: "$35" },
-                        { size: "25K", price: "$75" }
+                        { size: "١٠,٠٠٠$", price: "٦٥$" },
+                        { size: "١٥,٠٠٠$", price: "٨٥$" },
+                        { size: "٢٥,٠٠٠$", price: "١٤٥$" },
+                        { size: "٥٠,٠٠٠$", price: "٢٢٥$" },
+                        { size: "١٠٠,٠٠٠$", price: "٣٦٥$" },
+                        { size: "٢٠٠,٠٠٠$", price: "٦٦٥$" }
                     ],
                     phases: [
                         {
@@ -489,10 +899,10 @@ if (window.Telegram?.WebApp) {
                             daily: "٤٪",
                             max: "٨٪",
                             target: "٦٪",
-                            consistency: "نینە",
-                            rules: "نینە",
-                            mdays: "نینە",
-                            expiration: "نینە",
+                            consistency: undefined,
+                            rules: undefined,
+                            mdays: undefined,
+                            expiration: undefined,
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         },
@@ -501,10 +911,10 @@ if (window.Telegram?.WebApp) {
                             daily: "٤٪",
                             max: "٨٪",
                             target: "٦٪",
-                            consistency: "نینە",
-                            rules: "نینە",
-                            mdays: "نینە",
-                            expiration: "نینە",
+                            consistency: undefined,
+                            rules: undefined,
+                            mdays: undefined,
+                            expiration: undefined,
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         },
@@ -513,10 +923,10 @@ if (window.Telegram?.WebApp) {
                             daily: "٤٪",
                             max: "٨٪",
                             target: "٦٪",
-                            consistency: "نینە",
-                            rules: "نینە",
-                            mdays: "نینە",
-                            expiration: "نینە",
+                            consistency: undefined,
+                            rules: undefined,
+                            mdays: undefined,
+                            expiration: undefined,
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         }
@@ -542,6 +952,8 @@ if (window.Telegram?.WebApp) {
         if(pageId === 'home') renderHome(propFirms);
         else if(pageId === 'discounts') renderDiscounts();
         else if(pageId === 'notifications') renderNotifications();
+        else if(pageId === 'learn') renderLearn(); 
+        else if(pageId === 'about') renderAbout(); 
     }
 
     function toggleSidebar(state) {
@@ -553,15 +965,19 @@ if (window.Telegram?.WebApp) {
         overlay.classList.toggle('active', isActive);
     }
 
-    function renderHome(firmsToRender) {
-        const grid = document.getElementById('firm-grid');
-        
-        if (!firmsToRender || firmsToRender.length === 0) {
-            grid.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: var(--muted);">هیچ کۆمپانیایەک نەدۆزرایەوە.</p>';
-            return;
-        }
+    function getTranslation(key) {
+        return translations[currentLang][key] || key; // Fallback to key itself if not found
+    }
 
-        grid.innerHTML = firmsToRender.map(firm => `
+function renderHome(firmsToRender) {
+    const grid = document.getElementById('firm-grid');
+
+    let cardsHtml = '';
+
+    if (!firmsToRender || firmsToRender.length === 0) {
+        cardsHtml = `<p style="text-align:center; grid-column: 1/-1; color: var(--muted);">${getTranslation('no_firms_found')}</p>`;
+    } else {
+        cardsHtml = firmsToRender.map(firm => `
             <div class="card">
                 <div class="card-header">
                     <div class="card-logo">
@@ -571,23 +987,91 @@ if (window.Telegram?.WebApp) {
                         <h3>${firm.name}</h3>
                     </div>
                 </div>
-                <div class="guarantee">قازانج دان ب گرەنتییە</div>
-                <div class="price-tag">دەستپێدکەت ژ ${firm.cheapest} / ${firm.cheapestIQD}</div>
+            <div class="guarantee">${getTranslation(firm.guarantee)}</div>
+                <div class="price-tag">${getTranslation('starting_from')} ${firm.cheapest.replace('دولاران', getTranslation('dollars_currency')).replace('دیناران', getTranslation('iqd_currency'))} / ${firm.cheapestIQD.replace('دولاران', getTranslation('dollars_currency')).replace('دیناران', getTranslation('iqd_currency'))}</div>
                 <div class="card-stats">
-                    <div class="stat-item">پێدانا پارەی<b>${firm.payout}</b></div>
-                    <div class="stat-item">پشکا قازانجی<b>${firm.profitSplit}</b></div>
-                    <div class="stat-item">پلاتفورم<b class="platform-item">${firm.platforms}</b></div>
+                    <div class="stat-item">${getTranslation('payout')}<b>${getTranslation(firm.payout)}</b></div>
+                    <div class="stat-item">${getTranslation('profit_split')}<b>${getTranslation(firm.profitSplit)}</b></div>
+                    <div class="stat-item">${getTranslation('platforms')}<b class="platform-item">${firm.platforms}</b></div>
                 </div>
-                <button class="btn-primary" onclick="renderModelSelection(${firm.id})">زێدەتر ببینە</button>
+                <button class="btn-primary" onclick="renderModelSelection(${firm.id})">${getTranslation('see_more')}</button>
                 <div class="code-box" style="margin-top: 20px; border-color: #d4af37; background: rgba(212, 175, 55, 0.1);">
                     <a href="${firm.link}" target="_blank" style="text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                        <span style="font-weight: bold; font-size: 0.9rem;">سەرەدانا سایتی بکە</span>
+                        <span style="font-weight: bold; font-size: 0.9rem;">${getTranslation('visit_website')}</span>
                         <i class="fas fa-external-link-alt" style="color: #d4af37;"></i>
                     </a>
                 </div>
             </div>
         `).join('');
     }
+
+    // کارتا نوو (ل نێزیک دێ پتر کومپانی هێنە زێدەکرن)
+    cardsHtml += `
+    <div class="card coming-soon-card-enhanced" style="
+        background: var(--elevated-bg-mid);
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 280px;
+        padding: 25px;
+        border-radius: var(--radius-lg, 12px);
+        color: var(--text);
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        grid-column: span 1;
+        cursor: default;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    ">
+        <style>
+            .coming-soon-card-enhanced:hover {
+                transform: translateY(-8px) scale(1.03);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px var(--gold-primary);
+                border: 2px solid var(--gold-light);
+            }
+            .coming-soon-card-enhanced:hover .coming-soon-icon {
+                transform: scale(1.15) rotate(3deg);
+                text-shadow: 0 0 20px var(--gold-light), 0 0 12px var(--gold-primary);
+            }
+            .coming-soon-card-enhanced:hover h3 {
+                color: var(--gold-primary);
+            }
+        </style>
+
+        <div class="coming-soon-icon" style="
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 4.5rem;
+            margin-bottom: 15px;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), text-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        ">
+            <i class="fas fa-plus-circle"></i>
+        </div>
+        <h3 style="
+            color: var(--gold-light);
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            letter-spacing: 1.2px;
+            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+            transition: color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        ">${getTranslation('coming_soon_title')}</h3>
+        <p style="
+            color: var(--muted);
+            font-size: 1rem;
+            opacity: 0.95;
+            max-width: 85%;
+            line-height: 1.6;
+        ">${getTranslation('coming_soon_description')}</p>
+    </div>
+`;
+
+    grid.innerHTML = cardsHtml;
+}
 
     let sortAscending = true;
 
@@ -618,7 +1102,7 @@ if (window.Telegram?.WebApp) {
     }
 
     function filterFirms() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
+        const query = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase() : '';
         const filtered = propFirms.filter(f => (f.name || '').toLowerCase().includes(query));
         renderHome(filtered);
     }
@@ -627,6 +1111,7 @@ if (window.Telegram?.WebApp) {
         navigator.clipboard.writeText(code).then(() => {
             const toast = document.getElementById('toast');
             toast.classList.add('active');
+            // Toast text is already handled by updateTextContent
             setTimeout(() => {
                 toast.classList.remove('active');
             }, 3000);
@@ -640,8 +1125,9 @@ if (window.Telegram?.WebApp) {
         grid.innerHTML = propFirms.map(firm => `
             <div class="card" style="text-align: center; direction: rtl;">
                 <h2 class="text-gold" style="font-size: 1.5rem;">${firm.name}</h2>
+                
                 <div class="code-box">
-                    <div class="label" style="font-size: 0.8rem; color: #aaa;">ئێکێ بکرە، ئێکێ دیاری وەربگرە</div>
+                    <div class="label" style="font-size: 0.6rem; color: #aaa;">${getTranslation('buy_one_get_one_free')}</div>
                     <span style="font-weight: bold;">${firm.code}</span>
                     <button class="copy-btn" onclick="copyCode('${firm.code}')">
                         <i class="far fa-copy"></i>
@@ -649,7 +1135,7 @@ if (window.Telegram?.WebApp) {
                 </div>
                 ${(firm.extraCodes || []).map(exCode => `
                     <div class="code-box" style="margin-top: 10px;">
-                        <div class="label" style="font-size: 0.8rem; color: #aaa;">٥٠٪ داشکاندن بو بازرگانێن نوی</div>
+                        <div class="label" style="font-size: 0.6rem; color: #aaa;">${getTranslation('new_trader_discount')}</div>
                         <span style="font-weight: bold;">${exCode}</span>
                         <button class="copy-btn" onclick="copyCode('${exCode}')">
                             <i class="far fa-copy"></i>
@@ -658,7 +1144,7 @@ if (window.Telegram?.WebApp) {
                 `).join('')}
                 <div class="code-box" style="margin-top: 20px; border-color: #d4af37; background: rgba(212, 175, 55, 0.1);">
                     <a href="${firm.link}" target="_blank" style="text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                        <span style="font-weight: bold; font-size: 0.9rem;">سەرەدانا سایتی بکە</span>
+                        <span style="font-weight: bold; font-size: 0.9rem;">${getTranslation('visit_website')}</span>
                         <i class="fas fa-external-link-alt" style="color: #d4af37;"></i>
                     </a>
                 </div>
@@ -669,7 +1155,7 @@ if (window.Telegram?.WebApp) {
     function renderNotifications() {
         const list = document.getElementById('notif-list');
         const news = [
-            { title: "٥٠٪ داشکاندن ل GFT", body: "بازرگانێن نوی دشێن ٥٠٪ داشکاندنێ دەستخوڤەبینن.", date: "2024/05/20" },
+            { title: getTranslation('news_gft_discount_title'), body: getTranslation('news_gft_discount_body'), date: "2024/05/20" },
         ];
         list.innerHTML = news.map(n => `
             <div class="card" style="padding: 15px; border-right: 4px solid var(--primary);">
@@ -682,182 +1168,332 @@ if (window.Telegram?.WebApp) {
         `).join('');
     }
 
-    function renderModelSelection(firmId) {
-        const firm = propFirms.find(f => f.id === firmId);
-        const modalBody = document.getElementById('modal-body');
-        if (!firm) return;
-        
-        let tabsHtml = '<div class="tabs">';
-        (firm.models || []).forEach((model, index) => {
-            tabsHtml += `<button class="tab-btn ${index === 0 ? 'active' : ''}" onclick="switchModel(${firmId}, ${index})">${model.name}</button>`;
-        });
-        tabsHtml += '</div>';
-        
-        const accountsHtml = buildAccountsHtml(firm, 0, 0);
-        
-        modalBody.innerHTML = `
-            <h2 style="margin-bottom: 20px;">${firm.name}</h2>
-            ${tabsHtml}
-            <div id="modal-accounts-container">${accountsHtml}</div>
-        `; 
+    function renderLearn() {
+        const grid = document.getElementById('learn').querySelector('.grid');
+        if (!grid) return;
 
-        (function attachMinimalChev(modalBody) {
-            const tabsEl = modalBody.querySelector('.tabs');
-            if (!tabsEl) return;
-            if (tabsEl.closest('.tabs-wrapper.minimal')) return;
+        let learnHtml = `
+            <div class="learn-category-header">
+                <h2 class="text-gold"><i class="fas fa-cubes"></i> ${getTranslation('prop_firm_types_title')}</h2>
+            </div>
+            <div class="learn-cards-row">
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('what_is_prop_firm_learn_title')}</h3>
+                    <p>${getTranslation('what_is_prop_firm_learn_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('instant_accounts_title')}</h3>
+                    <p>${getTranslation('instant_accounts_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('one_step_challenge_title')}</h3>
+                    <p>${getTranslation('one_step_challenge_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('two_step_challenge_title')}</h3>
+                    <p>${getTranslation('two_step_challenge_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('three_step_challenge_title')}</h3>
+                    <p>${getTranslation('three_step_challenge_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('pay_later_title')}</h3>
+                    <p>${getTranslation('pay_later_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('goat_one_dollar_title')}</h3>
+                    <p>${getTranslation('goat_one_dollar_desc')}</p>
+                </div>
+            </div>
 
-            const wrapper = document.createElement('div');
-            wrapper.className = 'tabs-wrapper minimal';
-
-            const leftChev = document.createElement('button');
-            leftChev.className = 'chev chev-left';
-            leftChev.setAttribute('aria-label', 'scroll left');
-            leftChev.innerHTML = '<i class="fas fa-chevron-left"></i>';
-
-            const rightChev = document.createElement('button');
-            rightChev.className = 'chev chev-right';
-            rightChev.setAttribute('aria-label', 'scroll right');
-            rightChev.innerHTML = '<i class="fas fa-chevron-right"></i>';
-
-            tabsEl.parentNode.insertBefore(wrapper, tabsEl);
-            wrapper.appendChild(leftChev);
-            wrapper.appendChild(tabsEl);
-            wrapper.appendChild(rightChev);
-
-            const isRTL = getComputedStyle(tabsEl).direction === 'rtl';
-            const step = Math.round(tabsEl.clientWidth * 0.6) || 200;
-
-            function updateMinimalChev() {
-                const overflowing = tabsEl.scrollWidth > tabsEl.clientWidth + 4;
-                leftChev.style.display = overflowing ? 'inline-flex' : 'none';
-                rightChev.style.display = overflowing ? 'inline-flex' : 'none';
-
-                if (isRTL) {
-                    const absScrollLeft = Math.abs(tabsEl.scrollLeft);
-                    const maxScrollLeft = tabsEl.scrollWidth - tabsEl.clientWidth;
-                    leftChev.style.opacity = (absScrollLeft >= (maxScrollLeft - 6)) ? '0.35' : '1';
-                    rightChev.style.opacity = (absScrollLeft <= 6) ? '0.35' : '1';
-                } else {
-                    leftChev.style.opacity = (tabsEl.scrollLeft <= 6) ? '0.35' : '1';
-                    rightChev.style.opacity = (tabsEl.scrollLeft >= tabsEl.scrollWidth - tabsEl.clientWidth - 6) ? '0.35' : '1';
-                }
-            }
-
-            leftChev.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const dir = isRTL ? step : -step;
-                tabsEl.scrollBy({ left: dir, behavior: 'smooth' });
-            });
-            rightChev.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const dir = isRTL ? -step : step;
-                tabsEl.scrollBy({ left: dir, behavior: 'smooth' });
-            });
-
-            tabsEl.addEventListener('scroll', updateMinimalChev);
-            window.addEventListener('resize', updateMinimalChev);
-            updateMinimalChev();
-        })(modalBody);
-        
-        document.getElementById('modal-overlay').classList.add('active');
-        document.body.style.overflow = 'hidden';
+            <div class="learn-category-header">
+                <h2 class="text-gold"><i class="fas fa-gavel"></i> ${getTranslation('rules_explanation_title')}</h2>
+            </div>
+            <div class="learn-cards-row">
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('daily_drawdown_rule_title')}</h3>
+                    <p>${getTranslation('daily_drawdown_rule_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('max_drawdown_rule_title')}</h3>
+                    <p>${getTranslation('max_drawdown_rule_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('target_profit_rule_title')}</h3>
+                    <p>${getTranslation('target_profit_rule_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('consistency_rule_exp_title')}</h3>
+                    <p>${getTranslation('consistency_rule_exp_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('open_trades_drawdown_rule_title')}</h3>
+                    <p>${getTranslation('open_trades_drawdown_rule_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('min_trading_days_rule_title')}</h3>
+                    <p>${getTranslation('min_trading_days_rule_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('account_expiration_rule_title')}</h3>
+                    <p>${getTranslation('account_expiration_rule_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('trade_news_rule_title')}</h3>
+                    <p>${getTranslation('trade_news_rule_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('hold_weekends_rule_title')}</h3>
+                    <p>${getTranslation('hold_weekends_rule_desc')}</p>
+                </div>
+                <div class="learn-card-dynamic">
+                    <h3>${getTranslation('trade_size_rule_title')}</h3>
+                    <p>${getTranslation('trade_size_rule_desc')}</p>
+                </div>
+            </div>
+        `;
+        grid.innerHTML = learnHtml;
     }
 
-    function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
-        const model = firm.models[modelIndex];
-        if (!model) return '';
+    function renderAbout() {
+        updateTextContent(currentLang);
+    }
 
-        let sizesHtml = '';
-        let priceHtml = '';
+    function renderModelSelection(firmId) {
+    const firm = propFirms.find(f => f.id === firmId);
+    const modalBody = document.getElementById('modal-body');
+    if (!firm || !modalBody) return;
+    
+    let tabsHtml = '<div class="tabs">';
+    (firm.models || []).forEach((model, index) => {
+        tabsHtml += `<button class="tab-btn ${index === 0 ? 'active' : ''}" onclick="switchModel(${firmId}, ${index})">${model.name}</button>`;
+    });
+    tabsHtml += '</div>';
+    
+    const accountsHtml = buildAccountsHtml(firm, 0, 0);
+    
+    modalBody.innerHTML = `
+        <h2 style="margin-bottom: 20px;">${firm.name}</h2>
+        ${tabsHtml}
+        <div id="modal-accounts-container">${accountsHtml}</div>
+    `;
+
+    attachChevsIn(modalBody);
+    
+    document.getElementById('modal-overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
+    const model = firm.models[modelIndex];
+    if (!model) return '';
+
+    let sizesHtml = '';
+    let priceHtml = '';
+    
+    if (model.accounts && model.accounts.length > 0) {
+        const activeAccount = model.accounts[activeSizeIndex] || model.accounts[0];
         
-        if (model.accounts && model.accounts.length > 0) {
-            const activeAccount = model.accounts[activeSizeIndex] || model.accounts[0];
-            
-            sizesHtml = `<div class="size-tabs">`;
-            
-            model.accounts.forEach((acc, idx) => {
-                const activeClass = idx === activeSizeIndex ? 'active' : '';
-                sizesHtml += `<button class="size-tab-btn ${activeClass}" onclick="switchAccountSize(${firm.id}, ${modelIndex}, ${idx})">${acc.size}</button>`;
-            });
-            
-            sizesHtml += `</div>`;
-            
-            priceHtml = `
-                <div class="price-display">
-                    <span>بهایێ هەژمارێ بێی داشکاندن</span>
-                    <b>${activeAccount.price}</b>
-                </div>
-            `;
-        }
+        sizesHtml = `<div class="size-tabs">`;
+        
+        model.accounts.forEach((acc, idx) => {
+            const activeClass = idx === activeSizeIndex ? 'active' : '';
+            sizesHtml += `<button class="size-tab-btn ${activeClass}" onclick="switchAccountSize(${firm.id}, ${modelIndex}, ${idx})">${acc.size}</button>`;
+        });
+        
+        sizesHtml += `</div>`;
+        
+        priceHtml = `
+            <div class="price-display">
+                <span>${getTranslation('price_without_discount')}</span>
+                <b>${activeAccount.price}</b>
+            </div>
+        `;
+    }
 
-        const renderRules = (rules, phaseTitle = '') => {
-            const titleHtml = phaseTitle ? `<h4 style="margin: 10px 0 5px; color: #d4af37;">${phaseTitle}</h4>` : '';
-            return `
-                ${titleHtml}
-                <div class="rules-grid">
-                    <div class="stat-item">ژ دەستدانا روژانە <b>${rules.daily || "نینە"}</b></div>
-                    <div class="stat-item">ژ دەستدانا گشتی <b>${rules.max || "نینە"}</b></div>
-                    <div class="stat-item">ئارمانج <b>${rules.target || "نینە"}</b></div>
-                    <div class="stat-item">پێگیربوون <b>${rules.consistency || "نینە"}</b></div>
-                    <div class="stat-item">ژ دەستدانا مامەلێن ڤەکری <b>${rules.rules || "نینە"}</b></div>
-                    <div class="stat-item">کێمترین روژێن بازرگانیێ <b>${rules.mdays || "نینە"}</b></div>
-                    <div class="stat-item">سەرڤەچوونا هەژمارێ <b>${rules.expiration || "نینە"}</b></div>
-                    <div class="stat-item">بازرگانیکرن دگەل نووچا <b>${rules.tradenews || "نینە"}</b></div>
-                    <div class="stat-item">ڤەکری هێلان د بهێنڤەدانێ دا <b>${rules.holdweekends || "نینە"}</b></div>
-                </div>
-            `;
+    const renderRules = (rulesObj, phaseTitleKey = '') => { // Renamed parameter to rulesObj
+        const titleHtml = phaseTitleKey ? `<h4 style="margin: 10px 0 5px; color: #d4af37;">${getTranslation(phaseTitleKey)}</h4>` : '';
+        const getRuleValue = (rules, key) => { // Helper to get and format rule values
+            const val = rules[key];
+            const unitKey = rules[key + 'UnitKey']; // e.g., 'expirationUnitKey'
+            const noteKey = rules[key + 'NoteKey']; // e.g., 'mdaysNoteKey'
+
+            if (val === undefined || val === null || val === "نینە" || val === "") return getTranslation('not_applicable');
+            if (val === "بەلێ") return getTranslation('yes');
+            if (val === "نەخێر") return getTranslation('no');
+
+            let translatedValue = String(val);
+
+            // Handle numeric values with units
+            if (typeof val === 'number' && unitKey) {
+                translatedValue = `${val} ${getTranslation(unitKey)}`;
+            }
+            
+            // Handle numeric values with appended notes
+            if (noteKey) {
+                translatedValue += ` ${getTranslation(noteKey)}`;
+            }
+
+            return translatedValue;
         };
 
-        let rulesContent = '';
+        return `
+            ${titleHtml}
+            <div class="rules-grid">
+                <div class="stat-item">${getTranslation('daily_drawdown')} <b>${getRuleValue(rulesObj, 'daily')}</b></div>
+                <div class="stat-item">${getTranslation('max_drawdown')} <b>${getRuleValue(rulesObj, 'max')}</b></div>
+                <div class="stat-item">${getTranslation('target_profit')} <b>${getRuleValue(rulesObj, 'target')}</b></div>
+                <div class="stat-item">${getTranslation('consistency_rule')} <b>${getRuleValue(rulesObj, 'consistency')}</b></div>
+                <div class="stat-item">${getTranslation('open_trades_drawdown')} <b>${getRuleValue(rulesObj, 'rules')}</b></div>
+                <div class="stat-item">${getTranslation('min_trading_days')} <b>${getRuleValue(rulesObj, 'mdays')}</b></div>
+                <div class="stat-item">${getTranslation('account_expiration')} <b>${getRuleValue(rulesObj, 'expiration')}</b></div>
+                <div class="stat-item">${getTranslation('trade_news')} <b>${getRuleValue(rulesObj, 'tradenews')}</b></div>
+                <div class="stat-item">${getTranslation('hold_weekends')} <b>${getRuleValue(rulesObj, 'holdweekends')}</b></div>
+            </div>
+        `;
+    };
 
-        if (model.notes && model.notes.length > 0) {
-            rulesContent += `<div class="notes-section" style="margin-top: 15px; padding: 10px; border: 1px dashed var(--muted); border-radius: 8px;">`;
-            model.notes.forEach(note => {
-                rulesContent += `<p style="font-size: 0.9em; margin-bottom: 5px; color: var(--muted);"><i class="fas fa-info-circle" style="margin-inline-end: 5px;"></i> ${note}</p>`;
-            });
-            rulesContent += `</div>`;
-        }
+    let rulesContent = '';
 
-        if (model.phases && Array.isArray(model.phases) && model.phases.length > 0) {
-            rulesContent += model.phases.map(phase => `
-                <div class="phase-card" style="margin-top: 20px;">
-                    ${renderRules(phase, phase.phase)}
-                </div>
-            `).join('<hr style="border-color:#333; margin:20px 0;">');
-        } else {
-            const hasDirectRules = ['daily', 'max', 'target', 'consistency', 'rules', 'mdays', 'expiration', 'tradenews', 'holdweekends'].some(key => model[key] !== undefined && model[key] !== null);
-            if (hasDirectRules) {
-                rulesContent += `
-                    <div class="model-rules-card" style="margin-top: 20px;">
-                        ${renderRules(model)}
-                    </div>
-                `;
-            }
-        }
-
-        return sizesHtml + priceHtml + rulesContent;
-    }
-
-    function switchModel(firmId, modelIndex) {
-        const firm = propFirms.find(f => f.id === firmId);
-        const container = document.getElementById('modal-accounts-container');
-        if (container) {
-            container.innerHTML = buildAccountsHtml(firm, modelIndex, 0);
-        }
-        
-        document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
-            if (idx === modelIndex) btn.classList.add('active');
-            else btn.classList.remove('active');
+    if (model.notes && model.notes.length > 0) {
+        rulesContent += `<div class="notes-section" style="margin-top: 15px; padding: 10px; border: 1px dashed var(--muted); border-radius: 8px;">`;
+        model.notes.forEach(noteKey => { // 'noteKey' is now directly a translation key
+            rulesContent += `<p style="font-size: 0.9em; margin-bottom: 5px; color: var(--muted);"><i class="fas fa-info-circle" style="margin-inline-end: 5px;"></i> ${getTranslation(noteKey)}</p>`;
         });
+        rulesContent += `</div>`;
     }
 
-    function switchAccountSize(firmId, modelIndex, sizeIndex) {
-        const firm = propFirms.find(f => f.id === firmId);
-        const container = document.getElementById('modal-accounts-container');
-        if (container) {
-            container.innerHTML = buildAccountsHtml(firm, modelIndex, sizeIndex);
+    if (model.phases && Array.isArray(model.phases) && model.phases.length > 0) {
+        rulesContent += model.phases.map(phase => {
+            let phaseKey = '';
+            // These strings are used for lookup, keep them consistent with the بادینی phase names
+            if (phase.phase === 'قۆناغا هەڵسەنگاندنێ') phaseKey = 'phase_evaluation';
+            else if (phase.phase === 'قۆناغا فەندکری') phaseKey = 'phase_funded';
+            else if (phase.phase === 'قۆناغا ئێکێ') phaseKey = 'phase_one';
+            else if (phase.phase === 'قۆناغا دووێ') phaseKey = 'phase_two';
+            else if (phase.phase === 'قۆناغا سیێ') phaseKey = 'phase_three';
+            
+            return `
+                <div class="phase-card" style="margin-top: 20px;">
+                    ${renderRules(phase, phaseKey)}
+                </div>
+            `;
+        }).join('<hr style="border-color:#333; margin:20px 0;">');
+    } else {
+        // If there are no phases, render direct model rules
+        const hasDirectRules = ['daily', 'max', 'target', 'consistency', 'rules', 'mdays', 'expiration', 'tradenews', 'holdweekends'].some(key => model[key] !== undefined && model[key] !== null);
+        if (hasDirectRules) {
+            rulesContent += `
+                <div class="model-rules-card" style="margin-top: 20px;">
+                    ${renderRules(model, '')}
+                </div>
+            `;
         }
     }
+
+    return sizesHtml + priceHtml + rulesContent;
+}
+
+/* Helper: attach chevrons to any .tabs/.size-tabs inside a root element */
+function attachChevsIn(rootEl = document) {
+    const nodes = rootEl.querySelectorAll('.tabs, .size-tabs');
+    nodes.forEach(n => attachChevsTo(n));
+}
+
+function attachChevsTo(tabsEl) {
+    if (!tabsEl || !tabsEl.parentNode) return;
+    // avoid double-wrapping
+    if (tabsEl.closest('.tabs-wrapper.minimal')) return;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'tabs-wrapper minimal';
+
+    const leftChev = document.createElement('button');
+    leftChev.className = 'chev chev-left';
+    leftChev.setAttribute('aria-label', 'scroll left');
+    leftChev.innerHTML = '<i class="fas fa-chevron-left" aria-hidden="true"></i>';
+    if (!leftChev.querySelector('i')) leftChev.textContent = '◀';
+
+    const rightChev = document.createElement('button');
+    rightChev.className = 'chev chev-right';
+    rightChev.setAttribute('aria-label', 'scroll right');
+    rightChev.innerHTML = '<i class="fas fa-chevron-right" aria-hidden="true"></i>';
+    if (!rightChev.querySelector('i')) rightChev.textContent = '▶';
+
+    const isRTL = getComputedStyle(tabsEl).direction === 'rtl';
+    const step = Math.round(tabsEl.clientWidth * 0.6) || 200;
+
+    // insert wrapper and place chevrons: for RTL (Kurdish) put rightChev visually left
+    tabsEl.parentNode.insertBefore(wrapper, tabsEl);
+    if (isRTL) {
+        wrapper.appendChild(rightChev);
+        wrapper.appendChild(tabsEl);
+        wrapper.appendChild(leftChev);
+    } else {
+        wrapper.appendChild(leftChev);
+        wrapper.appendChild(tabsEl);
+        wrapper.appendChild(rightChev);
+    }
+
+    function update() {
+        const overflowing = tabsEl.scrollWidth > tabsEl.clientWidth + 4;
+        leftChev.style.display = overflowing ? 'inline-flex' : 'none';
+        rightChev.style.display = overflowing ? 'inline-flex' : 'none';
+
+        if (isRTL) {
+            const absScrollLeft = Math.abs(Math.round(tabsEl.scrollLeft));
+            const maxScrollLeft = Math.abs(Math.round(tabsEl.scrollWidth - tabsEl.clientWidth));
+            leftChev.style.opacity = (absScrollLeft >= (maxScrollLeft - 6)) ? '0.35' : '1';
+            rightChev.style.opacity = (absScrollLeft <= 6) ? '0.35' : '1';
+        } else {
+            leftChev.style.opacity = (tabsEl.scrollLeft <= 6) ? '0.35' : '1';
+            rightChev.style.opacity = (tabsEl.scrollLeft >= tabsEl.scrollWidth - tabsEl.clientWidth - 6) ? '0.35' : '1';
+        }
+    }
+
+    leftChev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const dir = isRTL ? step : -step;
+        tabsEl.scrollBy({ left: dir, behavior: 'smooth' });
+    });
+    rightChev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const dir = isRTL ? -step : step;
+        tabsEl.scrollBy({ left: dir, behavior: 'smooth' });
+    });
+
+    tabsEl.addEventListener('scroll', update);
+    window.addEventListener('resize', update);
+
+    // initial update after paint
+    requestAnimationFrame(update);
+}
+
+function switchModel(firmId, modelIndex) {
+    const firm = propFirms.find(f => f.id === firmId);
+    const container = document.getElementById('modal-accounts-container');
+    if (container && firm) {
+        container.innerHTML = buildAccountsHtml(firm, modelIndex, 0);
+        const modalBody = document.getElementById('modal-body');
+        attachChevsIn(modalBody);
+    }
+    
+    document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+        if (idx === modelIndex) btn.classList.add('active');
+        else btn.classList.remove('active');
+    });
+}
+
+function switchAccountSize(firmId, modelIndex, sizeIndex) {
+    const firm = propFirms.find(f => f.id === firmId);
+    const container = document.getElementById('modal-accounts-container');
+    if (container && firm) {
+        container.innerHTML = buildAccountsHtml(firm, modelIndex, sizeIndex);
+        const modalBody = document.getElementById('modal-body');
+        attachChevsIn(modalBody);
+    }
+}
 
     function closeModal(event) {
         if (event && event.target !== document.getElementById('modal-overlay') && !event.target.closest('.close-modal')) return;
@@ -865,7 +1501,16 @@ if (window.Telegram?.WebApp) {
         document.body.style.overflow = 'auto';
     }
 
-    renderHome(propFirms);
+    // Initial rendering of the home page with the correct language
+    document.addEventListener('DOMContentLoaded', () => {
+        renderHome(propFirms);
+        // Ensure other pages are also rendered with correct language if visited
+        renderNotifications(); 
+        renderDiscounts(); 
+        renderLearn(); // Call renderLearn on initial load
+        renderAbout();
+    });
+
 
     function triggerHaptic() {
         if (window.Telegram?.WebApp?.HapticFeedback) {
