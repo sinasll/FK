@@ -145,74 +145,58 @@
 
 <script>
 
-const firebaseConfig = {
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+import { getFirestore, doc, setDoc, serverTimestamp, initializeFirestore } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
     apiKey: "AIzaSyAl0isgL-Kycr_Z2qSlWbH5Bqn0QL-0Il8",
     authDomain: "fund-kurd-mini-app.firebaseapp.com",
     projectId: "fund-kurd-mini-app",
     storageBucket: "fund-kurd-mini-app.firebasestorage.app",
     messagingSenderId: "520050036487",
-    appId: "1:520050036487:web:bb5ae05729bebfdbf1bfa2",  
-};
+    appId: "1:520050036487:web:bb5ae05729bebfdbf1bfa2",
+    };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    
+    // Initialize Firestore with persistence
+    const db = initializeFirestore(app, {
+      experimentalForceLongPolling: true
+    });
 
-// -----------------------------
-// SAVE TELEGRAM USER DATA
-// -----------------------------
-async function saveTelegramUser() {
-    try {
+    // Telegram User Tracking Function
+    async function trackTelegramUser() {
+      try {
         const tg = window.Telegram?.WebApp;
-        if (!tg) {
-            console.log("Not in Telegram environment");
-            return;
-        }
-        
-        const user = tg.initDataUnsafe?.user;
-        if (!user) {
-            console.log("No user data available");
-            return;
-        }
+        if (!tg) return;
 
-        const userId = String(user.id);
-        const userRef = db.collection("users").doc(userId);
+        const userData = tg.initDataUnsafe?.user;
+        if (!userData) return;
 
-        await db.runTransaction(async (transaction) => {
-            const doc = await transaction.get(userRef);
-            const now = firebase.firestore.FieldValue.serverTimestamp();
+        const userId = String(userData.id);
+        const userRef = doc(db, "users", userId);
 
-            if (!doc.exists) {
-                // New user: set both firstSeen and lastSeen
-                transaction.set(userRef, {
-                    telegramId: user.id,
-                    username: user.username || null,
-                    firstName: user.first_name || null,
-                    lastName: user.last_name || null,
-                    languageCode: user.language_code || null,
-                    firstSeen: now,
-                    lastSeen: now
-                });
-                console.log("New user saved");
-            } else {
-                // Returning user: update info and lastSeen only
-                transaction.update(userRef, {
-                    username: user.username || null,
-                    firstName: user.first_name || null,
-                    lastName: user.last_name || null,
-                    languageCode: user.language_code || null,
-                    lastSeen: now
-                });
-                console.log("Existing user updated");
-            }
-        });
-    } catch (error) {
-        console.error("Error saving user to Firestore:", error);
+        await setDoc(userRef, {
+          telegramId: userId,
+          username: userData.username || userData.first_name,
+          firstName: userData.first_name || "Anonymous",
+          lastName: userData.last_name || null,
+          languageCode: userData.language_code || "en",
+          chatId: tg.initDataUnsafe.chat?.id || "personal",
+          photoUrl: userData.photo_url || null,
+          joinedAt: serverTimestamp(),
+          lastActive: serverTimestamp(),
+          userAgent: navigator.userAgent,
+          platform: navigator.platform
+        }, { merge: true });
+
+        console.log("User tracking successful");
+      } catch (error) {
+        console.error("User tracking failed:", error);
+      }
     }
-}
-
-// Run when the page has loaded
-document.addEventListener("DOMContentLoaded", saveTelegramUser);
 
 // -----------------------------
 // YOUR EXISTING CODE (unchanged below)
