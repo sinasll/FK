@@ -804,13 +804,13 @@ main {
     font-size: 0.8em; /* قەبارێ فونتێ بۆ سەرنڤیسێن کارتێ، بچووکتر */
     color: var(--gold); /* رەنگێ زێری، ژ --gold */
     margin-bottom: 10px; /* ژێریا سەرنڤیسێ */
-    text-transform: capitalize; /* بتنێ پیتێن سەرەکی یێن دەستپێکێ ل سەرنڤیسێ */
+    text-transform: capitalize; /* بتنێ پیتێن پراپ فیرم یێن دەستپێکێ ل سەرنڤیسێ */
 }
 
 /* Styling for card descriptions */
 .learn-card-dynamic p {
     font-size: 0.9em; /* قەبارێ فونتێ بۆ تێکستێ، گەلەک بچووکتر */
-    color: var(--muted); /* رەنگەکێ کێمتر ژ تێکستێ سەرەکی، ژ --muted */
+    color: var(--muted); /* رەنگەکێ کێمتر ژ تێکستێ پراپ فیرم، ژ --muted */
     line-height: 1.5; /* دووریا ناڤبەرا خەتان */
 }
 
@@ -834,4 +834,63 @@ main {
     .learn-card-dynamic p {
         font-size: 0.85em;
     }
+}
+
+ /* New styles for the enhanced Learn page - These were removed as per your request */
+        .terms-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--elevated-bg-mid);
+            border-radius: var(--radius-lg);
+            /* box-shadow: var(--shadow-medium); */ /* Removed shadow */
+            grid-column: 1 / -1;
+        }
+
+        .terms-section h3 {
+            color: white; /* Changed to white */
+            font-size: 1rem; /* Smaller text */
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+            display: block; /* Changed to block, no flex needed without icons */
+            align-items: unset; /* Removed align-items */
+        }
+        /* .terms-section h3 i rules removed as per request */
+
+
+        .terms-section p {
+            color: white; /* Changed to white */
+            font-size: 0.9rem; /* Smaller text */
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        .terms-section p:last-child {
+            margin-bottom: 0;
+        }
+        /* New style for rules explanation cards */
+        .rule-explanation-card {
+            background-color: var(--elevated-bg-low);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            /* box-shadow: var(--shadow-small); */ /* Removed shadow */
+            /* transition: transform 0.3s ease, box-shadow 0.3s ease; */ /* Removed animations */
+            text-align: right; /* Ensure RTL for card content */
+        }
+        /* .rule-explanation-card:hover rules removed as per request */
+        .rule-explanation-card h3 {
+            display: block; /* Changed to block, no flex needed without icons */
+            align-items: unset; /* Removed align-items */
+            font-size: 1.2rem; /* Smaller text */
+        }
+
+        .nav-link.disabled {
+    opacity: 0.5;
+    pointer-events: none; /* Prevents clicking */
+    cursor: not-allowed;
+    filter: grayscale(1);
+    transition: rgb(80, 77, 77);
+}
+
+.nav-link.disabled span {
+    text-decoration: none; /* Optional: adds a strikethrough effect */
 }

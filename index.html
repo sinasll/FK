@@ -9,81 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Firebase SDKs (compat version) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <style>
-        /* New styles for the enhanced Learn page */
-        .learn-category-header {
-            grid-column: 1 / -1; /* Make header span all columns */
-            text-align: center;
-            margin-bottom: 25px;
-            margin-top: 40px; /* Add margin to separate categories */
-        }
-
-        .learn-category-header h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            position: relative;
-            padding-bottom: 10px;
-        }
-
-        .learn-category-header h2 i {
-            margin-inline-end: 10px;
-            color: var(--gold-primary);
-        }
-
-        .learn-category-header h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: var(--gold-primary);
-            border-radius: 5px;
-        }
-
-        .learn-cards-row {
-            grid-column: 1 / -1; /* Make the row span all columns of the main grid */
-            display: grid; /* Inner grid for cards */
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .learn-card-dynamic {
-            background: var(--elevated-bg-mid);
-            padding: 20px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-small);
-            text-align: start; /* Adjusted from center in static cards */
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            border: 1px solid var(--border-color);
-        }
-
-        .learn-card-dynamic:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            border-color: var(--gold-light);
-        }
-
-        .learn-card-dynamic h3 {
-            color: var(--gold-light);
-            font-size: 1rem;
-            margin-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding-bottom: 8px;
-        }
-
-        .learn-card-dynamic p {
-            color: var(--muted);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-    </style>
 </head>
 <body>
 
@@ -101,19 +29,19 @@
         <div class="logo"><img class="logo-img" src="FK.png" alt="Fund Kurd logo"></div>
         <nav>
             <a href="#" class="nav-link active" onclick="showPage(event, 'home')">
-                <i class="fas fa-home"></i> <span data-i18n="home">سەرەکی</span>
+                <i class="fas fa-landmark"></i> <span data-i18n="home">پراپ فیرم</span>
             </a>
             <a href="#" class="nav-link" onclick="showPage(event, 'discounts')">
                 <i class="fas fa-tag"></i> <span data-i18n="discount_codes">کودێن داشکاندنێ</span>
             </a>
-            <a href="#" class="nav-link" onclick="showPage(event, 'learn')">
-                <i class="fas fa-graduation-cap"></i> <span data-i18n="learn">فێربوون</span>
+            <a href="#" class="nav-link" onclick="showPage(event, 'rulesExplanation')">
+                <i class="fas fa-book-open"></i> <span data-i18n="rules_explanation_title">شلوڤەکرنا یاسایان</span>
             </a>
-            <a href="#" class="nav-link" onclick="showPage(event, 'notifications')">
-                <i class="fas fa-bell"></i> <span data-i18n="notifications">ئاگەهداری</span>
+            <a href="#" class="nav-link disabled">
+                <i class="fas fa-trophy"></i> <span>پێشبڕکێ</span>
             </a>
             <a href="#" class="nav-link" onclick="showPage(event, 'about')">
-                <i class="fas fa-info-circle"></i> <span data-i18n="about_us">دەربارەی مە</span>
+                <i class="fas fa-info-circle"></i> <span data-i18n="terms_and_guidelines_title">مەرج و رێنمایی</span>
             </a>
         </nav>
     </aside>
@@ -124,8 +52,8 @@
             <!-- Home Page -->
             <section id="home" class="page-section active">
                 <div class="hero">
-                    <h1 data-i18n="hero_title">باشترین رێبەرێ تە بو پراپ فیرمان</h1>
-                    <p data-i18n="hero_description">ئەرزانترین و باشترین پراپ بو بازرگانێن کورد ل ڤێرە ببینە.</p>
+                    <h1 data-i18n="hero_title">باشترین رێبەرێ تە بۆ پراپ فیرمان</h1>
+                    <p data-i18n="hero_description">ئەرزانترین و باشترین پراپ بۆ بازرگانێن کورد ل ڤێرە ببینە.</p>
                 </div>
 
                 <div class="grid" id="firm-grid"></div>
@@ -140,45 +68,35 @@
                 <div class="grid" id="discount-grid"></div>
             </section>
 
-            <!-- Learn Page -->
-            <section id="learn" class="page-section">
+            <!-- NEW RULES EXPLANATION PAGE -->
+            <section id="rulesExplanation" class="page-section">
                 <div class="hero">
-                    <h1 data-i18n="learn">فێربوون</h1>
+                    <h1 data-i18n="rules_explanation_title"></h1>
+                    <p data-i18n="rules_explanation_intro" style="color: white; font-size: 0.9rem; opacity: 0.95; max-width: 85%; line-height: 1.6; margin-top: 15px;"></p>
                 </div>
-                <div class="grid">
-                    <!-- Dynamic content will be rendered here by renderLearn() -->
-                    <!-- The original learn-cards are replaced by dynamic content -->
-                </div>
+                <div class="grid" id="rules-explanation-grid"></div>
             </section>
 
-            <!-- Notifications Page -->
-            <section id="notifications" class="page-section">
-                <div class="hero">
-                    <h1 data-i18n="notifications">ئاگەهداری</h1>
-                </div>
-                <div id="notif-list" style="display: flex; flex-direction: column; gap: 15px;"></div>
-            </section>
-
-            <!-- About Page -->
+            <!-- About Page (now Terms & Guidelines) -->
             <section id="about" class="page-section">
                 <div class="hero">
-                    <div style="font-size: 4rem; color: var(--gold);"><i class="fas fa-rocket"></i></div>
-                    <h1 data-i18n="about_fund_kurd">دەربارەی Fund Kurd</h1>
-                    <p data-i18n="about_fund_kurd_desc">ئەم ئێکەمین و مەزنترین رێبەرێ کوردین بۆ پراپ فیرمان، ئارمانجا مە ئاسانکرنا کارێ تریدەری یە.</p>
+                    <h1 data-i18n="terms_and_guidelines_title">مەرج و رێنمایی</h1>
+                    <p data-i18n="terms_intro_description" style="color: white; font-size: 0.9rem; opacity: 0.95; max-width: 85%; line-height: 1.6; margin-top: 15px;">
+                        ل فەند کورد، ئارمانجا مە یا پراپ فیرم دابینکرنا ژینگەهەکا باوەرپێکری و ب سەلامەتە بۆ سەرکەفتنا تە د جیهانا بازرگانیێ دا. بۆ پاراستنا مافێن هەردوو لایەنان و کارکرنەکا شەفاف، ئەڤ خالێن ل خوارێ بنەمایێ کارێن مە نە:
+                    </p>
                 </div>
-                <div class="grid">
-                    <div class="learn-card" style="text-align: center;">
-                        <i class="fas fa-check-circle"></i>
-                        <h3 data-i18n="transparency">شەفافیەت</h3>
-                    </div>
-                    <div class="learn-card" style="text-align: center;">
-                        <i class="fas fa-users"></i>
-                        <h3 data-i18n="kurdish_support">پشتەڤانیا کوردی</h3>
-                    </div>
-                    <div class="learn-card" style="text-align: center;">
-                        <i class="fas fa-sync"></i>
-                        <h3 data-i18n="continuous_updates">نووکرنا بەردەوام</h3>
-                    </div>
+                <div class="grid terms-section">
+                    <h3><span data-i18n="term1_title"></span></h3> <!-- Removed icon -->
+                    <p data-i18n="term1_desc"></p>
+
+                    <h3><span data-i18n="term2_title"></span></h3> <!-- Removed icon -->
+                    <p data-i18n="term2_desc"></p>
+
+                    <h3><span data-i18n="term3_title"></span></h3> <!-- Removed icon -->
+                    <p data-i18n="term3_desc"></p>
+
+                    <h3><span data-i18n="term4_title"></span></h3> <!-- Removed icon -->
+                    <p data-i18n="term4_desc"></p>
                 </div>
             </section>
 
@@ -263,13 +181,11 @@ if (window.Telegram?.WebApp) {
         'بادینی': {
             // General UI
             'app_title': 'Fund Kurd',
-            'home': 'سەرەکی',
+            'home': 'پراپ فیرم',
             'discount_codes': 'کودێن داشکاندنێ',
-            'learn': 'فێربوون',
-            'notifications': 'ئاگەهداری',
-            'about_us': 'دەربارەی مە',
-            'hero_title': 'باشترین رێبەرێ تە بو پراپ فیرمان',
-            'hero_description': 'ئەرزانترین و باشترین پراپ بو بازرگانێن کورد ل ڤێرە ببینە.',
+            'terms_and_guidelines_title': 'مەرج و رێنمایی',
+            'hero_title': 'باشترین رێبەرێ تە بۆ پراپ فیرمان',
+            'hero_description': 'ئەرزانترین و باشترین پراپ بۆ بازرگانێن کورد ل ڤێرە ببینە.',
             'see_more': 'زێدەتر ببینە',
             'visit_website': 'سەرەدانا سایتی بکە',
             'code_copied': 'کود هاتە کۆپیکرن',
@@ -308,87 +224,72 @@ if (window.Telegram?.WebApp) {
             // Model Notes (general keys for common phrases)
             'note_all_accounts_same_rules': 'هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە',
             'note_one_time_account': 'بتنێ ئێک جار دشێی ڤێ هەژمارێ دەستخوڤەبینی',
-            'note_goat_blitz_temp': 'ئەڤ مودێلە ب شێوەکێ دەمکی و بتنێ ل دوو بێهنڤەدانێن هەیڤێ ژ نشکەکیڤە دهێت',
+            'note_goat_blitz_temp': 'ئەڤ مودێلە ب شێوەکێ دەمکی و بتنێ ل دوو بهێنڤەدانێن هەیڤێ ژ نشکەکیڤە دهێت',
             'note_pay_later': 'بتنێ ٥$ وەک پێشەکی، پاشی پارێ ڤێ هەژمارێ پشتی دەرچوونێ دهێتە دان و هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە',
             'note_daily_profit_required': '(هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)', // Used for mdays note
             'days_duration': 'روژ', // for "28 روژ" => "28 روژ"
 
-            // Learn Page (Original Static Content - now dynamic)
-            'what_is_prop_firm': 'پراپ فیرم چنە؟', // Kept for reference, though new structure is different
-            'what_is_prop_firm_desc': 'کومپانیێن دابینکرنا سەرمایەی نە بۆ تریدەران بەرامبەر پارەکرنا تێستەکێ.', // Kept for reference
-
-            // New Learn Page Content
-            'prop_firm_types_title': 'سوڕانی پڕاپ فیرمێ',
-            'rules_explanation_title': 'شلوڤەکرنا یاسایان',
-
-            // Prop Firm Types
-            'instant_accounts_title': 'هەژمارێن ئیستنت (Instant Accounts)',
-            'instant_accounts_desc': 'ئەڤ جورە هەژمارە قۆناغێن هەڵسەنگاندنێ نینن. تۆ ئێکسەر دهێی فەندکرن و دشێی دەست ب بازرگانیێ بکەی.',
-            'one_step_challenge_title': 'تێستێن ئێک قۆناغی (1-Step Challenges)',
-            'one_step_challenge_desc': 'پێدڤی ب دەربازکرنا بتنێ ئێک قۆناغا هەڵسەنگاندنێ یە. پشتی وێ، دێ هەژمارا تە هێتە فەندکرن.',
-            'two_step_challenge_title': 'تێستێن دوو قۆناغی (2-Step Challenges)',
-            'two_step_challenge_desc': 'پێدڤی ب دەربازکرنا دوو قۆناغێن هەڵسەنگاندنێ یە. پشتی وان، دێ هەژمارا تە هێتە فەندکرن.',
-            'three_step_challenge_title': 'تێستێن سێ قۆناغی (3-Step Challenges)',
-            'three_step_challenge_desc': 'پێدڤی ب دەربازکرنا سێ قۆناغێن هەڵسەنگاندنێ یە. پشتی وان، دێ هەژمارا تە هێتە فەندکرن.',
-            'pay_later_title': 'پڕاپێن پارەدان پشتی قازانجی (Pay Later Prop Firms)',
-            'pay_later_desc': 'تۆ بتنێ پارەکا کێم وەک پێشەکی ددەی و پارێ تەواوی یێ هەژمارێ پشتی دەربازکرنا تێستێ وەرگرتنا قازانجی دهێتە ژێبڕین.',
-            'goat_one_dollar_title': 'پڕاپێن ١$ (Goat 1$ Challenges)',
-            'goat_one_dollar_desc': 'ئەڤە ب شێوەیەکێ دەمکی و ب بهایەکێ گەلەک ئەرزان دهێنە پێشکێشکرن، زۆربە گاڤان ب ئێک دولاری.',
-            'what_is_prop_firm_learn_title': 'پراپ فیرم چنە؟',
-            'what_is_prop_firm_learn_desc': 'کومپانیێن دابینکرنا سەرمایەی نە بۆ تریدەران بەرامبەر پارەکرنا تێستەکێ، ئارمانج ئەوە کو تریدەر نەچار نەبن سەرمایەیەکێ گەلەک مەزن بکاربینن، ب ڤی رەنگی دشێن ب سەرمایەکێ مەزنتر وەک نوکە ٥٠$ دەستپێبکەن ب رێیا پراپ فیرمێ.',
-
-            // Rules Explanations
-            'daily_drawdown_rule_title': 'ژ دەستدانا روژانە (Daily Drawdown)',
-            'daily_drawdown_rule_desc': 'ئەڤە ئەو زێدەترین رێژەیا ژ دەستدانێ یە کو رێ پێ دهێت د ماوێ ٢٤ دەمژمێران دا (ژ دەمێ دەستپێکرنا تریدێ). نابیت زێدەتر ژ وێ رێژەیێ ژدەست بدەی، بێ گومان ئەگەر تۆ ڤێ یاسایێ بشکێنی دێ هەژمارا تە هێتە وەرگرتن.',
-            'max_drawdown_rule_title': 'ژ دەستدانا گشتی (Max Drawdown)',
-            'max_drawdown_rule_desc': 'ئەڤە ئەو زێدەترین ژ دەستدانا تەواوی یە کو رێ پێ دهێت هەژمارا تە بگەهیتێ، ژ دەستدان ژ سەرەتایێ هەژمارێ یان بلندترین رێژا قازانجا هاتیە وەرگرتن. ئەگەر تۆ ڤێ یاسایێ بشکێنی دێ هەژمارا تە هێتە وەرگرتن.',
-            'target_profit_rule_title': 'ئارمانجا قازانجی (Target Profit)',
-            'target_profit_rule_desc': 'ئەڤە ئەو رێژەیا قازانجی یە کو دڤێت تۆ بگەهیێ بۆ دەربازکرنا قۆناغەکێ. پشتی گەهشتنێ، دێ چیە قۆناغا بهێت یان دێ هێیە فەندکرن. بۆ نموونە 10% target profit و ژمارا ئەکاونتێ 10,000$ بیت، دڤێت تۆ 1,000$ قازانج بکەی.',
-            'consistency_rule_exp_title': 'یاسا پێگیربوونێ (Consistency Rule)',
-            'consistency_rule_exp_desc': 'ئەڤ یاسا بۆ پاراستنا تریدەرێن نوی و زێدە بازرگانیکرنێ یە. ڤێ یاسایێ دڤێت تۆ ب شێوەیەکێ بەرداوام بازرگانیێ بکەی و ئەڤە ب رامانا وێ نایێت کو تو دشێی هەمی قازانجێ خوە د ئێک مامەلێ دا وەرگری. بۆ نموونە دڤێت 10% قازانج بکەی، نابیت د ئێک تریدێ دا 8% قازانج بکەی و دوو تریدێن دی یێن 1% و ب وێ چەندێ یاسایا پێگیربوونێ دێ شکێنێ.',
-            'open_trades_drawdown_rule_title': 'ژ دەستدانا مامەلێن ڤەکری (Open Trades Drawdown)',
-            'open_trades_drawdown_rule_desc': 'ئەڤە ئەو زێدەترین رێژەیا ژ دەستدانێ یە کو رێ پێ دهێت بۆ مامەلێن تە یێن ڤەکری. دڤێت ژ ڤێ رێژەیێ زێدەتر نەبیت. ئەڤ یاسایە کێم پراب فیرم هەی کو بکاربینیت.',
-            'min_trading_days_rule_title': 'کێمترین روژێن بازرگانیێ (Minimum Trading Days)',
-            'min_trading_days_rule_desc': 'ئەڤە کێمترین ژمارا روژانە کو دڤێت تۆ تێدا بازرگانیێ بکەی د قۆناغەکێ دا بۆ وێ چەندێ کو دەرچوونی. بۆ نموونە ئەگەر 3 روژێن بازرگانیێ بێت، دڤێت تۆ د 3 روژێن جودا دا تریدێ بکەی و پاشی ئەکاونتێ تە یێ دەرباز بێت.',
-            'account_expiration_rule_title': 'سەرڤەچوونا هەژمارێ (Account Expiration)',
-            'account_expiration_rule_desc': 'ئەڤە ماوێ دەمە کو تێدا دڤێت تۆ تێستێ دەرباز بکەی. ئەگەر د ڤی ماوه‌ی دا تێستێ دەرباز نەکەي، دێ هەژمارا تە هێتە وەرگرتن. گەلەک پراپ فیرم نوکە ڤێ یاسایێ نینن.',
-            'trade_news_rule_title': 'بازرگانیکرن دگەل نووچا (Trading News)',
-            'trade_news_rule_desc': 'ئەگەر یاسا "بەلێ" بیت، دشێی د دەمێ نووچەیێن گرنگ دا بازرگانیێ بکەی. ئەگەر "نەخێر" بیت، رێ پێ نایێت، بێ گومان دڤێت 2 خولەکان پێش نووچەیێ و 2 خولەکان پشتی نووچەیێ تریدێ نەکەی.',
-            'hold_weekends_rule_title': 'ڤەکری هێلان د بهێنڤەدانێ دا (Hold Weekends)',
-            'hold_weekends_rule_desc': 'ئەگەر یاسا "بەلێ" بیت، دشێی مامەلێن خۆ د بهێنڤەدانێن حەفتیێ دا ڤەکری بهێلی. ئەگەر "نەخێر" بیت، دڤێت هەمی مامەلێن خۆ پێش بهێنڤەدانێ بگری.',
-            'trade_size_rule_title': 'رێژا سایزا تریدێ (Trade Size)',
-            'trade_size_rule_desc': 'ئەڤ یاسایێ دڤێت تۆ رێژەکا دیارکری یا قەبارێ مامەلێ بکاربینی و نەشێی ژ وێ رێژەیێ زێدەتر قەبارە بکاربینی.',
-
-
-            // Notifications Page
-            'news_gft_discount_title': '٥٠٪ داشکاندن ل GFT',
-            'news_gft_discount_body': 'بازرگانێن نوی دشێن ٥٠٪ داشکاندنێ دەستخوڤەبینن.',
+            // New Learn Page Content - Removed as per your request
 
             // Discount Page
             'buy_one_get_one_free': 'ئێکێ بکرە، ئێکێ دیاری وەربگرە',
-            'new_trader_discount': '٥٠٪ داشکاندن بو بازرگانێن نوی',
+            'new_trader_discount': '٥٠٪ داشکاندن بۆ بازرگانێن نوی',
 
-            // About Us Page
-            'about_fund_kurd': 'دەربارەی Fund Kurd',
-            'about_fund_kurd_desc': 'ئەم ئێکەمین و مەزنترین رێبەرێ کوردین بۆ پراپ فیرمان، ئارمانجا مە ئاسانکرنا کارێ تریدەری یە.',
-            'transparency': 'شەفافیەت',
-            'kurdish_support': 'پشتەڤانیا کوردی',
-            'continuous_updates': 'نووکرنا بەردەوام',
+            // About Us / Terms & Guidelines Page
+            'terms_intro_description': 'ل فەند کورد، ئارمانجا مە یا سەرەکی دابینکرنا ژینگەهەکا باوەرپێکری و ب سەلامەتە بۆ سەرکەفتنا تە د جیهانا بازرگانیێ دا. بۆ پاراستنا مافێن هەردوو لایەنان و کارکرنەکا شەفاف، ئەڤ خالێن ل خوارێ بنەمایێ کارێن مە نە:',
+            'term1_title': '١. سەربەخوییا بڕیاران و مەترسی:',
+            'term1_desc': 'ئەم وەک فەند کورد چ شیرەتێن کڕین و فرۆتنێ یان وەبەرهێنانێ نادەین. هەر بڕیارەکا دارایی یا تو بدەی، ب تەمامی ل سەر بەرپرسیارەتییا تە بخۆ یە. سەرکەفتن و ئەنجامێن تە گرێدای ئاستێ شارەزاییا تە و چەوانیا پابەندبوونا تە نە ب رێنمایی و ئارمانجێن کومپانیێ.',
+            'term2_title': '٢. گرەنتییا هەلبژارتنێ:',
+            'term2_desc': 'داکۆ سەرمایە و مافێ تە یێ پاراستی بیت و تو بێ ترس دەست ب کارێ خو بکەی، مە ب هویربینی کار دگەل وان کومپانیان بتنێ کرییە یێن کو یاسا و سیستەمێ گرەنتیێ (ضمان) ل دەڤ هەی، ئانکو کومپانیێن مە هەلبژارتین ب تەمامی خو بەرپرس دبینن بەرامبەر قازانجێن تە.',
+            'term3_title': '٣. سنۆرێن بەرپرسیارەتییا مە:',
+            'term3_desc': 'کاروبارێن دارایی و دانا قازانجان راستەوخۆ د ناڤبەرا تە و کومپانییان دا دهێنە بجهئینان. ژبەر هندێ، ئەم نە دبەرپرسین ژ هەر بڕیارەکا دەرەکی وەک درەنگکەفتن یان ڕەتکرنا قازانجان ژ لایێ وان کومپانییان ڤە.',
+            'term4_title': '٤. پشتەڤانییا بەردەوام:',
+            'term4_desc': 'سەرەڕای خالێن ل سەری، مە دڤێتن تە پشتراست بکەین کو دروستبوونا ئاریشان یان رەتکرنا قازانجان گەلەک یا کێمە و ب دەگمەن ڕوو ددەن، تایبەت ل وان کومپانیێن گرەنتی هەی. لێ ئەگەر هەر ئاریشەک ژی دگەل کومپانییان پەیدا بوو، ئەم تە ب تنێ ناهێلن. ئەم دێ وەک پشتەڤان هەمی هەول و شیانێن خو بکارئینین بۆ چارەسەرکرنا ئاریشە و پاراستنا بەرژەوەندییێن تە.',
+
             'cheapest': 'ئەرزانترین',
             'iqd_currency': 'دیناران',
             'dollars_currency': 'دولاران',
             // New translation keys for "Coming Soon" card
             'coming_soon_title': 'هیڤییە چاڤەرێ بن',
-            'coming_soon_description': 'ل نێزیک دێ پتر پڕاپ هێنە زێدەکرن'
+            'coming_soon_description': 'ل نێزیک دێ پتر پراپ هێنە زێدەکرن',
+            
+            // NEW: Rules Explanation Page
+            'rules_explanation_title': 'شلوڤەکرنا یاسایان',
+            'rules_explanation_intro': 'ل ڤێرە دێ شلوڤەکرنا یاسا سەرەکی یێن پراپ فیرمان بۆ تە کەین دا تو ب باشی تێبگەهی کا چاوا کار دگەل وان بکەی و خو ژ ژدەستدانا پارەی بپارێزی.',
+
+            'rule_daily_drawdown_title': '١. ژ دەستدانا رۆژانە (Daily Drawdown)',
+            'rule_daily_drawdown_desc': 'پراپ رێژەکا دیارکری (بۆ نموونە ٥٪) ددانیتن. ئەگەر تو د ئێک رۆژدا ب وێ رێژەیێ یان پتر ژ دەست بدەی، تو یاسایێ دشکێنی. ئەڤ سنوورە هەمی رۆژا لدیف دەمەکێ دیارکری نوی دبیتەڤە.',
+
+            'rule_max_drawdown_title': '٢. ژ دەستدانا گشتی (Maximum Drawdown)',
+            'rule_max_drawdown_desc': 'سنوورێ گشتی یێ خوسارەتیێ، "هێلا سۆر" یا دوماهیکێیە د هەر هەژمارەکا پراپ فێرمێ دا. ئەگەر تە ئەڤ سنوورە بەزاند، هەژمارا تە ب تەمامی دهێتە داخستن.',
+
+            'rule_target_profit_title': '٣. ئارمانجا قازانجێ (Target Profit)',
+            'rule_target_profit_desc': 'ئەڤە ئارمانجا قازانجێ یە کو دڤێت تو بگەهیێ دا کو قوناغەکا هەڵسەنگاندنێ دەرباز بکەی و بەرەڤ قوناغا بهێت بچی یان ژی هەژمارا فەندکری وەربگری. د قوناغێن جودا دا، رێژەیێن ئارمانجێ دجودا بن.',
+
+            'rule_consistency_rule_title': '٤. یاسایا پێگیربوونێ (Consistency Rule)',
+            'rule_consistency_rule_desc': 'یاسایا پێگیربوونێ پشتراست دکەت کو قازانجێن تە د درێژاهیا دەمی دا جێگیر و بەردەوام بن. دبێژیت کو چ رۆژەکا بازرگانیێ بتنێ نەشێت ٢٠٪ یان زێدەتر ژ تێکڕایێ قازانجێن تە د ماوێ دابەشکرنا پارەی دا پێکبینیت. ئەگەر ڤێ یاسایێ پێشێل بکەی، هەژمارا تە ناهێتە گرتن، لێ نەشێی داخوازا پارەی بکەی هەتا رۆژا هەرە بلند یا قازانجێ کێمتر ژ ٢٠٪ بێت.',
+
+            'rule_open_trades_drawdown_title': '٥. ژ دەستدانا مامەلێن ڤەکری (Maximum Loss Per Trade)',
+            'rule_open_trades_drawdown_desc': 'ئەڤ یاسایە رێگریێ ل ژ دەستدانێن مەزن دکەت. دبێژیت ئەگەر قازانج و زیانا (PnL) ڤەکری د هەر دەمەکی دا کێمتر ژ ٢٪ ژ بالانسێ هەژمارا تە لێهات، دێ هەژمارا تە ب شێوەیەکێ هێتە گرتن.',
+
+            'rule_min_trading_days_title': '٦. کێمترین رۆژێن بازرگانیێ (Minimum Trading Days)',
+            'rule_min_trading_days_desc': 'ئەڤە کێمترین ژمارا رۆژانە کو دڤێت تو بازرگانیێ تێدا بکەی بۆ دەربازکرنا قوناغەکێ.',
+
+            'rule_account_expiration_title': '٧. سەرڤەچوونا هەژمارێ (Account Expiration)',
+            'rule_account_expiration_desc': 'هندەک پراپ فیرم سنۆرەکێ دەمی بۆ قوناغێن هەڵسەنگاندنێ ددانن. ئەگەر تو نەشێی د وێ ماوێ دا ئارمانجا قازانجێ دەستخوڤەبینی، دێ قوناغا تە ب سەرڤەچیت و ژ دەست دەی.',
+
+            'rule_trade_news_title': '٨. بازرگانیکرن دگەل نووچا (Trade News)',
+            'rule_trade_news_desc': 'بازرگانیکرن د دەمێ نووچەیێن گرنگ دا ب تەمامی رێ پێ هاتیە دان. لێ، هەر مامەلەیەک کو د ماوێ ٥ خولەکان بەری یان پشتی بەلاڤکرنا نووچەیێن مەزن، دهێتە ڤەکرن یان گرتن، دێ بتنێ ١٪ قازانج هێتە هژمارتن، قازانجێ زێدە دێ هێتە لادان.',
+
+            'rule_hold_weekends_title': '٩. ڤەکری هێلان د بهێنڤەدانێ دا (Hold Weekends)',
+            'rule_hold_weekends_desc': 'بەلێ، دشێی مامەلەیێن خو ل رۆژێن بهێنڤەدانێ (شەمبی و ئێک شەمبی) ڤەکری بهێلی.'
         },
         'سورانی': {
             // General UI
             'app_title': 'فەند کورد',
-            'home': 'ماڵەوە',
+            'home': 'پراپ فیرم',
             'discount_codes': 'کۆدی داشکاندن',
-            'learn': 'فێربوون',
-            'notifications': 'ئاگاداری',
-            'about_us': 'دەربارەی ئێمە',
+            'terms_and_guidelines_title': 'مەرج و ڕێنمایی',
             'hero_title': 'باشترین ڕێبەری تۆ بۆ پڕۆپ فیرمەکان',
             'hero_description': 'هەرزانترین و باشترین پڕۆپ بۆ بازرگانانی کورد لێرە ببینە.',
             'see_more': 'زیاتر ببینە',
@@ -434,76 +335,65 @@ if (window.Telegram?.WebApp) {
             'note_daily_profit_required': '(هەر ڕۆژێک پێویستی بە ٠,٥٪ قازانجە)',
             'days_duration': 'ڕۆژ', // for "28 ڕۆژ" => "28 ڕۆژ"
 
-            // Learn Page (Original Static Content - now dynamic)
-            'what_is_prop_firm': 'پڕۆپ فیرم چییە؟',
-            'what_is_prop_firm_desc': 'کۆمپانیای دابینکردنی سەرمایە بۆ تڕەیدەرەکان بەرامبەر پارەدانێکی تێست.',
-
-            // New Learn Page Content
-            'prop_firm_types_title': 'جۆرەکانی پڕۆپ فیرم',
-            'rules_explanation_title': 'شیکردنەوەی یاساکان',
-
-            // Prop Firm Types
-            'instant_accounts_title': 'ئەکاونتەکانی Instant (Instant Accounts)',
-            'instant_accounts_desc': 'ئەم جۆرە ئەکاونتە قۆناغی هەڵسەنگاندنی نییە. تۆ ڕاستەوخۆ فەند دەکرێیت و دەتوانیت دەست بە بازرگانی بکەیت.',
-            'one_step_challenge_title': 'تێستەکانی یەک قۆناغی (1-Step Challenges)',
-            'one_step_challenge_desc': 'پێویستە تەنها یەک قۆناغی هەڵسەنگاندن تێپەڕێنیت. دوای ئەوە، ئەکاونتەکەت فەند دەکرێت.',
-            'two_step_challenge_title': 'تێستەکانی دوو قۆناغی (2-Step Challenges)',
-            'two_step_challenge_desc': 'پێویستە دوو قۆناغی هەڵسەنگاندن تێپەڕێنیت. دوای ئەوان، ئەکاونتەکەت فەند دەکرێت.',
-            'three_step_challenge_title': 'تێستەکانی سێ قۆناغی (3-Step Challenges)',
-            'three_step_challenge_desc': 'پێویستە سێ قۆناغی هەڵسەنگاندن تێپەڕێنیت. دوای ئەوان، ئەکاونتەکەت فەند دەکرێت.',
-            'pay_later_title': 'پڕۆپەکانی پارەدان لە دوای قازانج (Pay Later Prop Firms)',
-            'pay_later_desc': 'تۆ تەنها بڕێکی کەم وەک پێشەکی دەدەیت و نرخی تەواوی ئەکاونتەکە دوای تێپەڕاندنی تێستەکە و وەرگرتنی قازانجەکە لێدەبڕدرێت.',
-            'goat_one_dollar_title': 'پڕۆپەکانی ١$ (Goat 1$ Challenges)',
-            'goat_one_dollar_desc': 'ئەمە بە شێوەیەکی کاتی و بە نرخێکی زۆر هەرزان پێشکەش دەکرێت، زۆربەی کات بە یەک دۆلار.',
-            'what_is_prop_firm_learn_title': 'پڕۆپ فیرم چییە؟',
-            'what_is_prop_firm_learn_desc': 'کۆمپانیای دابینکردنی سەرمایە بۆ تڕەیدەرەکان بەرامبەر پارەدانێکی تێست، ئامانج ئەوەیە کە تڕەیدەر ناچار نەبن سەرمایەیەکی زۆر گەورە بەکاربهێنن، بەم شێوەیە دەتوانن بە سەرمایەیەکی گەورەتر وەک ئێستا ٥٠$ دەستپێبکەن بە ڕێگەی پڕۆپ فیرم.',
-
-            // Rules Explanations
-            'daily_drawdown_rule_title': 'زیانی ڕۆژانە (Daily Drawdown)',
-            'daily_drawdown_rule_desc': 'ئەمە ئەو زۆرترین ڕێژەی زیانە کە ڕێگەپێدراوە لە ماوەی ٢٤ کاتژمێردا (لە کاتی دەستپێکردنی تڕەیدەکە). نابێت زیاتر لەو ڕێژەیە زیان بکەیت، بە دڵنیاییەوە ئەگەر تۆ ئەم یاسایە بشکێنیت ئەکاونتەکەت دەدرێتەوە.',
-            'max_drawdown_rule_title': 'زیانی گشتی (Max Drawdown)',
-            'max_drawdown_rule_desc': 'ئەمە ئەو زۆرترین زیانی گشتییە کە ڕێگەپێدراوە ئەکاونتەکەت پێی بگات، زیان لە سەرەتای ئەکاونتەکەوە یان بەرزترین ڕێژەی قازانجی وەرگیراو. ئەگەر تۆ ئەم یاسایە بشکێنیت ئەکاونتەکەت دەدرێتەوە.',
-            'target_profit_rule_title': 'ئامانجی قازانج (Target Profit)',
-            'target_profit_rule_desc': 'ئەمە ئەو ڕێژەیەی قازانجە کە دەبێت تۆ پێی بگەیت بۆ تێپەڕاندنی قۆناغێک. دوای گەیشتن بەوە، دەچیتە قۆناغی داهاتوو یان فەند دەکرێیت. بۆ نموونە 10% target profit و ژمارەی ئەکاونتەکە 10,000$ بێت، دەبێت تۆ 1,000$ قازانج بکەیت.',
-            'consistency_rule_exp_title': 'یاسای پابەندبوون (Consistency Rule)',
-            'consistency_rule_exp_desc': 'ئەم یاسایە بۆ پاراستنی تڕەیدەرە نوێکان و زۆر بازرگانی کردنە. ئەم یاسایە دەبێت تۆ بە شێوەیەکی بەردەوام بازرگانی بکەیت و ئەمە بەو مانایە نایەت کە تۆ دەتوانیت هەموو قازانجەکەت لە یەک مامەڵەدا وەربگریت. بۆ نموونە دەبێت 10% قازانج بکەیت، نابێت لە یەک تڕەیددا 8% قازانج بکەیت و دوو تڕەیدی دیکەی 1% و بەوە یاسای پابەندبوون دەشکێنیت.',
-            'open_trades_drawdown_rule_title': 'زیانی مامەڵە کراوەکان (Open Trades Drawdown)',
-            'open_trades_drawdown_rule_desc': 'ئەمە ئەو زۆرترین ڕێژەی زیانە کە ڕێگەپێدراوە بۆ مامەڵە کراوەکانت. نابێت لەم ڕێژەیە زیاتر بێت. ئەم یاسایە کەم پڕۆپ فیرم هەیە کە بەکاری بهێنێت.',
-            'min_trading_days_rule_title': 'کەمترین ڕۆژەکانی بازرگانی (Minimum Trading Days)',
-            'min_trading_days_rule_desc': 'ئەمە کەمترین ژمارەی ڕۆژانەیە کە دەبێت تۆ تێیدا بازرگانی بکەیت لە قۆناغێکدا بۆ ئەوەی تێپەڕێنیت. بۆ نموونە ئەگەر 3 ڕۆژی بازرگانی بێت، دەبێت تۆ لە 3 ڕۆژی جیاوازدا تڕەید بکەیت و پاشان ئەکاونتەکەت تێپەڕیبێت.',
-            'account_expiration_rule_title': 'کۆتایی هاتنی ئەکاونت (Account Expiration)',
-            'account_expiration_rule_desc': 'ئەمە ماوەی ئەو کاتەیە کە دەبێت تۆ تێستەکە تێپەڕێنیت. ئەگەر لەم ماوەیەدا تێستەکە تێپەڕنەکەیت، ئەکاونتەکەت دەدرێتەوە. زۆر پڕۆپ فیرم ئێستا ئەم یاسایەیان نییە.',
-            'trade_news_rule_title': 'بازرگانی لەگەڵ هەواڵ (Trading News)',
-            'trade_news_rule_desc': 'ئەگەر یاساکە "بەڵێ" بێت، دەتوانیت لە کاتی هەواڵە گرنگەکاندا بازرگانی بکەیت. ئەگەر "نەخێر" بێت، ڕێگەپێدراو نییە، بە دڵنیاییەوە دەبێت 2 خولەک پێش هەواڵەکە و 2 خولەک دوای هەواڵەکە تڕەید نەکەیت.',
-            'hold_weekends_rule_title': 'کراوەهێڵان لە پشوودا (Hold Weekends)',
-            'hold_weekends_rule_desc': 'ئەگەر یاساکە "بەڵێ" بێت، دەتوانیت مامەڵەکانت لە پشووەکانی هەفتەدا کراوە بهێڵیتەوە. ئەگەر "نەخێر" بێت، دەبێت هەموو مامەڵەکانت پێش پشوو دابخەیت.',
-            'trade_size_rule_title': 'ڕێژەی سایزی تڕەید (Trade Size)',
-            'trade_size_rule_desc': 'ئەم یاسایە دەبێت تۆ ڕێژەیەکی دیاریکراو لە قەبارەی مامەڵە بەکاربهێنیت و ناتوانیت لەو ڕێژەیە زیاتر قەبارە بەکاربهێنیت.',
-
-            // Notifications Page
-            'news_gft_discount_title': '٥٠٪ داشکاندن لە GFT',
-            'news_gft_discount_body': 'بازرگانانی نوێ دەتوانن ٥٠٪ داشکاندن بەدەستبهێنن.',
+            // New Learn Page Content - Removed as per your request
 
             // Discount Page
             'buy_one_get_one_free': 'یەکێک بکڕە، یەکێکی دیکە بە دیاری وەربگرە',
             'new_trader_discount': '٥٠٪ داشکاندن بۆ بازرگانانی نوێ',
 
-            // About Us Page
-            'about_fund_kurd': 'دەربارەی فەند کورد',
-            'about_fund_kurd_desc': 'ئێمە یەکەمین و گەورەترین ڕێبەری کوردین بۆ پڕۆپ فیرمەکان، ئامانجی ئێمە ئاسانکردنی کاری تڕەیدەرە.',
-            'transparency': 'شەفافیەت',
-            'kurdish_support': 'پشتیوانی کوردی',
-            'continuous_updates': 'نوێکردنەوەی بەردەوام',
+            // About Us / Terms & Guidelines Page
+            'terms_intro_description': 'لە فەند کورد، ئامانجی سەرەکیمان دابینکردنی ژینگەییەکی متمانەپێکراو و سەلامەتە بۆ سەرکەوتنی تۆ لە جیهانی بازرگانیدا. بۆ پاراستنی مافی هەردوو لایەن و کارکردنێکی شەفاف، ئەم خاڵانەی خوارەوە بنەمای کارەکانی ئێمەن:',
+            'term1_title': '١. سەربەخۆیی بڕیارەکان و مەترسی:',
+            'term1_desc': 'ئێمە وەک فەند کورد هیچ ئامۆژگارییەکی کڕین و فرۆشتن یان وەبەرهێنان نادەین. هەر بڕیارێکی دارایی کە تۆ بیدەیت، بە تەواوی لەسەر بەرپرسیارێتیی خۆتە. سەرکەوتن و ئەنجامەکانت بەستراوەتەوە بە ئاستی شارەزایی تۆ و چۆنیەتی پابەندبوونت بە ڕێنمایی و ئامانجەکانی کۆمپانیاوە.',
+            'term2_title': '٢. گەرەنتی هەڵبژاردن:',
+            'term2_desc': 'بۆ ئەوەی سەرمایە و مافەکانی تۆ پارێزراو بێت و تۆ بە بێ ترس دەست بە کارەکەت بکەیت، ئێمە بە وردبینی کارمان تەنها لەگەڵ ئەو کۆمپانیایانە کردووە کە یاسا و سیستەمی گەرەنتییان (ضمان) هەیە، واتە کۆمپانیا هەڵبژاردەکانی ئێمە بە تەواوی خۆیان بە بەرپرسیار دەزانن بەرامبەر قازانجەکانت.',
+            'term3_title': '٣. سنوورەکانی بەرپرسیارێتی ئێمە:',
+            'term3_desc': 'کاروبارە داراییەکان و دابەشکردنی قازانج ڕاستەوخۆ لە نێوان تۆ و کۆمپانیاکاندا ئەنجام دەدرێن. لەبەر ئەوە، ئێمە بەرپرسیار نین لە هیچ بڕیارێکی دەرەکی وەک دواکەوتن یان ڕەتکردنەوەی قازانجەکان لە لایەن ئەو کۆمپaniایانەوە.',
+            'term4_title': '٤. پشتگیری بەردەوام:',
+            'term4_desc': 'سەرەڕای خاڵەکانی سەرەوە، ئێمە دەمانەوێت دڵنیات بکەینەوە کە دروستبوونی کێشەکان یان ڕەتکردنەوەی قازانجەکان زۆر کەمە و بە دەگمەن ڕوودەدەن، بەتایبەتی لەو کۆمپaniایانەی کە گەرەنتییان هەیە. بەڵام ئەگەر هەر کێشەیەکیش لەگەڵ کۆمپaniایان پەیدا بوو، ئێمە تۆ بە تەنیا ناهێڵین. ئێمە وەک پشتگیریکەر هەموو هەوڵ و توانای خۆمان بەکار دەهێنین بۆ چارەسەرکردنی کێشەکان و پاراستنی بەرژەوەندییەکانت.',
+
             'cheapest': 'هەرزانترین',
             'iqd_currency': 'دینار',
             'dollars_currency': 'دۆلار',
             // New translation keys for "Coming Soon" card
             'coming_soon_title': 'تکایە چاوەڕوان بن',
-            'coming_soon_description': 'بەم زووانە پڕۆپ فیرمی زیاتر زیاد دەکرێت'
+            'coming_soon_description': 'بەم زووانە پڕۆپ فیرمی زیاتر زیاد دەکرێت',
+
+            // NEW: Rules Explanation Page
+            'rules_explanation_title': 'ڕوونکردنەوەی یاساکان',
+            'rules_explanation_intro': 'لێرەدا ڕوونکردنەوەی یاسا سەرەکییەکانی پڕۆپ فیرمەکانت بۆ دەکەین تا بە باشی تێبگەیت چۆن کار لەگەڵیان بکەیت و خۆت بپارێزیت لە پێشێلکردن و لەدەستدانی پارە.',
+
+            'rule_daily_drawdown_title': '١. زیانی ڕۆژانە (Daily Drawdown)',
+            'rule_daily_drawdown_desc': 'پڕۆپ ڕێژەیەکی دیاریکراو (بۆ نموونە ٥%) دادەنێت. ئەگەر تۆ لە یەک ڕۆژدا بەو ڕێژەیە یان زیاتر زیانت کرد، تۆ یاساکە دەشکێنیت. ئەم سنوورە هەموو ڕۆژێک لە دوای کاتێکی دیاریکراو نوێ دەبێتەوە.',
+
+            'rule_max_drawdown_title': '٢. زیانی گشتی (Maximum Drawdown)',
+            'rule_max_drawdown_desc': 'سنووری گشتی زیان، "هێڵی سوور"ی کۆتاییە لە هەر ئەکاونتێکی پڕۆپ فیرمدا. ئەگەر تۆ ئەم سنوورەت تێپەڕاند، ئەکاونتەکەت بە تەواوی دادەخرێت.',
+
+            'rule_target_profit_title': '٣. ئامانجی قازانج (Target Profit)',
+            'rule_target_profit_desc': 'ئەمە ئامانجی قازانجە کە پێویستە تۆ پێی بگەیت بۆ ئەوەی قۆناغێکی هەڵسەنگاندن تێپەڕێنیت و بەرەو قۆناغی داهاتوو بڕۆیت یان ئەکاونتی فەندکراو وەربگریت. لە قۆناغە جیاوازەکاندا، ڕێژەی ئامانجەکان جیاواز دەبن.',
+
+            'rule_consistency_rule_title': '٤. یاسای پابەندبوون (Consistency Rule)',
+            'rule_consistency_rule_desc': 'یاسای پابەندبوون دڵنیا دەبێتەوە کە قازانجەکانت بە درێژایی کات جێگیر و بەردەوامن. دەڵێت کە هیچ ڕۆژێکی بازرگانی بە تەنیا ناتوانێت ٢٠% یان زیاتر لە کۆی قازانجەکانت لە ماوەی دابەشکردنی پارەدا پێکبهێنێت. ئەگەر ئەم یاسایە پێشێل بکەیت، ئەکاونتەکەت داناخرێت، بەڵام ناتوانیت داوای پارە بکەیت تا ڕۆژی زۆرترین قازانج لە ٢٠% کەمتر دەبێتەوە.',
+
+            'rule_open_trades_drawdown_title': '٥. زیانی مامەڵە کراوەکان (Maximum Loss Per Trade)',
+            'rule_open_trades_drawdown_desc': 'ئەم یاسایە ڕێگری لە زیانە گەورەکان دەکات. دەڵێت ئەگەر قازانج و زیانی (PnL) کراوە لە هەر کاتێکدا گەیشتە کەمتر لە ٢%ی باڵانسی ئەکاونتەکەت، ئەوا ئەکاونتەکەت دادەخرێت.',
+
+            'rule_min_trading_days_title': '٦. کەمترین ڕۆژەکانی بازرگانی (Minimum Trading Days)',
+            'rule_min_trading_days_desc': 'ئەمە کەمترین ژمارەی ڕۆژەکانە کە پێویستە تۆ بازرگانی تێدا بکەیت بۆ تێپەڕاندنی قۆناغێک.',
+
+            'rule_account_expiration_title': '٧. کۆتایی هاتنی ئەکاونت (Account Expiration)',
+            'rule_account_expiration_desc': 'هەندێک پڕۆپ فیرم سنوورێکی کاتی بۆ قۆناغەکانی هەڵسەنگاندن دادەنێن. ئەگەر تۆ نەتوانیت لەو ماوەیەدا ئامانجی قازانج بەدەست بهێنیت، ئەوا قۆناغەکەت کۆتایی دێت و لەدەستی دەدەیت.',
+
+            'rule_trade_news_title': '٨. بازرگانی لەگەڵ هەواڵ (Trade News)',
+            'rule_trade_news_desc': 'بازرگانی کردن لە کاتی ڕووداوە هەواڵییە گرنگەکاندا بە تەواوی ڕێگەپێدراوە. بەڵام، هەر مامەڵەیەک کە لە ماوەی ٥ خولەک پێش یان پاش بڵاوکردنەوەی هەواڵی گەورە، دەکرێتەوە یان دادەخرێت، تەنها ١% قازانج هەژمار دەکرێت، قازانجی زیادە لادەبرێت.',
+
+            'rule_hold_weekends_title': '٩. کراوەهێڵان لە پشوودا (Hold Weekends)',
+            'rule_hold_weekends_desc': 'بەڵێ، دەتوانیت مامەڵەکانت لە ڕۆژانی پشوودا (شەممە و یەکشەممە) کراوە بهێڵیتەوە.'
         }
     };
 
     let currentLang = localStorage.getItem('appLang') || 'بادینی'; // Default to بادینی
+    // let currentLearnSection = 'prop_firm_types'; // Removed as per your request
 
     function updateTextContent(lang) {
         document.querySelectorAll('[data-i18n]').forEach(element => {
@@ -540,8 +430,7 @@ if (window.Telegram?.WebApp) {
             const pageId = activePage.id;
             if(pageId === 'home') renderHome(propFirms);
             else if(pageId === 'discounts') renderDiscounts();
-            else if(pageId === 'notifications') renderNotifications();
-            else if(pageId === 'learn') renderLearn(); 
+            else if(pageId === 'rulesExplanation') renderRulesExplanation(); // NEW: Handle rulesExplanation
             else if(pageId === 'about') renderAbout(); 
         }
     }
@@ -618,27 +507,6 @@ if (window.Telegram?.WebApp) {
                         { size: "٢٥٠,٠٠٠$", price: "٢٠٨٨$" },
                         { size: "٣٠٠,٠٠٠$", price: "٢٣٩٨$" },
                         { size: "٤٠٠,٠٠٠$", price: "٢٩٩٨$" }
-                    ]
-                },
-                {
-                    name: "Instant Blitz",
-                    daily: "٢٪",
-                    max: "٤٪ (دیفچوون)",
-                    target: "٥٪",
-                    consistency: "٢٥٪",
-                    rules: "٢٪",
-                    mdays: undefined,
-                    notes: ["note_all_accounts_same_rules"],
-                    expiration: undefined,
-                    tradenews: "بەلێ",
-                    holdweekends: "بەلێ",
-                    accounts: [
-                        { size: "٥,٠٠٠$", price: "" },
-                        { size: "١٠,٠٠٠$", price: "" },
-                        { size: "١٥,٠٠٠$", price: "" },
-                        { size: "٢٥,٠٠٠$", price: "" },
-                        { size: "٥٠,٠٠٠$", price: "" },
-                        { size: "١٠٠,٠٠٠$", price: "" }
                     ]
                 },
                 {
@@ -735,28 +603,6 @@ if (window.Telegram?.WebApp) {
                             tradenews: "بەلێ",
                             holdweekends: "بەلێ"
                         }
-                    ]
-                },
-                {
-                    name: "Goat Blitz",
-                    notes: ["note_goat_blitz_temp"],
-                    daily: "٣٪ (دیفچوون)",
-                    max: "٥٪ (دیفچوون)",
-                    target: "٣٪",
-                    consistency: "١٥٪",
-                    rules: "٢٪",
-                    mdays: 5,
-                    mdaysNoteKey: 'note_daily_profit_required',
-                    expiration: undefined,
-                    tradenews: "بەلێ",
-                    holdweekends: "بەلێ",
-                    accounts: [
-                        { size: "٥,٠٠٠$", price: "" },
-                        { size: "١٠,٠٠٠$", price: "" },
-                        { size: "١٥,٠٠٠$", price: "" },
-                        { size: "٢٥,٠٠٠$", price: "" },
-                        { size: "٥٠,٠٠٠$", price: "" },
-                        { size: "١٠٠,٠٠٠$", price: "" }
                     ]
                 },
                 {
@@ -951,8 +797,7 @@ if (window.Telegram?.WebApp) {
         // Re-render content when navigating
         if(pageId === 'home') renderHome(propFirms);
         else if(pageId === 'discounts') renderDiscounts();
-        else if(pageId === 'notifications') renderNotifications();
-        else if(pageId === 'learn') renderLearn(); 
+        else if(pageId === 'rulesExplanation') renderRulesExplanation(); // NEW: Handle rulesExplanation
         else if(pageId === 'about') renderAbout(); 
     }
 
@@ -1152,112 +997,41 @@ function renderHome(firmsToRender) {
         `).join('');
     }
 
-    function renderNotifications() {
-        const list = document.getElementById('notif-list');
-        const news = [
-            { title: getTranslation('news_gft_discount_title'), body: getTranslation('news_gft_discount_body'), date: "2024/05/20" },
+    // NEW: Function to render the Rules Explanation page
+    function renderRulesExplanation() {
+        const grid = document.getElementById('rules-explanation-grid');
+        const rules = [
+            { titleKey: 'rule_daily_drawdown_title', descKey: 'rule_daily_drawdown_desc' }, /* Removed icon */
+            { titleKey: 'rule_max_drawdown_title', descKey: 'rule_max_drawdown_desc' }, /* Removed icon */
+            { titleKey: 'rule_target_profit_title', descKey: 'rule_target_profit_desc' }, /* Removed icon */
+            { titleKey: 'rule_consistency_rule_title', descKey: 'rule_consistency_rule_desc' }, /* Removed icon */
+            { titleKey: 'rule_open_trades_drawdown_title', descKey: 'rule_open_trades_drawdown_desc' }, /* Removed icon */
+            { titleKey: 'rule_min_trading_days_title', descKey: 'rule_min_trading_days_desc' }, /* Removed icon */
+            { titleKey: 'rule_account_expiration_title', descKey: 'rule_account_expiration_desc' }, /* Removed icon */
+            { titleKey: 'rule_trade_news_title', descKey: 'rule_trade_news_desc' }, /* Removed icon */
+            { titleKey: 'rule_hold_weekends_title', descKey: 'rule_hold_weekends_desc' } /* Removed icon */
         ];
-        list.innerHTML = news.map(n => `
-            <div class="card" style="padding: 15px; border-right: 4px solid var(--primary);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h4 style="margin: 0;">${n.title}</h4>
-                    <span style="font-size: 0.75rem; color: var(--muted);">${n.date}</span>
-                </div>
-                <p style="color: var(--muted); font-size: 0.9rem; margin-top: 8px;">${n.body}</p>
+
+        let rulesHtml = rules.map(rule => `
+            <div class="card rule-explanation-card">
+                <h3 style="color: white; font-size: 0.7rem; margin-bottom: 10px;"> <!-- Changed to white and smaller font -->
+                    ${getTranslation(rule.titleKey)}
+                </h3>
+                <p style="color: white; font-size: 0.9rem; line-height: 1.8;"> <!-- Changed to white and smaller font -->
+                    ${getTranslation(rule.descKey)}
+                </p>
             </div>
         `).join('');
-    }
 
-    function renderLearn() {
-        const grid = document.getElementById('learn').querySelector('.grid');
-        if (!grid) return;
-
-        let learnHtml = `
-            <div class="learn-category-header">
-                <h2 class="text-gold"><i class="fas fa-cubes"></i> ${getTranslation('prop_firm_types_title')}</h2>
-            </div>
-            <div class="learn-cards-row">
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('what_is_prop_firm_learn_title')}</h3>
-                    <p>${getTranslation('what_is_prop_firm_learn_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('instant_accounts_title')}</h3>
-                    <p>${getTranslation('instant_accounts_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('one_step_challenge_title')}</h3>
-                    <p>${getTranslation('one_step_challenge_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('two_step_challenge_title')}</h3>
-                    <p>${getTranslation('two_step_challenge_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('three_step_challenge_title')}</h3>
-                    <p>${getTranslation('three_step_challenge_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('pay_later_title')}</h3>
-                    <p>${getTranslation('pay_later_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('goat_one_dollar_title')}</h3>
-                    <p>${getTranslation('goat_one_dollar_desc')}</p>
-                </div>
-            </div>
-
-            <div class="learn-category-header">
-                <h2 class="text-gold"><i class="fas fa-gavel"></i> ${getTranslation('rules_explanation_title')}</h2>
-            </div>
-            <div class="learn-cards-row">
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('daily_drawdown_rule_title')}</h3>
-                    <p>${getTranslation('daily_drawdown_rule_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('max_drawdown_rule_title')}</h3>
-                    <p>${getTranslation('max_drawdown_rule_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('target_profit_rule_title')}</h3>
-                    <p>${getTranslation('target_profit_rule_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('consistency_rule_exp_title')}</h3>
-                    <p>${getTranslation('consistency_rule_exp_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('open_trades_drawdown_rule_title')}</h3>
-                    <p>${getTranslation('open_trades_drawdown_rule_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('min_trading_days_rule_title')}</h3>
-                    <p>${getTranslation('min_trading_days_rule_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('account_expiration_rule_title')}</h3>
-                    <p>${getTranslation('account_expiration_rule_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('trade_news_rule_title')}</h3>
-                    <p>${getTranslation('trade_news_rule_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('hold_weekends_rule_title')}</h3>
-                    <p>${getTranslation('hold_weekends_rule_desc')}</p>
-                </div>
-                <div class="learn-card-dynamic">
-                    <h3>${getTranslation('trade_size_rule_title')}</h3>
-                    <p>${getTranslation('trade_size_rule_desc')}</p>
-                </div>
-            </div>
-        `;
-        grid.innerHTML = learnHtml;
+        grid.innerHTML = rulesHtml;
+        updateTextContent(currentLang); // Ensure dynamic elements (like hero title/description) are updated
     }
 
     function renderAbout() {
         updateTextContent(currentLang);
+        // The About section (Terms & Guidelines) is mostly static HTML with data-i18n attributes
+        // The main content is now directly in the HTML structure, and `updateTextContent` handles translations.
+        // No complex dynamic rendering logic is needed here like for firms or learn cards.
     }
 
     function renderModelSelection(firmId) {
@@ -1505,9 +1279,8 @@ function switchAccountSize(firmId, modelIndex, sizeIndex) {
     document.addEventListener('DOMContentLoaded', () => {
         renderHome(propFirms);
         // Ensure other pages are also rendered with correct language if visited
-        renderNotifications(); 
         renderDiscounts(); 
-        renderLearn(); // Call renderLearn on initial load
+        renderRulesExplanation(); // NEW: Call renderRulesExplanation on load
         renderAbout();
     });
 
@@ -1519,7 +1292,7 @@ function switchAccountSize(firmId, modelIndex, sizeIndex) {
     }
 
     document.addEventListener('click', (e) => {
-        const target = e.target.closest('button, a, .tab-btn, .nav-link, .copy-btn, .size-tab-btn');
+        const target = e.target.closest('button, a, .tab-btn, .nav-link, .copy-btn, .size-tab-btn, .learn-tab-btn');
         if (target) {
             triggerHaptic();
         }
