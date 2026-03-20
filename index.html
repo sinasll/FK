@@ -308,17 +308,21 @@
             'phase_two': 'قۆناغا دووێ',
             'phase_three': 'قۆناغا سیێ',
             'notes_prefix': 'تێبینی:',
+            'minimuim_withdraw':'پشتی ٣٪ قازانجی دشێی بکێشی',
 
             'firm_gft_payout': '١٤ روژان جارەکێ',
             'firm_gft_profit_split': '٨٠٪ هەتا ١٠٠٪',
             'firm_gft_guarantee': 'ئەگەر دماوێ ٤٨ دەمژمێران دا قازانجێ تە نە هاتە دان، دێ ٥٠٠$ زێدەتر لسەر قازانجێ خو وەرگری',
+            'firm_mavem_guarantee': 'ل ڕۆژێن شەمبی و ئێکشەمبی یا ژی بازرگانیێ ب زێڕی بکە',
 
             'note_all_accounts_same_rules': 'هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە',
             'note_one_time_account': 'بتنێ ئێک جار دشێی ڤێ هەژمارێ دەستخوڤەبینی',
+            'note_24hrs_account': 'پشتی ئێکەم ترەید، ئەڤ ئەکاونتە دماوێ ٢٤ دەمژمێراندا بسەرڤەدچیت',
             'note_goat_blitz_temp': 'ئەڤ مودێلە ب شێوەکێ دەمکی و بتنێ ل دوو بهێنڤەدانێن هەیڤێ ژ نشکەکیڤە دهێت',
             'note_pay_later': 'بتنێ ٥$ وەک پێشەکی، پاشی پارێ ڤێ هەژمارێ پشتی دەرچوونێ دهێتە دان و هەمی هەژمارێن ڤێ مودێلێ هەمان یاسا هەنە',
             'note_daily_profit_required': '(هەر رۆژەک پێدڤی ب ٠,٥٪ قازانجیە)',
             'days_duration': 'روژ',
+            'maven_news':'دەستوور دای نینە چ مامەلەیان ڤەکەی یان بگری، د ماوێ ٢ خولەکان بەری و ٢ خولەکان پشتی بەلاڤبوونا دەنگوباسێن ئابووری یێن گرنگ',
 
             'buy_one_get_one_free': 'ئێکێ بکرە، ئێکێ دیاری وەربگرە',
             'new_trader_discount': 'داشکاندن بۆ بازرگانێن نوی',
@@ -424,17 +428,22 @@
             'phase_two': 'قۆناغی دووەم',
             'phase_three': 'قۆناغی سێیەم',
             'notes_prefix': 'تێبینی:',
+            'minimuim_withdraw':'لە دوای ٣٪ قازانج دەتوانی ڕابکێشیت',
 
             'firm_gft_payout': 'هەر ١٤ ڕۆژ جارێک',
             'firm_gft_profit_split': '٨٠٪ بۆ ١٠٠٪',
             'firm_gft_guarantee': 'ئەگەر لە ماوەی ٤٨ کاتژمێردا قازانجەکەت نەدرا، ٥٠٠$ زیاتر لەسەر قازانجەکەت وەردەگریت',
+            'firm_mavem_guarantee': 'لە ڕۆژانی شەممە و یەکشەممەشدا بازرگانی بە زێڕەوە بکە',
+
 
             'note_all_accounts_same_rules': 'هەموو ئەکاونتەکانی ئەم مۆدێلە هەمان یاسایان هەیە',
             'note_one_time_account': 'تەنها یەک جار دەتوانیت ئەم ئەکاونتە بەدەست بهێنیت',
+            'note_24hrs_account': 'دوای یەکەم ترەید، ئەم ئەکاونتە لە ماوەی ٢٤ کاتژمێردا بەسەردەچێت',
             'note_goat_blitz_temp': 'ئەم مۆدێلە بە شێوەیەکی کاتی و تەنها لە دوو پشووی مانگدا بەناکاو دێت',
             'note_pay_later': 'تەنها ٥$ وەک پێشەکی، پاشان نرخی ئەم ئەکاونتە دوای دەرچوون دەدرێت و هەموو ئەکاونتەکانی ئەم مۆدێلە هەمان یاسایان هەیە',
             'note_daily_profit_required': '(هەر ڕۆژێک پێویستی بە ٠,٥٪ قازانجە)',
             'days_duration': 'ڕۆژ',
+            'maven_news':'ڕێگەپێدراو نییە هیچ مامەڵەیەک بکەیتەوە یان دابخەیت لە ماوەی ٢ خولەک پێش و ٢ خولەک دوای بڵاوبوونەوەی هەواڵە ئابوورییە گرنگەکان',
 
             'buy_one_get_one_free': 'یەکێک بکڕە، یەکێکی دیکە بە دیاری وەربگرە',
             'new_trader_discount': 'داشکاندن بۆ بازرگانانی نوێ',
@@ -895,7 +904,7 @@
     profitSplit: "٨٠٪",
     platforms: "MT5 - MatchTrader",
     link: "https://maventrading.com/?ref=y2viyzr",
-    guarantee: "هیچ گەرەنتییەکی پارە زیادکردنی فەرمی نییە",
+    guarantee: 'firm_mavem_guarantee',
     models: [
         {
             name: "Standard 1 Step",
@@ -914,153 +923,189 @@
                     daily: "٣٪",
                     max: "٥٪ (دیفچوون)",
                     target: "٨٪",
-                    consistency: undefined,
-                    rules: undefined,
+                    consistency: 'نینە',
+                    rules: 'نینە',
                     mdays: 'نینە',
                     mdaysNoteKey: 'note_daily_profit_required',
                     expiration: 'نینە',
-                    tradenews: "بەلێ",
+                    tradenews: 'maven_news',
+                    holdweekends: "بەلێ"
+                },
+                {
+                    phase: "قۆناغا فەندکری",
+                    daily: "٣٪",
+                    max: "٥٪ (دیفچوون)",
+                    target: "١٠٪",
+                    consistency: 'نینە',
+                    rules: 'نینە',
+                    mdays: 'نینە',
+                    mdaysNoteKey: 'note_daily_profit_required',
+                    expiration: 'نینە',
+                    tradenews: 'maven_news',
+                    holdweekends: "بەلێ"
+                }
+            ]
+        },
+
+        {
+            name: "Standard 2 Step",
+            notes: ["note_all_accounts_same_rules"],
+            accounts: [
+                { size: "٢,٠٠٠$", price: "١٩$" },
+                { size: "٥,٠٠٠$", price: "٢٢$" },
+                { size: "١٠,٠٠٠$", price: "٤٤$" },
+                { size: "٢٠,٠٠٠$", price: "٨٨$" },
+                { size: "٥٠,٠٠٠$", price: "٢٢٠$" },
+                { size: "١٠٠,٠٠٠$", price: "٤٤٠$" }
+            ],
+            phases: [
+                {
+                    phase: "قۆناغا ئێکێ",
+                    daily: "٤٪",
+                    max: "٨٪",
+                    target: "٨٪",
+                    consistency: 'نینە',
+                    rules: 'نینە',
+                    mdays: 3,
+                    mdaysNoteKey: 'note_daily_profit_required',
+                    expiration: undefined,
+                    tradenews: 'maven_news',
+                    holdweekends: "بەلێ"
+                },
+                {
+                    phase: "قۆناغا دووێ",
+                    daily: "٤٪",
+                    max: "٨٪",
+                    target: "٥٪",
+                    consistency: undefined,
+                    rules: undefined,
+                    mdays: 3,
+                    mdaysNoteKey: 'note_daily_profit_required',
+                    expiration: undefined,
+                    tradenews: 'maven_news',
                     holdweekends: "بەلێ"
                 },
                 {
                     phase: "قۆناغا فەندکری",
                     daily: "٤٪",
                     max: "٨٪",
-                    target: "١٠٪",
-                    consistency: undefined,
-                    rules: undefined,
-                    mdays: 3,
+                    target: "نینە",
+                    consistency: 'نینە',
+                    rules: 'نینە',
+                    mdays: 'نینە',
                     mdaysNoteKey: 'note_daily_profit_required',
-                    expiration: undefined,
-                    tradenews: "بەلێ",
+                    expiration: 'نینە',
+                    tradenews: 'maven_news',
                     holdweekends: "بەلێ"
                 }
             ]
         },
 
-        // Standard 2-step
-        {
-            name: "Standard 2 Step",
-            notes: ["note_all_accounts_same_rules"],
-            accounts: [
-                { size: "٥,٠٠٠$", price: "٤٥$" },
-                { size: "١٥,٠٠٠$", price: "١٣٥$" },
-                { size: "٥٠,٠٠٠$", price: "٢٥٥$" }
-            ],
-            phases: [
-                {
-                    phase: "قۆناغا ئێکێ",
-                    daily: "٥٪",
-                    max: "١٠٪",
-                    target: "٨٪",
-                    consistency: undefined,
-                    rules: undefined,
-                    mdays: 3,
-                    mdaysNoteKey: 'note_daily_profit_required',
-                    expiration: undefined,
-                    tradenews: "بەلێ",
-                    holdweekends: "بەلێ"
-                },
-                {
-                    phase: "قۆناغا دووێ",
-                    daily: "٥٪",
-                    max: "١٠٪",
-                    target: "٤٪",
-                    consistency: undefined,
-                    rules: undefined,
-                    mdays: 3,
-                    mdaysNoteKey: 'note_daily_profit_required',
-                    expiration: undefined,
-                    tradenews: "بەلێ",
-                    holdweekends: "بەلێ"
-                }
-            ]
-        },
-
-        // Standard 3-step
         {
             name: "Standard 3 Step",
             notes: ["note_all_accounts_same_rules"],
             accounts: [
-                { size: "١٠,٠٠٠$", price: "٦٥$" },
-                { size: "٢٥,٠٠٠$", price: "١٤٥$" },
-                { size: "١٠٠,٠٠٠$", price: "٣٦٥$" }
+                { size: "٢,٠٠٠$", price: "١٣$" },
+                { size: "٥,٠٠٠$", price: "١٧$" },
+                { size: "١٠,٠٠٠$", price: "٣٨$" },
+                { size: "٢٠,٠٠٠$", price: "٧٦$" },
+                { size: "٥٠,٠٠٠$", price: "١٩٠$" },
+                { size: "١٠٠,٠٠٠$", price: "٢٩٩$" }
             ],
             phases: [
                 {
                     phase: "قۆناغا ئێکێ",
-                    daily: "٤٪",
-                    max: "٨٪",
+                    daily: "٢٪",
+                    max: "٣٪",
                     target: "٦٪",
-                    consistency: undefined,
-                    rules: undefined,
-                    mdays: 3,
+                    consistency: "نینە",
+                    rules: "نینە",
+                    mdays: "نینە",
                     mdaysNoteKey: 'note_daily_profit_required',
-                    expiration: undefined,
-                    tradenews: "بەلێ",
+                    expiration: "نینە",
+                    tradenews: 'maven_news',
                     holdweekends: "بەلێ"
                 },
                 {
                     phase: "قۆناغا دووێ",
-                    daily: "٤٪",
-                    max: "٨٪",
+                    daily: "٢٪",
+                    max: "٣٪",
                     target: "٦٪",
-                    consistency: undefined,
-                    rules: undefined,
-                    mdays: 3,
+                    consistency: "نینە",
+                    rules: "نینە",
+                    mdays: "نینە",
                     mdaysNoteKey: 'note_daily_profit_required',
-                    expiration: undefined,
-                    tradenews: "بەلێ",
+                    expiration: "نینە",
+                    tradenews: 'maven_news',
                     holdweekends: "بەلێ"
                 },
                 {
                     phase: "قۆناغا سیێ",
-                    daily: "٤٪",
-                    max: "٨٪",
+                    daily: "٢٪",
+                    max: "٣٪",
                     target: "٦٪",
-                    consistency: undefined,
-                    rules: undefined,
-                    mdays: 3,
+                    consistency: "نینە",
+                    rules: "نینە",
+                    mdays: "نینە",
                     mdaysNoteKey: 'note_daily_profit_required',
-                    expiration: undefined,
-                    tradenews: "بەلێ",
+                    expiration: "نینە",
+                    tradenews: 'maven_news',
+                    holdweekends: "بەلێ"
+                },
+                {
+                    phase: "قۆناغا فەندکری",
+                    daily: "٢٪",
+                    max: "٣٪",
+                    target: "٦٪",
+                    consistency: "نینە",
+                    rules: "نینە",
+                    mdays: "نینە",
+                    mdaysNoteKey: 'note_daily_profit_required',
+                    expiration: "نینە",
+                    tradenews: 'maven_news',
                     holdweekends: "بەلێ"
                 }
             ]
         },
 
-        // Instant model
         {
             name: "Instant",
             notes: ["note_all_accounts_same_rules"],
             accounts: [
-                { size: "٥,٠٠٠$", price: "٨٨$" },
-                { size: "١٠,٠٠٠$", price: "١٤٨$" }
+                { size: "٢,٠٠٠$", price: "١٥$" },
+                { size: "٥,٠٠٠$", price: "١٩$" },
+                { size: "١٠,٠٠٠$", price: "٣٧$" },
+                { size: "٢٠,٠٠٠$", price: "٦٨$" },
+                { size: "٥٠,٠٠٠$", price: "١٧٠$" },
+                { size: "١٠٠,٠٠٠$", price: "٣٨٠$" }
             ],
             phases: [
                 {
                     phase: "قۆناغا فەندکری",
                     daily: "٣٪ (دیفچوون)",
                     max: "٦٪ (دیفچوون)",
-                    target: undefined,
-                    consistency: "١٥٪",
-                    rules: "٢٪",
+                    target: 'minimuim_withdraw',
+                    consistency: "٢٠٪",
+                    rules: "١٪",
                     mdays: 5,
                     mdaysNoteKey: 'note_daily_profit_required',
                     expiration: undefined,
-                    tradenews: "بەلێ",
+                    tradenews: 'maven_news',
                     holdweekends: "بەلێ"
                 }
             ]
         },
 
-        // Mini model
         {
             name: "Mini",
-            notes: ["note_one_time_account"],
+            notes: ["note_24hrs_account"],
             accounts: [
-                { size: "٥٠٠$", price: "١$" },
-                { size: "١,٠٠٠$", price: "٥$" }
+                { size: "٢,٠٠٠$", price: "١٣$" },
+                { size: "٥,٠٠٠$", price: "١٧$" },
+                { size: "١٠,٠٠٠$", price: "٣٨$" },
+                { size: "٢٠,٠٠٠$", price: "٧٦$" },
+                { size: "٥٠,٠٠٠$", price: "١٩٠$" },
+                { size: "١٠٠,٠٠٠$", price: "٢٩٩$" }
             ],
             phases: [
                 {
@@ -1068,13 +1113,13 @@
                     daily: "٣٪ (دیفچوون)",
                     max: "٦٪ (دیفچوون)",
                     target: "نییە",
-                    consistency: "١٥٪",
-                    rules: "٢٪",
-                    mdays: 3,
+                    consistency: "٢٠٪",
+                    rules: "١٪",
+                    mdays: "نینە",
                     mdaysNoteKey: 'note_daily_profit_required',
-                    expiration: 14,
+                    expiration: "٢٤ دەمژمێر",
                     expirationUnitKey: 'days_duration',
-                    tradenews: "بەلێ",
+                    tradenews: 'maven_news',
                     holdweekends: "بەلێ"
                 }
             ]
@@ -1131,7 +1176,7 @@
                             <h3>${firm.name}</h3>
                         </div>
                     </div>
-                    ${(firm.guarantee && firm.id !== 2) ? `<div class="guarantee">${getTranslation(firm.guarantee)}</div>` : ''}
+                    <div class="guarantee">${getTranslation(firm.guarantee)}</div>
                     <div class="discount">${getTranslation('biggestDiscount')}<b>${getTranslation(firm.biggestDiscount)}</b></div>
                     <div class="price-tag">${getTranslation('starting_from')} ${firm.cheapest.replace('دولاران', getTranslation('dollars_currency')).replace('دیناران', getTranslation('iqd_currency'))} / ${firm.cheapestIQD.replace('دولاران', getTranslation('dollars_currency')).replace('دیناران', getTranslation('iqd_currency'))}</div>
                     <div class="card-stats">
@@ -1355,110 +1400,111 @@
     }
 
     function buildAccountsHtml(firm, modelIndex, activeSizeIndex = 0) {
-        const model = firm.models[modelIndex];
-        if (!model) return '';
+    const model = firm.models[modelIndex];
+    if (!model) return '';
 
-        let sizesHtml = '';
-        let priceHtml = '';
+    let sizesHtml = '';
+    let priceHtml = '';
+    
+    if (model.accounts && model.accounts.length > 0) {
+        const activeAccount = model.accounts[activeSizeIndex] || model.accounts[0];
         
-        if (model.accounts && model.accounts.length > 0) {
-            const activeAccount = model.accounts[activeSizeIndex] || model.accounts[0];
-            
-            sizesHtml = `<div class="size-tabs">`;
-            
-            model.accounts.forEach((acc, idx) => {
-                const activeClass = idx === activeSizeIndex ? 'active' : '';
-                sizesHtml += `<button class="size-tab-btn ${activeClass}" onclick="switchAccountSize(${firm.id}, ${modelIndex}, ${idx})">${acc.size}</button>`;
-            });
-            
-            sizesHtml += `</div>`;
-            
-            priceHtml = `
-                <div class="price-display">
-                    <span>${getTranslation('price_without_discount')}</span>
-                    <b>${activeAccount.price}</b>
-                </div>
-            `;
-        }
+        sizesHtml = `<div class="size-tabs">`;
+        
+        model.accounts.forEach((acc, idx) => {
+            const activeClass = idx === activeSizeIndex ? 'active' : '';
+            sizesHtml += `<button class="size-tab-btn ${activeClass}" onclick="switchAccountSize(${firm.id}, ${modelIndex}, ${idx})">${acc.size}</button>`;
+        });
+        
+        sizesHtml += `</div>`;
+        
+        priceHtml = `
+            <div class="price-display">
+                <span>${getTranslation('price_without_discount')}</span>
+                <b>${activeAccount.price}</b>
+            </div>
+        `;
+    }
 
-        const renderRules = (rulesObj, phaseTitleKey = '') => {
-            const titleHtml = phaseTitleKey ? `<h4 style="margin: 10px 0 5px; color: #d4af37;">${getTranslation(phaseTitleKey)}</h4>` : '';
-            const getRuleValue = (rules, key) => {
-                const val = rules[key];
-                const unitKey = rules[key + 'UnitKey'];
-                const noteKey = rules[key + 'NoteKey'];
+    const renderRules = (rulesObj, phaseTitleKey = '') => {
+        const titleHtml = phaseTitleKey ? `<h4 style="margin: 10px 0 5px; color: #d4af37;">${getTranslation(phaseTitleKey)}</h4>` : '';
 
-                if (val === undefined || val === null || val === "نینە" || val === "") return getTranslation('not_applicable');
-                if (val === "بەلێ") return getTranslation('yes');
-                if (val === "نەخێر") return getTranslation('no');
+        const getRuleValue = (rules, key) => {
+            const val = rules[key];
+            const unitKey = rules[key + 'UnitKey'];
+            const noteKey = rules[key + 'NoteKey'];
 
-                let translatedValue = String(val);
+            if (val === undefined || val === null || val === "نینە" || val === "" || val === "نییە") {
+                return getTranslation('not_applicable');
+            }
 
-                if (typeof val === 'number' && unitKey) {
-                    translatedValue = `${val} ${getTranslation(unitKey)}`;
-                }
-                
-                if (noteKey) {
-                    translatedValue += ` ${getTranslation(noteKey)}`;
-                }
+            if (val === "بەلێ") return getTranslation('yes');
+            if (val === "نەخێر") return getTranslation('no');
 
-                return translatedValue;
-            };
+            // 🔥 FIX: translate keys like maven_news
+            let translatedValue = translations[currentLang][val] 
+                ? getTranslation(val) 
+                : String(val);
 
-            return `
-                ${titleHtml}
-                <div class="rules-grid">
-                    <div class="stat-item">${getTranslation('daily_drawdown')} <b>${getRuleValue(rulesObj, 'daily')}</b></div>
-                    <div class="stat-item">${getTranslation('max_drawdown')} <b>${getRuleValue(rulesObj, 'max')}</b></div>
-                    <div class="stat-item">${getTranslation('target_profit')} <b>${getRuleValue(rulesObj, 'target')}</b></div>
-                    <div class="stat-item">${getTranslation('consistency_rule')} <b>${getRuleValue(rulesObj, 'consistency')}</b></div>
-                    <div class="stat-item">${getTranslation('open_trades_drawdown')} <b>${getRuleValue(rulesObj, 'rules')}</b></div>
-                    <div class="stat-item">${getTranslation('min_trading_days')} <b>${getRuleValue(rulesObj, 'mdays')}</b></div>
-                    <div class="stat-item">${getTranslation('account_expiration')} <b>${getRuleValue(rulesObj, 'expiration')}</b></div>
-                    <div class="stat-item">${getTranslation('trade_news')} <b>${getRuleValue(rulesObj, 'tradenews')}</b></div>
-                    <div class="stat-item">${getTranslation('hold_weekends')} <b>${getRuleValue(rulesObj, 'holdweekends')}</b></div>
-                </div>
-            `;
+            if (typeof val === 'number' && unitKey) {
+                translatedValue = `${val} ${getTranslation(unitKey)}`;
+            }
+
+            if (noteKey) {
+                translatedValue += ` ${getTranslation(noteKey)}`;
+            }
+
+            return translatedValue;
         };
 
-        let rulesContent = '';
+        return `
+            ${titleHtml}
+            <div class="rules-grid">
+                <div class="stat-item">${getTranslation('daily_drawdown')} <b>${getRuleValue(rulesObj, 'daily')}</b></div>
+                <div class="stat-item">${getTranslation('max_drawdown')} <b>${getRuleValue(rulesObj, 'max')}</b></div>
+                <div class="stat-item">${getTranslation('target_profit')} <b>${getRuleValue(rulesObj, 'target')}</b></div>
+                <div class="stat-item">${getTranslation('consistency_rule')} <b>${getRuleValue(rulesObj, 'consistency')}</b></div>
+                <div class="stat-item">${getTranslation('open_trades_drawdown')} <b>${getRuleValue(rulesObj, 'rules')}</b></div>
+                <div class="stat-item">${getTranslation('min_trading_days')} <b>${getRuleValue(rulesObj, 'mdays')}</b></div>
+                <div class="stat-item">${getTranslation('account_expiration')} <b>${getRuleValue(rulesObj, 'expiration')}</b></div>
+                <div class="stat-item">${getTranslation('trade_news')} <b>${getRuleValue(rulesObj, 'tradenews')}</b></div>
+                <div class="stat-item">${getTranslation('hold_weekends')} <b>${getRuleValue(rulesObj, 'holdweekends')}</b></div>
+            </div>
+        `;
+    };
 
-        if (model.notes && model.notes.length > 0) {
-            rulesContent += `<div class="notes-section" style="margin-top: 15px; padding: 10px; border: 1px dashed var(--muted); border-radius: 8px;">`;
-            model.notes.forEach(noteKey => {
-                rulesContent += `<p style="font-size: 0.9em; margin-bottom: 5px; color: var(--muted);"><i class="fas fa-info-circle" style="margin-inline-end: 5px;"></i> ${getTranslation(noteKey)}</p>`;
-            });
-            rulesContent += `</div>`;
-        }
+    let rulesContent = '';
 
-        if (model.phases && Array.isArray(model.phases) && model.phases.length > 0) {
-            rulesContent += model.phases.map(phase => {
-                let phaseKey = '';
-                if (phase.phase === 'قۆناغا هەڵسەنگاندنێ') phaseKey = 'phase_evaluation';
-                else if (phase.phase === 'قۆناغا فەندکری') phaseKey = 'phase_funded';
-                else if (phase.phase === 'قۆناغا ئێکێ') phaseKey = 'phase_one';
-                else if (phase.phase === 'قۆناغا دووێ') phaseKey = 'phase_two';
-                else if (phase.phase === 'قۆناغا سیێ') phaseKey = 'phase_three';
-                
-                return `
-                    <div class="phase-card" style="margin-top: 20px;">
-                        ${renderRules(phase, phaseKey)}
-                    </div>
-                `;
-            }).join('<hr style="border-color:#333; margin:20px 0;">');
-        } else {
-            const hasDirectRules = ['daily', 'max', 'target', 'consistency', 'rules', 'mdays', 'expiration', 'tradenews', 'holdweekends'].some(key => model[key] !== undefined && model[key] !== null);
-            if (hasDirectRules) {
-                rulesContent += `
-                    <div class="model-rules-card" style="margin-top: 20px;">
-                        ${renderRules(model, '')}
-                    </div>
-                `;
-            }
-        }
-
-        return sizesHtml + priceHtml + rulesContent;
+    if (model.notes && model.notes.length > 0) {
+        rulesContent += `<div class="notes-section" style="margin-top: 15px; padding: 10px; border: 1px dashed var(--muted); border-radius: 8px;">`;
+        model.notes.forEach(noteKey => {
+            rulesContent += `<p style="font-size: 0.9em; margin-bottom: 5px; color: var(--muted);">
+                <i class="fas fa-info-circle"></i> ${getTranslation(noteKey)}
+            </p>`;
+        });
+        rulesContent += `</div>`;
     }
+
+    if (model.phases && Array.isArray(model.phases) && model.phases.length > 0) {
+        rulesContent += model.phases.map(phase => {
+            let phaseKey = '';
+
+            if (phase.phase === 'قۆناغا هەڵسەنگاندنێ') phaseKey = 'phase_evaluation';
+            else if (phase.phase === 'قۆناغا فەندکری') phaseKey = 'phase_funded';
+            else if (phase.phase === 'قۆناغا ئێکێ') phaseKey = 'phase_one';
+            else if (phase.phase === 'قۆناغا دووێ') phaseKey = 'phase_two';
+            else if (phase.phase === 'قۆناغا سیێ') phaseKey = 'phase_three';
+            
+            return `
+                <div class="phase-card" style="margin-top: 20px;">
+                    ${renderRules(phase, phaseKey)}
+                </div>
+            `;
+        }).join('<hr style="border-color:#333; margin:20px 0;">');
+    }
+
+    return sizesHtml + priceHtml + rulesContent;
+}
 
     function attachChevsIn(rootEl = document) {
         const nodes = rootEl.querySelectorAll('.tabs, .size-tabs');
